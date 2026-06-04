@@ -9,8 +9,7 @@
   --text: #f7f9ff;
   --muted: rgba(247, 249, 255, 0.58);
   --muted-2: rgba(247, 249, 255, 0.35);
-  --glass: rgba(255, 255, 255, 0.075);
-  --line: rgba(255, 255, 255, 0.12);
+  --line: rgba(255, 255, 255, 0.13);
   --cyan: #a9c7ff;
   --blue: #6c8dff;
   --danger: #ff5e63;
@@ -31,14 +30,15 @@ body {
   overflow-x: hidden;
 }
 
+/* FUNDO DO APP */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,0.16), rgba(0,0,0,0.84)),
+    linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.70)),
     url("assets/bg-splash.PNG") center center / cover no-repeat;
-  opacity: 0.9;
+  opacity: 0.72;
   z-index: -3;
 }
 
@@ -47,9 +47,9 @@ body::after {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 0%, rgba(120,150,255,0.18), transparent 34%),
-    radial-gradient(circle at 0% 80%, rgba(255,255,255,0.05), transparent 30%),
-    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.62) 100%);
+    radial-gradient(circle at 50% 0%, rgba(120,150,255,0.14), transparent 34%),
+    radial-gradient(circle at 0% 80%, rgba(255,255,255,0.04), transparent 30%),
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.52) 100%);
   z-index: -2;
   pointer-events: none;
 }
@@ -69,15 +69,16 @@ input,
 select {
   width: 100%;
   height: 56px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: 18px;
-  background: rgba(255,255,255,0.065);
+  background: rgba(255,255,255,0.07);
   color: var(--text);
   padding: 0 16px;
   outline: none;
   font-size: 17px;
   margin-bottom: 12px;
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 input::placeholder {
@@ -207,7 +208,7 @@ select {
   transition: opacity 0.55s ease, visibility 0.55s ease;
 }
 
-/* GLOBAL */
+/* HEADER */
 
 .top-header {
   display: flex;
@@ -237,16 +238,19 @@ select {
   width: 54px;
   height: 54px;
   border-radius: 18px;
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.08);
   color: white;
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .profile-button span {
   font-family: "Orbitron", sans-serif;
   font-weight: 800;
 }
+
+/* TELAS */
 
 .main {
   position: relative;
@@ -273,13 +277,84 @@ select {
   }
 }
 
-.glass-card {
-  border: 1px solid var(--line);
+/* GLASS BASE */
+
+.glass-card,
+.hero-card,
+.metric-card,
+.panel,
+.form-card,
+.goal-card,
+.insight-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.14);
   background:
-    linear-gradient(145deg, rgba(255,255,255,0.13), rgba(255,255,255,0.045));
-  box-shadow: 0 22px 70px rgba(0,0,0,0.42);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+    linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.025));
+  box-shadow:
+    0 18px 42px rgba(0,0,0,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(255,255,255,0.03);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+}
+
+/* REFLEXO GLASS */
+
+.glass-card::before,
+.hero-card::before,
+.metric-card::before,
+.panel::before,
+.form-card::before,
+.goal-card::before,
+.insight-card::before {
+  content: "";
+  position: absolute;
+  top: -34%;
+  left: -24%;
+  width: 88%;
+  height: 72%;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.20) 0%,
+    rgba(255,255,255,0.06) 34%,
+    rgba(255,255,255,0.00) 68%
+  );
+  transform: rotate(-12deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* BRILHO INTERNO */
+
+.glass-card::after,
+.hero-card::after,
+.metric-card::after,
+.panel::after,
+.form-card::after,
+.goal-card::after,
+.insight-card::after {
+  content: "";
+  position: absolute;
+  right: -38px;
+  bottom: -38px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(160,190,255,0.18), transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glass-card > *,
+.hero-card > *,
+.metric-card > *,
+.panel > *,
+.form-card > *,
+.goal-card > *,
+.insight-card > * {
+  position: relative;
+  z-index: 2;
 }
 
 /* HOME */
@@ -289,19 +364,6 @@ select {
   border-radius: var(--radius-xl);
   padding: 26px;
   margin-bottom: 16px;
-  overflow: hidden;
-  position: relative;
-  border: 1px solid rgba(255,255,255,0.16);
-  background:
-    radial-gradient(circle at 82% 42%, rgba(170,195,255,0.32), transparent 28%),
-    linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.045));
-  box-shadow: 0 24px 80px rgba(0,0,0,0.52);
-  backdrop-filter: blur(26px);
-}
-
-.hero-copy {
-  position: relative;
-  z-index: 2;
 }
 
 .hero-copy span {
@@ -326,7 +388,7 @@ select {
   border-radius: 999px;
   color: var(--cyan);
   background: rgba(169,199,255,0.12);
-  border: 1px solid rgba(169,199,255,0.16);
+  border: 1px solid rgba(169,199,255,0.18);
   font-weight: 700;
 }
 
@@ -337,8 +399,9 @@ select {
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.42), rgba(120,150,255,0.18), transparent 62%);
-  filter: blur(1px);
+  background: radial-gradient(circle, rgba(255,255,255,0.32), rgba(120,150,255,0.14), transparent 62%);
+  filter: blur(3px);
+  z-index: 1;
 }
 
 .metrics-grid {
@@ -373,7 +436,7 @@ select {
   font-size: 13px;
 }
 
-/* PANELS */
+/* PAINÉIS */
 
 .panel {
   border-radius: var(--radius-lg);
@@ -406,7 +469,7 @@ select {
   font-size: 14px;
 }
 
-/* FORMS */
+/* FORMULÁRIOS */
 
 .page-title {
   margin-bottom: 18px;
@@ -452,7 +515,7 @@ select {
 
 .form-card button.dark-button {
   background: rgba(255,255,255,0.08);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255,255,255,0.14);
   color: white;
 }
 
@@ -462,7 +525,7 @@ select {
   background: linear-gradient(135deg, #ff5e63, #7d1d24);
 }
 
-/* LISTS */
+/* LISTAS */
 
 .list {
   display: grid;
@@ -479,10 +542,12 @@ select {
   grid-template-columns: 46px 1fr auto;
   gap: 12px;
   align-items: center;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255,255,255,0.13);
   background: rgba(255,255,255,0.055);
   border-radius: 20px;
   padding: 12px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .item-icon {
@@ -523,7 +588,7 @@ select {
 }
 
 .item-actions button {
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255,255,255,0.13);
   background: rgba(255,255,255,0.08);
   color: white;
   border-radius: 10px;
@@ -532,7 +597,7 @@ select {
   font-size: 12px;
 }
 
-/* GOALS */
+/* METAS */
 
 .goals-grid {
   display: grid;
@@ -542,9 +607,6 @@ select {
 .goal-card {
   border-radius: var(--radius-lg);
   padding: 18px;
-  border: 1px solid var(--line);
-  background: linear-gradient(145deg, rgba(255,255,255,0.13), rgba(255,255,255,0.045));
-  backdrop-filter: blur(24px);
 }
 
 .goal-card h3 {
@@ -600,7 +662,7 @@ select {
   font-size: 18px;
 }
 
-/* BOTTOM NAV */
+/* MENU INFERIOR */
 
 .bottom-nav {
   position: fixed;
@@ -611,15 +673,15 @@ select {
   height: 78px;
   border-radius: 31px;
   border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(5, 7, 11, 0.84);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(5, 7, 11, 0.72);
+  backdrop-filter: blur(26px) saturate(130%);
+  -webkit-backdrop-filter: blur(26px) saturate(130%);
   display: grid;
   grid-template-columns: 1fr 1fr 78px 1fr 1fr;
   align-items: center;
   padding: 0 8px;
   z-index: 100;
-  box-shadow: 0 22px 70px rgba(0,0,0,0.62);
+  box-shadow: 0 22px 70px rgba(0,0,0,0.58);
 }
 
 .nav-item {
