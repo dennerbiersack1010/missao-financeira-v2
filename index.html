@@ -53,43 +53,41 @@
 
       <!-- HOME -->
       <section class="screen active" id="home">
-        <section class="hero-card">
+        <section class="hero-card glass-card">
           <div class="hero-copy">
             <span>Caixa atual</span>
             <h2 id="caixaAtual">R$ 0,00</h2>
-            <p id="statusFinanceiro">Sistema financeiro ativo</p>
+            <p id="statusFinanceiro">Saldo operacional positivo</p>
           </div>
-
-          <div class="hero-orb"></div>
         </section>
 
         <section class="metrics-grid">
-          <div class="glass-card metric-card">
+          <div class="metric-card glass-card">
             <span>Ganhos</span>
             <strong id="totalGanhos">R$ 0,00</strong>
             <small>Entradas registradas</small>
           </div>
 
-          <div class="glass-card metric-card">
+          <div class="metric-card glass-card">
             <span>Saídas</span>
             <strong id="totalSaidas">R$ 0,00</strong>
             <small>Gastos registrados</small>
           </div>
 
-          <div class="glass-card metric-card">
+          <div class="metric-card glass-card">
             <span>Contas</span>
             <strong id="totalContasPendentes">R$ 0,00</strong>
             <small>Pendentes</small>
           </div>
 
-          <div class="glass-card metric-card">
+          <div class="metric-card glass-card">
             <span>Metas</span>
             <strong id="totalMetas">0</strong>
             <small>Ativas</small>
           </div>
         </section>
 
-        <section class="glass-card panel">
+        <section class="panel glass-card">
           <div class="panel-head">
             <div>
               <h3>Próximos vencimentos</h3>
@@ -101,7 +99,7 @@
           <div class="list" id="listaProximosVencimentos"></div>
         </section>
 
-        <section class="glass-card panel">
+        <section class="panel glass-card">
           <div class="panel-head">
             <div>
               <h3>Meta em destaque</h3>
@@ -120,21 +118,21 @@
           <h2>Ganhos e saídas</h2>
         </div>
 
-        <div class="glass-card form-card">
+        <div class="form-card glass-card">
           <h3>Nova entrada</h3>
           <input id="entradaNome" type="text" placeholder="Nome do trabalho" />
           <input id="entradaValor" type="number" placeholder="Valor recebido" />
           <button type="button" onclick="adicionarEntrada()">Adicionar ganho</button>
         </div>
 
-        <div class="glass-card form-card">
+        <div class="form-card glass-card">
           <h3>Nova saída</h3>
           <input id="saidaNome" type="text" placeholder="Nome do gasto" />
           <input id="saidaValor" type="number" placeholder="Valor gasto" />
           <button class="dark-button" type="button" onclick="adicionarSaida()">Adicionar saída</button>
         </div>
 
-        <section class="glass-card panel">
+        <section class="panel glass-card">
           <div class="panel-head">
             <div>
               <h3>Histórico</h3>
@@ -153,7 +151,7 @@
           <h2>Contas a pagar</h2>
         </div>
 
-        <section class="glass-card form-card">
+        <section class="form-card glass-card">
           <h3>Nova conta</h3>
 
           <input id="contaNome" type="text" placeholder="Ex: Spotify, Internet, Pessoa..." />
@@ -173,7 +171,7 @@
           <button type="button" onclick="adicionarConta()">Adicionar conta</button>
         </section>
 
-        <section class="glass-card panel">
+        <section class="panel glass-card">
           <div class="panel-head">
             <div>
               <h3>Total pendente</h3>
@@ -183,7 +181,7 @@
           </div>
         </section>
 
-        <section class="glass-card panel">
+        <section class="panel glass-card">
           <div class="list" id="listaContas"></div>
         </section>
       </section>
@@ -195,7 +193,7 @@
           <h2>Metas</h2>
         </div>
 
-        <section class="glass-card form-card">
+        <section class="form-card glass-card">
           <h3>Nova meta</h3>
 
           <input id="metaNome" type="text" placeholder="Ex: Notebook, viagem, reserva..." />
@@ -215,7 +213,7 @@
           <h2>Agenda financeira</h2>
         </div>
 
-        <section class="glass-card panel">
+        <section class="panel glass-card">
           <div class="panel-head">
             <div>
               <h3>Vencimentos</h3>
@@ -235,22 +233,22 @@
         </div>
 
         <section class="insights-grid">
-          <div class="glass-card insight-card">
+          <div class="insight-card glass-card">
             <span>Entradas</span>
             <strong id="insightEntradas">R$ 0,00</strong>
           </div>
 
-          <div class="glass-card insight-card">
+          <div class="insight-card glass-card">
             <span>Saídas</span>
             <strong id="insightSaidas">R$ 0,00</strong>
           </div>
 
-          <div class="glass-card insight-card">
+          <div class="insight-card glass-card">
             <span>Devo pagar</span>
             <strong id="insightDevido">R$ 0,00</strong>
           </div>
 
-          <div class="glass-card insight-card">
+          <div class="insight-card glass-card">
             <span>Registros</span>
             <strong id="insightRegistros">0</strong>
           </div>
@@ -262,7 +260,7 @@
     </main>
 
     <!-- MENU -->
-    <nav class="bottom-nav">
+    <nav class="bottom-nav glass-nav">
       <button class="nav-item active" type="button" onclick="openTab('home', this)">
         <span>⌂</span>
         <small>Início</small>
