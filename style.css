@@ -1954,3 +1954,24 @@ img {
 .backup-actions button {
   margin: 0 !important;
 }
+
+/* CORRIGIR ESPAÇO ENTRE OS CARDS DE BACKUP */
+
+#backupHome .backup-actions {
+  display: block !important;
+  margin-top: 24px !important;
+}
+
+#backupHome .backup-actions button {
+  display: block !important;
+  width: 100% !important;
+  min-height: 56px !important;
+
+  margin: 0 0 16px 0 !important;
+
+  border-radius: 22px !important;
+}
+
+#backupHome .backup-actions button:last-child {
+  margin-bottom: 0 !important;
+}
