@@ -2497,3 +2497,34 @@ img {
 .hidden {
   display: none !important;
 }
+
+/* CORREÇÃO — BOTÕES DOS CARDS CLICÁVEIS */
+
+.item,
+.conta-item,
+.transaction-item,
+.goal-card {
+  position: relative !important;
+}
+
+.item-actions,
+.transaction-actions,
+.goal-actions-premium {
+  position: relative !important;
+  z-index: 50 !important;
+  pointer-events: auto !important;
+}
+
+.item-actions button,
+.transaction-actions button,
+.goal-actions-premium button {
+  position: relative !important;
+  z-index: 60 !important;
+  pointer-events: auto !important;
+}
+
+.conta-paga::before,
+.conta-alerta::before {
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
