@@ -1276,10 +1276,12 @@ function atualizarContas() {
   lista.innerHTML = contasFiltradas
     .map((conta) => {
       const estaPaga = conta.status === "paga";
-      const estaAtrasada = !estaPaga && calcularDias(conta.vencimento) < 0;
+      const diasParaVencer = calcularDias(conta.vencimento);
+      const estaAtrasada = !estaPaga && diasParaVencer < 0;
+      const estaEmAlerta = !estaPaga && diasParaVencer >= 0 && diasParaVencer <= 3;
 
       return `
-        <div class="item conta-item ${estaPaga ? "conta-paga" : ""} ${estaAtrasada ? "agenda-atrasada" : ""}">
+        <div class="item conta-item ${estaPaga ? "conta-paga" : ""} ${estaAtrasada ? "agenda-atrasada" : ""} ${estaEmAlerta ? "conta-alerta" : ""}">
           <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
 
           <div>
@@ -1407,10 +1409,12 @@ function montarGrupoAgenda(titulo, listaDeContas) {
 
   const itens = listaDeContas.map((conta) => {
     const estaPaga = conta.status === "paga";
-    const estaAtrasada = !estaPaga && calcularDias(conta.vencimento) < 0;
+    const diasParaVencer = calcularDias(conta.vencimento);
+    const estaAtrasada = !estaPaga && diasParaVencer < 0;
+    const estaEmAlerta = !estaPaga && diasParaVencer >= 0 && diasParaVencer <= 3;
 
     return `
-      <div class="item conta-item ${estaPaga ? "conta-paga" : ""} ${estaAtrasada ? "agenda-atrasada" : ""}">
+      <div class="item conta-item ${estaPaga ? "conta-paga" : ""} ${estaAtrasada ? "agenda-atrasada" : ""} ${estaEmAlerta ? "conta-alerta" : ""}">
         <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
 
         <div>
@@ -1497,8 +1501,12 @@ function atualizarHome() {
     proximos.innerHTML = `<p class="empty">Nenhum vencimento pendente.</p>`;
   } else {
     proximos.innerHTML = contasPendentes.map((conta) => {
+      const diasParaVencer = calcularDias(conta.vencimento);
+      const estaAtrasada = diasParaVencer < 0;
+      const estaEmAlerta = diasParaVencer >= 0 && diasParaVencer <= 3;
+
       return `
-        <div class="item">
+        <div class="item conta-item ${estaAtrasada ? "agenda-atrasada" : ""} ${estaEmAlerta ? "conta-alerta" : ""}">
           <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
 
           <div>
