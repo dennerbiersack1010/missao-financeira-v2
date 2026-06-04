@@ -86,6 +86,8 @@ function iconeConta(nome, categoria) {
   return categoria ? categoria.slice(0, 2).toUpperCase() : "MF";
 }
 
+/* FIREBASE */
+
 async function carregarDados() {
   try {
     const snapshot = await getDoc(documentoRef);
@@ -123,6 +125,8 @@ async function salvarDados() {
   }
 }
 
+/* CÁLCULOS */
+
 function calcularResumo() {
   const totalEntradas = entradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
   const totalSaidas = saidas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
@@ -146,6 +150,8 @@ function calcularResumo() {
   };
 }
 
+/* ABAS */
+
 function openTab(tab, botao = null) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.remove("active");
@@ -161,7 +167,24 @@ function openTab(tab, botao = null) {
   if (botao) {
     botao.classList.add("active");
   }
+
+  const appContainer = document.querySelector(".app");
+
+  if (appContainer) {
+    appContainer.classList.remove(
+      "bg-home",
+      "bg-bills",
+      "bg-goals",
+      "bg-calendar",
+      "bg-transactions",
+      "bg-insights"
+    );
+
+    appContainer.classList.add(`bg-${tab}`);
+  }
 }
+
+/* ADICIONAR DADOS */
 
 async function adicionarEntrada() {
   const nomeInput = pegar("entradaNome");
@@ -176,7 +199,7 @@ async function adicionarEntrada() {
   }
 
   entradas.push({
-    id: Date.now(),
+    id: Date.now() + Math.random(),
     nome,
     valor,
     data: new Date().toLocaleDateString("pt-BR")
@@ -202,7 +225,7 @@ async function adicionarSaida() {
   }
 
   saidas.push({
-    id: Date.now(),
+    id: Date.now() + Math.random(),
     nome,
     valor,
     data: new Date().toLocaleDateString("pt-BR")
@@ -227,7 +250,7 @@ async function adicionarConta() {
   }
 
   contas.push({
-    id: Date.now(),
+    id: Date.now() + Math.random(),
     nome,
     valor,
     vencimento,
@@ -255,7 +278,7 @@ async function adicionarMeta() {
   }
 
   metas.push({
-    id: Date.now(),
+    id: Date.now() + Math.random(),
     nome,
     valorTotal,
     valorAtual: valorAtual || 0
@@ -269,24 +292,22 @@ async function adicionarMeta() {
   atualizarTela();
 }
 
-async function marcarContaPaga(id) {
-  contas = contas.map((conta) => {
-    if (conta.id === id) {
-      return {
-        ...conta,
-        status: conta.status === "paga" ? "pendente" : "paga"
-      };
-    }
+/* AÇÕES */
 
-    return conta;
-  });
+async function marcarContaPaga(index) {
+  if (!contas[index]) return;
+
+  contas[index].status = contas[index].status === "paga" ? "pendente" : "paga";
 
   await salvarDados();
   atualizarTela();
 }
 
-async function excluirConta(id) {
-  contas = contas.filter((conta) => conta.id !== id);
+async function excluirConta(index) {
+  if (!contas[index]) return;
+
+  contas.splice(index, 1);
+
   await salvarDados();
   atualizarTela();
 }
@@ -323,6 +344,8 @@ async function apagarTudo() {
   atualizarTela();
 }
 
+/* ATUALIZAR TELA */
+
 function atualizarTela() {
   const resumo = calcularResumo();
 
@@ -351,6 +374,8 @@ function atualizarTela() {
   atualizarCalendario();
   atualizarHome();
 }
+
+/* TRANSAÇÕES */
 
 function atualizarTransacoes() {
   const lista = pegar("listaTransacoes");
@@ -389,6 +414,8 @@ function atualizarTransacoes() {
   }).join("");
 }
 
+/* CONTAS */
+
 function atualizarContas() {
   const lista = pegar("listaContas");
 
@@ -397,31 +424,42 @@ function atualizarContas() {
     return;
   }
 
-  lista.innerHTML = contas
-    .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento))
+  const contasOrdenadas = contas
+    .map((conta, indexOriginal) => ({
+      ...conta,
+      indexOriginal
+    }))
+    .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+
+  lista.innerHTML = contasOrdenadas
     .map((conta) => {
+      const estaPaga = conta.status === "paga";
+
       return `
-        <div class="item">
+        <div class="item conta-item ${estaPaga ? "conta-paga" : ""}">
           <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
 
           <div>
             <h4>${conta.nome}</h4>
-            <small>${conta.categoria} • ${textoDias(conta.vencimento, conta.status === "paga")}</small>
+            <small>${conta.categoria} • ${textoDias(conta.vencimento, estaPaga)}</small>
           </div>
 
           <div>
             <strong>${moeda(conta.valor)}</strong>
             <div class="item-actions">
-              <button onclick="marcarContaPaga(${conta.id})">
-                ${conta.status === "paga" ? "Reabrir" : "Pagar"}
+              <button onclick="marcarContaPaga(${conta.indexOriginal})">
+                ${estaPaga ? "Reabrir" : "Pagar"}
               </button>
-              <button onclick="excluirConta(${conta.id})">Excluir</button>
+              <button onclick="excluirConta(${conta.indexOriginal})">Excluir</button>
             </div>
           </div>
         </div>
       `;
-    }).join("");
+    })
+    .join("");
 }
+
+/* METAS */
 
 function atualizarMetas() {
   const lista = pegar("listaMetas");
@@ -459,6 +497,8 @@ function atualizarMetas() {
   }).join("");
 }
 
+/* CALENDÁRIO */
+
 function atualizarCalendario() {
   const lista = pegar("listaCalendario");
 
@@ -472,13 +512,15 @@ function atualizarCalendario() {
   }
 
   lista.innerHTML = ordenadas.map((conta) => {
+    const estaPaga = conta.status === "paga";
+
     return `
-      <div class="item">
+      <div class="item conta-item ${estaPaga ? "conta-paga" : ""}">
         <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
 
         <div>
           <h4>${conta.nome}</h4>
-          <small>${textoDias(conta.vencimento, conta.status === "paga")}</small>
+          <small>${textoDias(conta.vencimento, estaPaga)}</small>
         </div>
 
         <div>
@@ -488,6 +530,8 @@ function atualizarCalendario() {
     `;
   }).join("");
 }
+
+/* HOME */
 
 function atualizarHome() {
   const proximos = pegar("listaProximosVencimentos");
@@ -543,6 +587,8 @@ function atualizarHome() {
   }
 }
 
+/* SPLASH */
+
 function iniciarSplashV2() {
   const splash = pegar("splashScreen");
   const percent = pegar("loadingPercent");
@@ -568,6 +614,8 @@ function iniciarSplashV2() {
   }, 22);
 }
 
+/* EXPOR FUNÇÕES PARA O HTML */
+
 window.openTab = openTab;
 window.adicionarEntrada = adicionarEntrada;
 window.adicionarSaida = adicionarSaida;
@@ -579,6 +627,8 @@ window.excluirEntrada = excluirEntrada;
 window.excluirSaida = excluirSaida;
 window.excluirMeta = excluirMeta;
 window.apagarTudo = apagarTudo;
+
+/* INICIAR APP */
 
 document.addEventListener("DOMContentLoaded", () => {
   iniciarSplashV2();
