@@ -30,6 +30,9 @@ let filtroContasAtual = "todas";
 let filtroEntradasAtual = "mes";
 let filtroSaidasAtual = "mes";
 
+let mesResumoSelecionado = new Date().getMonth();
+let anoResumoSelecionado = new Date().getFullYear();
+
 function pegar(id) {
   return document.getElementById(id);
 }
@@ -294,11 +297,28 @@ function calcularResumo() {
   };
 }
 
-function calcularResumoMensal() {
-  const entradasDoMes = entradas.filter((item) => estaNoMesAtual(item.data));
-  const saidasDoMes = saidas.filter((item) => estaNoMesAtual(item.data));
+function calcularResumoMensal(mes = mesResumoSelecionado, ano = anoResumoSelecionado) {
+  const entradasDoMes = entradas.filter((item) => {
+    const data = converterDataBRParaDate(item.data);
+    if (!data) return false;
 
-  const contasDoMes = contas.filter((conta) => vencimentoNoMesAtual(conta.vencimento));
+    return data.getMonth() === mes && data.getFullYear() === ano;
+  });
+
+  const saidasDoMes = saidas.filter((item) => {
+    const data = converterDataBRParaDate(item.data);
+    if (!data) return false;
+
+    return data.getMonth() === mes && data.getFullYear() === ano;
+  });
+
+  const contasDoMes = contas.filter((conta) => {
+    if (!conta.vencimento) return false;
+
+    const data = new Date(conta.vencimento + "T00:00:00");
+
+    return data.getMonth() === mes && data.getFullYear() === ano;
+  });
 
   const contasPendentesDoMes = contasDoMes.filter((conta) => conta.status !== "paga");
   const contasPagasDoMes = contasDoMes.filter((conta) => conta.status === "paga");
@@ -320,7 +340,9 @@ function calcularResumoMensal() {
     totalContasPendentes,
     totalContasPagas,
     caixaAtual,
-    saldoProjetado
+    saldoProjetado,
+    mes,
+    ano
   };
 }
 
@@ -879,13 +901,23 @@ function criarResumoMensalNaHome(resumo) {
     }
   }
 
+  const nomeMes = new Date(resumo.ano, resumo.mes, 1).toLocaleDateString("pt-BR", {
+    month: "long",
+    year: "numeric"
+  });
+
   bloco.innerHTML = `
     <div class="panel-head monthly-summary-head">
       <div>
         <h3>Resumo mensal</h3>
-        <p>Leitura estratégica do mês atual</p>
+        <p>Leitura estratégica do mês selecionado</p>
       </div>
-      <span>${new Date().toLocaleDateString("pt-BR", { month: "long" })}</span>
+    </div>
+
+    <div class="month-selector">
+      <button type="button" onclick="mudarMesResumo(-1)">‹</button>
+      <strong>${nomeMes}</strong>
+      <button type="button" onclick="mudarMesResumo(1)">›</button>
     </div>
 
     <div class="monthly-summary-grid">
@@ -924,6 +956,22 @@ function criarResumoMensalNaHome(resumo) {
       ${mensagemResumoMensal(resumo)}
     </div>
   `;
+}
+
+function mudarMesResumo(direcao) {
+  mesResumoSelecionado += direcao;
+
+  if (mesResumoSelecionado < 0) {
+    mesResumoSelecionado = 11;
+    anoResumoSelecionado--;
+  }
+
+  if (mesResumoSelecionado > 11) {
+    mesResumoSelecionado = 0;
+    anoResumoSelecionado++;
+  }
+
+  atualizarTela();
 }
 
 /* BACKUP */
@@ -1531,6 +1579,7 @@ window.aplicarFiltroSaidas = aplicarFiltroSaidas;
 window.exportarBackup = exportarBackup;
 window.abrirImportarBackup = abrirImportarBackup;
 window.importarBackupArquivo = importarBackupArquivo;
+window.mudarMesResumo = mudarMesResumo;
 
 /* INICIAR APP */
 
