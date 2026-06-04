@@ -5,15 +5,13 @@
 }
 
 :root {
-  --bg: #030509;
-  --text: #f7f9ff;
-  --muted: rgba(247, 249, 255, 0.58);
-  --muted-2: rgba(247, 249, 255, 0.35);
-  --line: rgba(255, 255, 255, 0.16);
-  --cyan: #a9c7ff;
-  --blue: #6c8dff;
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.78);
+  --muted-soft: rgba(255, 255, 255, 0.62);
+  --line: rgba(255, 255, 255, 0.22);
+  --cyan: #bcd2ff;
+  --gray-status: rgba(210, 216, 225, 0.72);
   --danger: #ff5e63;
-  --good: #7effb2;
   --radius-xl: 34px;
   --radius-lg: 26px;
 }
@@ -26,8 +24,34 @@ body {
   min-height: 100vh;
   font-family: "Rajdhani", sans-serif;
   color: var(--text);
-  background: #030509;
+  background: #000;
   overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,0.04) 0%,
+      rgba(0,0,0,0.12) 38%,
+      rgba(0,0,0,0.38) 100%
+    ),
+    url("assets/bg-splash.PNG") center center / cover no-repeat;
+  z-index: -3;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 70% 30%, rgba(140, 170, 255, 0.09), transparent 32%),
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.04), transparent 30%);
+  pointer-events: none;
+  z-index: -2;
 }
 
 button,
@@ -45,27 +69,27 @@ input,
 select {
   width: 100%;
   height: 56px;
-  border: 1px solid rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.20);
   border-radius: 18px;
-  background: rgba(255,255,255,0.05);
-  color: var(--text);
+  background: rgba(255,255,255,0.045);
+  color: white;
   padding: 0 16px;
   outline: none;
   font-size: 17px;
   margin-bottom: 12px;
-  backdrop-filter: blur(18px) saturate(135%);
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
 }
 
 input::placeholder {
-  color: rgba(255,255,255,0.36);
+  color: rgba(255,255,255,0.62);
 }
 
 select {
   color: #ffffff;
 }
 
-/* APP COM FUNDO REAL */
+/* APP */
 
 .app {
   width: 100%;
@@ -74,15 +98,7 @@ select {
   margin: 0 auto;
   padding: 26px 18px 112px;
   position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.10) 0%,
-      rgba(0, 0, 0, 0.38) 52%,
-      rgba(0, 0, 0, 0.72) 100%
-    ),
-    url("assets/bg-splash.PNG") center center / cover no-repeat;
+  background: transparent;
 }
 
 /* SPLASH */
@@ -204,16 +220,18 @@ select {
   margin-bottom: 24px;
 }
 
-.system-label {
+.system-label,
+.page-title span {
   display: block;
   margin-bottom: 6px;
-  color: var(--cyan);
+  color: #c8d8ff;
   font-family: "Orbitron", sans-serif;
   font-size: 10px;
   letter-spacing: 0.18em;
 }
 
 .top-header h1 {
+  color: #ffffff;
   font-size: 31px;
   line-height: 1;
   letter-spacing: -0.6px;
@@ -224,11 +242,11 @@ select {
   width: 54px;
   height: 54px;
   border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.025);
   color: white;
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
 }
 
 .profile-button span {
@@ -263,7 +281,7 @@ select {
   }
 }
 
-/* GLASS TRANSPARENTE */
+/* GLASS REAL */
 
 .glass-card,
 .hero-card,
@@ -274,22 +292,15 @@ select {
 .insight-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.18);
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,0.055),
-      rgba(255,255,255,0.010)
-    );
+  border: 1px solid rgba(255,255,255,0.24);
+  background: rgba(255,255,255,0.018);
   box-shadow:
-    0 18px 42px rgba(0,0,0,0.22),
-    inset 0 1px 0 rgba(255,255,255,0.13),
-    inset 0 -1px 0 rgba(255,255,255,0.03);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
+    0 18px 46px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(255,255,255,0.05);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
 }
-
-/* REFLEXO GLASS */
 
 .glass-card::before,
 .hero-card::before,
@@ -300,22 +311,20 @@ select {
 .insight-card::before {
   content: "";
   position: absolute;
-  top: -40%;
-  left: -30%;
-  width: 92%;
-  height: 76%;
+  top: -45%;
+  left: -35%;
+  width: 100%;
+  height: 78%;
   background: linear-gradient(
     135deg,
-    rgba(255,255,255,0.18) 0%,
-    rgba(255,255,255,0.045) 35%,
+    rgba(255,255,255,0.20) 0%,
+    rgba(255,255,255,0.045) 32%,
     rgba(255,255,255,0.00) 70%
   );
   transform: rotate(-12deg);
   pointer-events: none;
   z-index: 0;
 }
-
-/* BRILHO LEVE */
 
 .glass-card::after,
 .hero-card::after,
@@ -326,12 +335,10 @@ select {
 .insight-card::after {
   content: "";
   position: absolute;
-  right: -45px;
-  bottom: -45px;
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(160,190,255,0.10), transparent 70%);
-  filter: blur(24px);
+  inset: 0;
+  background:
+    radial-gradient(circle at 82% 55%, rgba(180,205,255,0.055), transparent 30%),
+    linear-gradient(135deg, rgba(255,255,255,0.025), rgba(255,255,255,0.000));
   pointer-events: none;
   z-index: 0;
 }
@@ -358,12 +365,13 @@ select {
 
 .hero-copy span {
   display: block;
-  color: var(--muted);
+  color: #ffffff;
   font-size: 16px;
   margin-bottom: 12px;
 }
 
 .hero-copy h2 {
+  color: #ffffff;
   font-family: "Orbitron", sans-serif;
   font-size: 34px;
   line-height: 1;
@@ -376,23 +384,12 @@ select {
   display: inline-flex;
   padding: 8px 13px;
   border-radius: 999px;
-  color: var(--cyan);
-  background: rgba(169,199,255,0.10);
-  border: 1px solid rgba(169,199,255,0.18);
+  color: var(--gray-status);
+  background: rgba(255,255,255,0.030);
+  border: 1px solid rgba(255,255,255,0.18);
   font-weight: 700;
-  backdrop-filter: blur(12px);
-}
-
-.hero-orb {
-  position: absolute;
-  right: -26px;
-  bottom: -28px;
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.25), rgba(120,150,255,0.10), transparent 62%);
-  filter: blur(4px);
-  z-index: 1;
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
 }
 
 .metrics-grid {
@@ -410,20 +407,21 @@ select {
 
 .metric-card span {
   display: block;
-  color: var(--muted);
+  color: #ffffff;
   font-size: 14px;
   margin-bottom: 10px;
 }
 
 .metric-card strong {
   display: block;
+  color: #ffffff;
   font-family: "Orbitron", sans-serif;
   font-size: 18px;
   margin-bottom: 8px;
 }
 
 .metric-card small {
-  color: var(--muted-2);
+  color: #ffffff;
   font-size: 13px;
 }
 
@@ -443,19 +441,20 @@ select {
 }
 
 .panel-head h3 {
+  color: #ffffff;
   font-size: 21px;
   line-height: 1;
   margin-bottom: 4px;
 }
 
 .panel-head p {
-  color: var(--muted);
+  color: #ffffff;
   font-size: 14px;
 }
 
 .panel-head > span,
 .panel-head > strong {
-  color: var(--cyan);
+  color: #ffffff;
   font-family: "Orbitron", sans-serif;
   font-size: 14px;
 }
@@ -466,16 +465,8 @@ select {
   margin-bottom: 18px;
 }
 
-.page-title span {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--cyan);
-  font-family: "Orbitron", sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.20em;
-}
-
 .page-title h2 {
+  color: #ffffff;
   font-size: 34px;
   line-height: 1;
   letter-spacing: -0.8px;
@@ -488,6 +479,7 @@ select {
 }
 
 .form-card h3 {
+  color: #ffffff;
   font-size: 21px;
   margin-bottom: 14px;
 }
@@ -524,7 +516,7 @@ select {
 }
 
 .empty {
-  color: var(--muted);
+  color: #ffffff;
   font-size: 15px;
 }
 
@@ -533,12 +525,12 @@ select {
   grid-template-columns: 46px 1fr auto;
   gap: 12px;
   align-items: center;
-  border: 1px solid rgba(255,255,255,0.13);
-  background: rgba(255,255,255,0.040);
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.018);
   border-radius: 20px;
   padding: 12px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
 }
 
 .item-icon {
@@ -547,7 +539,7 @@ select {
   border-radius: 16px;
   display: grid;
   place-items: center;
-  background: rgba(255,255,255,0.075);
+  background: rgba(255,255,255,0.055);
   color: white;
   font-family: "Orbitron", sans-serif;
   font-size: 15px;
@@ -555,17 +547,19 @@ select {
 }
 
 .item h4 {
+  color: #ffffff;
   font-size: 17px;
   line-height: 1;
   margin-bottom: 4px;
 }
 
 .item small {
-  color: var(--muted);
+  color: #ffffff;
   font-size: 13px;
 }
 
 .item strong {
+  color: #ffffff;
   font-family: "Orbitron", sans-serif;
   font-size: 13px;
   white-space: nowrap;
@@ -579,8 +573,8 @@ select {
 }
 
 .item-actions button {
-  border: 1px solid rgba(255,255,255,0.13);
-  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.04);
   color: white;
   border-radius: 10px;
   height: 28px;
@@ -601,6 +595,7 @@ select {
 }
 
 .goal-card h3 {
+  color: #ffffff;
   font-size: 21px;
   margin-bottom: 12px;
 }
@@ -608,7 +603,7 @@ select {
 .goal-info {
   display: flex;
   justify-content: space-between;
-  color: var(--muted);
+  color: #ffffff;
   font-size: 14px;
   margin-bottom: 12px;
 }
@@ -617,7 +612,7 @@ select {
   width: 100%;
   height: 10px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.12);
   overflow: hidden;
 }
 
@@ -642,13 +637,14 @@ select {
 }
 
 .insight-card span {
-  color: var(--muted);
+  color: #ffffff;
   font-size: 14px;
 }
 
 .insight-card strong {
   display: block;
   margin-top: 12px;
+  color: #ffffff;
   font-family: "Orbitron", sans-serif;
   font-size: 18px;
 }
@@ -663,23 +659,25 @@ select {
   width: min(410px, calc(100% - 28px));
   height: 78px;
   border-radius: 31px;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(5, 7, 11, 0.56);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.020);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
   display: grid;
   grid-template-columns: 1fr 1fr 78px 1fr 1fr;
   align-items: center;
   padding: 0 8px;
   z-index: 100;
-  box-shadow: 0 22px 70px rgba(0,0,0,0.48);
+  box-shadow:
+    0 22px 70px rgba(0,0,0,0.38),
+    inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
 .nav-item {
   height: 62px;
   border: none;
   background: transparent;
-  color: rgba(255,255,255,0.48);
+  color: rgba(255,255,255,0.58);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -704,7 +702,7 @@ select {
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  border: 4px solid #05070b;
+  border: 4px solid rgba(0,0,0,0.82);
   margin: -28px auto 0;
   background: linear-gradient(135deg, #eaf0ff, #a9c7ff);
   color: #05070b;
@@ -743,89 +741,4 @@ select {
   .loading-title {
     font-size: 10px;
   }
-}
-/* FORÇAR GLASS TRANSPARENTE REAL */
-
-.glass-card,
-.hero-card,
-.metric-card,
-.panel,
-.form-card,
-.goal-card,
-.insight-card {
-  background: rgba(255, 255, 255, 0.018) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04) !important;
-  backdrop-filter: blur(18px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
-}
-
-.hero-card {
-  background:
-    radial-gradient(circle at 84% 48%, rgba(150, 180, 255, 0.10), transparent 30%),
-    rgba(255, 255, 255, 0.018) !important;
-}
-
-.metric-card {
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008)) !important;
-}
-
-.panel,
-.form-card,
-.goal-card,
-.insight-card {
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008)) !important;
-}
-
-/* reflexo mais fino */
-.glass-card::before,
-.hero-card::before,
-.metric-card::before,
-.panel::before,
-.form-card::before,
-.goal-card::before,
-.insight-card::before {
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.14) 0%,
-    rgba(255,255,255,0.035) 34%,
-    rgba(255,255,255,0.00) 70%
-  ) !important;
-}
-
-/* reduz brilho azul interno */
-.glass-card::after,
-.hero-card::after,
-.metric-card::after,
-.panel::after,
-.form-card::after,
-.goal-card::after,
-.insight-card::after {
-  background: radial-gradient(circle, rgba(160,190,255,0.055), transparent 70%) !important;
-}
-
-/* botão do status também transparente */
-.hero-copy p {
-  background: rgba(255, 255, 255, 0.008) !important; 
-  border: 1px solid rgba(255,255,255,0.18) !important;
-  color: rgba(230,240,255,0.86) !important;
-  backdrop-filter: blur(14px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
-}
-
-/* deixa o fundo mais visível atrás dos cards */
-.app {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.05) 0%,
-      rgba(0, 0, 0, 0.24) 48%,
-      rgba(0, 0, 0, 0.54) 100%
-    ),
-    url("assets/bg-splash.PNG") center center / cover no-repeat !important;
 }
