@@ -34,6 +34,7 @@ let mesResumoSelecionado = new Date().getMonth();
 let anoResumoSelecionado = new Date().getFullYear();
 
 let contaEditandoIndex = null;
+let metaEditandoId = null;
 
 function pegar(id) {
   return document.getElementById(id);
@@ -627,51 +628,8 @@ async function adicionarValorMeta(id) {
   atualizarTela();
 }
 
-async function editarMeta(id) {
-  const meta = metas.find((item) => item.id === id);
-
-  if (!meta) return;
-
-  const novoNome = prompt("Nome da meta:", meta.nome);
-  if (novoNome === null) return;
-
-  const nomeFinal = novoNome.trim();
-
-  if (!nomeFinal) {
-    alert("O nome da meta não pode ficar vazio.");
-    return;
-  }
-
-  const novoValorTotal = prompt("Valor total da meta:", meta.valorTotal);
-  if (novoValorTotal === null) return;
-
-  const valorTotalFinal = converterValorDigitado(novoValorTotal);
-
-  if (isNaN(valorTotalFinal) || valorTotalFinal <= 0) {
-    alert("Digite um valor total válido.");
-    return;
-  }
-
-  const novoValorAtual = prompt("Valor já guardado:", meta.valorAtual || 0);
-  if (novoValorAtual === null) return;
-
-  let valorAtualFinal = converterValorDigitado(novoValorAtual);
-
-  if (isNaN(valorAtualFinal) || valorAtualFinal < 0) {
-    alert("Digite um valor guardado válido.");
-    return;
-  }
-
-  if (valorAtualFinal > valorTotalFinal) {
-    valorAtualFinal = valorTotalFinal;
-  }
-
-  meta.nome = nomeFinal;
-  meta.valorTotal = valorTotalFinal;
-  meta.valorAtual = valorAtualFinal;
-
-  await salvarDados();
-  atualizarTela();
+function editarMeta(id) {
+  abrirModalEditarMeta(id);
 }
 
 async function excluirMeta(id) {
@@ -1203,6 +1161,112 @@ async function salvarEdicaoConta() {
   atualizarTela();
 }
 
+/* MODAL PREMIUM — EDITAR META */
+
+function criarModalEditarMeta() {
+  if (pegar("modalEditarMeta")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "modalEditarMeta";
+  modal.className = "modal-overlay";
+
+  modal.innerHTML = `
+    <div class="modal-card glass-card">
+      <div class="modal-head">
+        <div>
+          <span>MISSION_GOAL</span>
+          <h3>Editar meta</h3>
+        </div>
+
+        <button type="button" class="modal-close" onclick="fecharModalEditarMeta()">×</button>
+      </div>
+
+      <div class="modal-form">
+        <label>
+          Nome da meta
+          <input id="editarMetaNome" type="text" placeholder="Nome da meta">
+        </label>
+
+        <label>
+          Valor total da meta
+          <input id="editarMetaValorTotal" type="number" step="0.01" placeholder="Valor total">
+        </label>
+
+        <label>
+          Valor já guardado
+          <input id="editarMetaValorAtual" type="number" step="0.01" placeholder="Valor guardado">
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-save" onclick="salvarEdicaoMeta()">Salvar alterações</button>
+        <button type="button" class="modal-cancel" onclick="fecharModalEditarMeta()">Cancelar</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+}
+
+function abrirModalEditarMeta(id) {
+  criarModalEditarMeta();
+
+  const meta = metas.find((item) => item.id === id);
+  if (!meta) return;
+
+  metaEditandoId = id;
+
+  pegar("editarMetaNome").value = meta.nome || "";
+  pegar("editarMetaValorTotal").value = meta.valorTotal || "";
+  pegar("editarMetaValorAtual").value = meta.valorAtual || 0;
+
+  pegar("modalEditarMeta").classList.add("active");
+}
+
+function fecharModalEditarMeta() {
+  const modal = pegar("modalEditarMeta");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
+  metaEditandoId = null;
+}
+
+async function salvarEdicaoMeta() {
+  if (metaEditandoId === null) return;
+
+  const meta = metas.find((item) => item.id === metaEditandoId);
+  if (!meta) return;
+
+  const nome = pegar("editarMetaNome").value.trim();
+  const valorTotal = Number(pegar("editarMetaValorTotal").value);
+  let valorAtual = Number(pegar("editarMetaValorAtual").value);
+
+  if (!nome || valorTotal <= 0) {
+    alert("Preencha o nome da meta e o valor total.");
+    return;
+  }
+
+  if (isNaN(valorAtual) || valorAtual < 0) {
+    alert("Digite um valor guardado válido.");
+    return;
+  }
+
+  if (valorAtual > valorTotal) {
+    valorAtual = valorTotal;
+  }
+
+  meta.nome = nome;
+  meta.valorTotal = valorTotal;
+  meta.valorAtual = valorAtual;
+
+  await salvarDados();
+
+  fecharModalEditarMeta();
+  atualizarTela();
+}
+
 /* ATUALIZAR TELA */
 
 function atualizarTela() {
@@ -1400,7 +1464,7 @@ function atualizarContas() {
     .join("");
 }
 
-/* METAS PREMIUM */
+/* METAS */
 
 function criarCardMeta(meta) {
   const progresso = meta.valorTotal > 0
@@ -1665,28 +1729,41 @@ window.adicionarEntrada = adicionarEntrada;
 window.adicionarSaida = adicionarSaida;
 window.adicionarConta = adicionarConta;
 window.adicionarMeta = adicionarMeta;
+
 window.marcarContaPaga = marcarContaPaga;
 window.editarConta = editarConta;
 window.excluirConta = excluirConta;
+
 window.editarEntrada = editarEntrada;
 window.excluirEntrada = excluirEntrada;
+
 window.editarSaida = editarSaida;
 window.excluirSaida = excluirSaida;
-window.excluirMeta = excluirMeta;
-window.editarMeta = editarMeta;
+
 window.adicionarValorMeta = adicionarValorMeta;
+window.editarMeta = editarMeta;
+window.excluirMeta = excluirMeta;
+
 window.apagarTudo = apagarTudo;
+
 window.aplicarFiltroContas = aplicarFiltroContas;
 window.aplicarFiltroEntradas = aplicarFiltroEntradas;
 window.aplicarFiltroSaidas = aplicarFiltroSaidas;
+
 window.exportarBackup = exportarBackup;
 window.abrirImportarBackup = abrirImportarBackup;
 window.importarBackupArquivo = importarBackupArquivo;
+
 window.mudarMesResumo = mudarMesResumo;
+
 window.abrirModalEditarConta = abrirModalEditarConta;
 window.fecharModalEditarConta = fecharModalEditarConta;
 window.salvarEdicaoConta = salvarEdicaoConta;
 window.alternarCampoDataPagamento = alternarCampoDataPagamento;
+
+window.abrirModalEditarMeta = abrirModalEditarMeta;
+window.fecharModalEditarMeta = fecharModalEditarMeta;
+window.salvarEdicaoMeta = salvarEdicaoMeta;
 
 /* INICIAR APP */
 
