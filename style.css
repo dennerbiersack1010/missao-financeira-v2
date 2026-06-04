@@ -3299,3 +3299,55 @@ img {
   font-size: 13px !important;
   color: #ffffff !important;
 }
+
+/* MODAL EDITAR META — MESMO PADRÃO DO MODAL DE CONTA */
+
+#modalEditarMeta.modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  padding: 22px !important;
+
+  background: rgba(0, 8, 20, 0.78) !important;
+
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+}
+
+#modalEditarMeta.modal-overlay.active {
+  display: flex !important;
+}
+
+#modalEditarMeta .modal-card {
+  position: relative !important;
+  z-index: 1000000 !important;
+
+  width: 100% !important;
+  max-width: 430px !important;
+  max-height: 82vh !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  padding: 26px !important;
+  padding-bottom: 30px !important;
+
+  border-radius: 30px !important;
+
+  background:
+    linear-gradient(145deg, rgba(7, 22, 46, 0.96), rgba(4, 12, 28, 0.96)) !important;
+
+  border: 1px solid rgba(190, 225, 255, 0.24) !important;
+
+  box-shadow:
+    0 0 70px rgba(60, 150, 255, 0.22),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
