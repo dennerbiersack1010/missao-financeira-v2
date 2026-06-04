@@ -563,7 +563,7 @@ function iniciarSplashV2() {
 
       setTimeout(() => {
         splash.classList.add("hide");
-      }, 250);
+      }, 350);
     }
   }, 22);
 }
