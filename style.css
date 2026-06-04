@@ -1005,3 +1005,17 @@ img {
   height: 52px !important;
   object-fit: contain !important;
 }
+
+/* AJUSTE — APROXIMAR LINHAS DA DESCRIÇÃO DAS CONTAS */
+
+.item small {
+  display: block !important;
+  line-height: 1.12 !important;
+  margin-top: 2px !important;
+  max-width: 150px !important;
+}
+
+.item h4 {
+  margin-bottom: 4px !important;
+  line-height: 1.05 !important;
+}
