@@ -3400,3 +3400,118 @@ img {
   position: relative !important;
   z-index: 2 !important;
 }
+
+/* =====================================================
+   CORREÇÃO — BOTÕES TORTOS NO CARD COM ALERTA LARANJA
+   ===================================================== */
+
+/* Remove qualquer padding extra que o alerta colocou no bloco do valor */
+.conta-alerta > div:last-child {
+  padding-right: 0 !important;
+}
+
+/* Mantém o card em alerta com a mesma estrutura dos cards normais */
+.conta-alerta {
+  display: grid !important;
+  grid-template-columns: 86px 1fr 150px !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+/* Bloco do texto */
+.conta-alerta > div:nth-child(2) {
+  min-width: 0 !important;
+}
+
+/* Bloco do valor + ações */
+.conta-alerta > div:nth-child(3) {
+  width: 150px !important;
+  min-width: 150px !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Valor da conta */
+.conta-alerta > div:nth-child(3) strong {
+  display: block !important;
+  width: 100% !important;
+
+  text-align: right !important;
+  white-space: nowrap !important;
+
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+}
+
+/* Botões do card em alerta */
+.conta-alerta .item-actions {
+  width: 100% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+
+  gap: 7px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Cada botão */
+.conta-alerta .item-actions button {
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 13px !important;
+
+  position: relative !important;
+  z-index: 11 !important;
+}
+
+/* Garante que o fundo laranja não mexa no layout */
+.conta-alerta::before,
+.conta-alerta::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Responsivo iPhone */
+@media (max-width: 480px) {
+  .conta-alerta {
+    grid-template-columns: 82px 1fr 146px !important;
+    gap: 10px !important;
+  }
+
+  .conta-alerta > div:nth-child(3) {
+    width: 146px !important;
+    min-width: 146px !important;
+  }
+
+  .conta-alerta .item-actions {
+    gap: 6px !important;
+  }
+
+  .conta-alerta .item-actions button {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    border-radius: 12px !important;
+  }
+}
