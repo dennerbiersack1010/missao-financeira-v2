@@ -1941,3 +1941,16 @@ img {
 .backup-actions button:active {
   transform: scale(0.97);
 }
+
+/* AJUSTE DE RESPIRO — BOTÕES BACKUP */
+
+.backup-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  margin-top: 24px !important;
+}
+
+.backup-actions button {
+  margin: 0 !important;
+}
