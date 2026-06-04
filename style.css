@@ -744,3 +744,88 @@ select {
     font-size: 10px;
   }
 }
+/* FORÇAR GLASS TRANSPARENTE REAL */
+
+.glass-card,
+.hero-card,
+.metric-card,
+.panel,
+.form-card,
+.goal-card,
+.insight-card {
+  background: rgba(255, 255, 255, 0.018) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+}
+
+.hero-card {
+  background:
+    radial-gradient(circle at 84% 48%, rgba(150, 180, 255, 0.10), transparent 30%),
+    rgba(255, 255, 255, 0.018) !important;
+}
+
+.metric-card {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008)) !important;
+}
+
+.panel,
+.form-card,
+.goal-card,
+.insight-card {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008)) !important;
+}
+
+/* reflexo mais fino */
+.glass-card::before,
+.hero-card::before,
+.metric-card::before,
+.panel::before,
+.form-card::before,
+.goal-card::before,
+.insight-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.14) 0%,
+    rgba(255,255,255,0.035) 34%,
+    rgba(255,255,255,0.00) 70%
+  ) !important;
+}
+
+/* reduz brilho azul interno */
+.glass-card::after,
+.hero-card::after,
+.metric-card::after,
+.panel::after,
+.form-card::after,
+.goal-card::after,
+.insight-card::after {
+  background: radial-gradient(circle, rgba(160,190,255,0.055), transparent 70%) !important;
+}
+
+/* botão do status também transparente */
+.hero-copy p {
+  background: rgba(255,255,255,0.055) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+  color: rgba(230,240,255,0.86) !important;
+  backdrop-filter: blur(14px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
+}
+
+/* deixa o fundo mais visível atrás dos cards */
+.app {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.05) 0%,
+      rgba(0, 0, 0, 0.24) 48%,
+      rgba(0, 0, 0, 0.54) 100%
+    ),
+    url("assets/bg-splash.PNG") center center / cover no-repeat !important;
+}
