@@ -2926,3 +2926,218 @@ img {
   z-index: 8 !important;
   pointer-events: auto !important;
 }
+
+/* =====================================================
+   AJUSTE DA ABA CONTAS
+   - alerta menor e mais alto
+   - botões alinhados
+   - valor sem sobreposição
+   ===================================================== */
+
+/* Card da lista de contas */
+.conta-item,
+.conta-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Conteúdo principal do card */
+.conta-item-content,
+.conta-card-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Área do ícone da conta */
+.conta-item-icon,
+.conta-card-icon {
+  flex: 0 0 88px;
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Imagem do ícone */
+.conta-item-icon img,
+.conta-card-icon img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Bloco central de informações */
+.conta-item-info,
+.conta-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Nome + valor */
+.conta-item-header,
+.conta-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+/* Nome da conta */
+.conta-item-title,
+.conta-card-title {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Valor da conta */
+.conta-item-value,
+.conta-card-value {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding-right: 22px; /* espaço para o alerta não encostar */
+  position: relative;
+  z-index: 2;
+}
+
+/* Linha de baixo: categoria / vencimento */
+.conta-item-subtitle,
+.conta-card-subtitle {
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+
+/* Área dos botões */
+.item-actions,
+.conta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: nowrap;
+  margin-top: 6px;
+}
+
+/* Botões de ação */
+.item-actions button,
+.conta-actions button {
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* =========================================
+   ALERTA LARANJA APENAS NO CARD ATRASADO
+   ========================================= */
+
+.conta-alerta {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 184, 70, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 0 18px rgba(255, 170, 60, 0.08);
+}
+
+/* ícone ! menor e mais alto */
+.conta-alerta::before {
+  content: "!";
+  position: absolute;
+  top: 9px;
+  right: 12px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+
+  color: #fff;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 197, 85, 0.65),
+    rgba(172, 103, 25, 0.52)
+  );
+  border: 1px solid rgba(255, 223, 145, 0.45);
+  box-shadow:
+    0 0 8px rgba(255, 184, 70, 0.16),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* remove qualquer pseudo extra antigo */
+.conta-alerta::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* tudo do card acima do fundo */
+.conta-alerta > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================
+   RESPONSIVO / AJUSTE FINO MOBILE
+   ========================================= */
+
+@media (max-width: 768px) {
+  .conta-item-content,
+  .conta-card-content {
+    gap: 12px;
+  }
+
+  .conta-item-icon,
+  .conta-card-icon {
+    flex: 0 0 78px;
+    width: 78px;
+    height: 78px;
+  }
+
+  .conta-item-icon img,
+  .conta-card-icon img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .conta-item-value,
+  .conta-card-value {
+    padding-right: 20px;
+  }
+
+  .item-actions,
+  .conta-actions {
+    gap: 6px;
+  }
+
+  .item-actions button,
+  .conta-actions button {
+    min-width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    padding: 0 10px;
+  }
+
+  .conta-alerta::before {
+    top: 8px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    font-size: 9px;
+  }
+}
