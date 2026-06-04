@@ -1355,3 +1355,30 @@ img {
 .quick-menu button:active span {
   transform: scale(0.94);
 }
+
+/* ÍCONES DE ENTRADA E SAÍDA NO HISTÓRICO */
+
+.transaction-icon-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: block;
+  filter:
+    drop-shadow(0 0 8px rgba(120, 190, 255, 0.45))
+    drop-shadow(0 0 18px rgba(60, 140, 255, 0.22))
+    saturate(1.2);
+}
+
+#listaTransacoes .item-icon {
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  border-radius: 18px !important;
+  overflow: visible !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background: rgba(255, 255, 255, 0.045) !important;
+}
