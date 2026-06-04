@@ -2815,3 +2815,114 @@ img {
 .card-valor {
   padding-right: 42px;
 }
+
+/* =====================================================
+   CORREÇÃO DEFINITIVA — CARD DE ALERTA LARANJA
+   ===================================================== */
+
+/* Card em alerta: laranja preso dentro do próprio card */
+.conta-alerta {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(92, 63, 16, 0.32) 0%,
+      rgba(15, 28, 52, 0.72) 42%,
+      rgba(8, 22, 45, 0.86) 100%
+    ) !important;
+
+  border: 1px solid rgba(255, 184, 70, 0.42) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 0 22px rgba(255, 174, 55, 0.10) !important;
+}
+
+/* Remove qualquer vazamento antigo do alerta */
+.conta-alerta::before {
+  content: "!" !important;
+
+  position: absolute !important;
+  top: 8px !important;
+  right: 15px !important;
+
+  width: 18px !important;
+  height: 18px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  font-family: "Orbitron", sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  color: #ffffff !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 197, 85, 0.58),
+      rgba(183, 105, 22, 0.42)
+    ) !important;
+
+  border: 1px solid rgba(255, 226, 150, 0.46) !important;
+
+  box-shadow:
+    0 0 8px rgba(255, 184, 70, 0.18),
+    inset 0 1px 0 rgba(255,255,255,0.22) !important;
+
+  pointer-events: none !important;
+  z-index: 4 !important;
+}
+
+/* Bloqueia pseudo-elemento extra, caso algum estilo antigo tenha criado brilho */
+.conta-alerta::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Garante que o conteúdo fique acima do fundo */
+.conta-alerta > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Dá espaço para o valor não encostar no ícone */
+.conta-alerta > div:last-child {
+  padding-right: 28px !important;
+}
+
+/* Valor e textos do card de alerta */
+.conta-alerta h4,
+.conta-alerta strong {
+  color: #ffffff !important;
+}
+
+.conta-alerta small {
+  color: rgba(255, 226, 178, 0.92) !important;
+}
+
+/* Ícone principal do card */
+.conta-alerta .item-icon {
+  filter: saturate(1.05) brightness(1.03) !important;
+}
+
+/* Remove sombra laranja de filhos que possam estar vazando */
+.conta-alerta * {
+  box-shadow-color: transparent;
+}
+
+/* Mas mantém os botões clicáveis */
+.conta-alerta .item-actions,
+.conta-alerta .item-actions button {
+  position: relative !important;
+  z-index: 8 !important;
+  pointer-events: auto !important;
+}
