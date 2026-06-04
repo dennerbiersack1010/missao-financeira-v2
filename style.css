@@ -9,7 +9,7 @@
   --text: #f7f9ff;
   --muted: rgba(247, 249, 255, 0.58);
   --muted-2: rgba(247, 249, 255, 0.35);
-  --line: rgba(255, 255, 255, 0.13);
+  --line: rgba(255, 255, 255, 0.16);
   --cyan: #a9c7ff;
   --blue: #6c8dff;
   --danger: #ff5e63;
@@ -30,15 +30,15 @@ body {
   overflow-x: hidden;
 }
 
-/* FUNDO DO APP */
+/* FUNDO DO APP MAIS VISÍVEL */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.70)),
+    linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.42)),
     url("assets/bg-splash.PNG") center center / cover no-repeat;
-  opacity: 0.72;
+  opacity: 0.95;
   z-index: -3;
 }
 
@@ -47,9 +47,9 @@ body::after {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 0%, rgba(120,150,255,0.14), transparent 34%),
-    radial-gradient(circle at 0% 80%, rgba(255,255,255,0.04), transparent 30%),
-    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.52) 100%);
+    radial-gradient(circle at 50% 0%, rgba(120,150,255,0.10), transparent 34%),
+    radial-gradient(circle at 0% 80%, rgba(255,255,255,0.035), transparent 30%),
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.38) 100%);
   z-index: -2;
   pointer-events: none;
 }
@@ -69,16 +69,16 @@ input,
 select {
   width: 100%;
   height: 56px;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.16);
   border-radius: 18px;
-  background: rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.05);
   color: var(--text);
   padding: 0 16px;
   outline: none;
   font-size: 17px;
   margin-bottom: 12px;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
 
 input::placeholder {
@@ -238,11 +238,11 @@ select {
   width: 54px;
   height: 54px;
   border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.045);
   color: white;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
 .profile-button span {
@@ -277,7 +277,7 @@ select {
   }
 }
 
-/* GLASS BASE */
+/* GLASS TRANSPARENTE */
 
 .glass-card,
 .hero-card,
@@ -288,15 +288,19 @@ select {
 .insight-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.16);
   background:
-    linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.025));
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.060),
+      rgba(255,255,255,0.012)
+    );
   box-shadow:
-    0 18px 42px rgba(0,0,0,0.30),
-    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 18px 42px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.12),
     inset 0 -1px 0 rgba(255,255,255,0.03);
-  backdrop-filter: blur(24px) saturate(130%);
-  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
 }
 
 /* REFLEXO GLASS */
@@ -310,22 +314,22 @@ select {
 .insight-card::before {
   content: "";
   position: absolute;
-  top: -34%;
-  left: -24%;
-  width: 88%;
-  height: 72%;
+  top: -40%;
+  left: -30%;
+  width: 92%;
+  height: 76%;
   background: linear-gradient(
     135deg,
-    rgba(255,255,255,0.20) 0%,
-    rgba(255,255,255,0.06) 34%,
-    rgba(255,255,255,0.00) 68%
+    rgba(255,255,255,0.18) 0%,
+    rgba(255,255,255,0.045) 35%,
+    rgba(255,255,255,0.00) 70%
   );
   transform: rotate(-12deg);
   pointer-events: none;
   z-index: 0;
 }
 
-/* BRILHO INTERNO */
+/* BRILHO LEVE */
 
 .glass-card::after,
 .hero-card::after,
@@ -336,12 +340,12 @@ select {
 .insight-card::after {
   content: "";
   position: absolute;
-  right: -38px;
-  bottom: -38px;
+  right: -45px;
+  bottom: -45px;
   width: 150px;
   height: 150px;
-  background: radial-gradient(circle, rgba(160,190,255,0.18), transparent 70%);
-  filter: blur(20px);
+  background: radial-gradient(circle, rgba(160,190,255,0.10), transparent 70%);
+  filter: blur(24px);
   pointer-events: none;
   z-index: 0;
 }
@@ -387,9 +391,10 @@ select {
   padding: 8px 13px;
   border-radius: 999px;
   color: var(--cyan);
-  background: rgba(169,199,255,0.12);
+  background: rgba(169,199,255,0.10);
   border: 1px solid rgba(169,199,255,0.18);
   font-weight: 700;
+  backdrop-filter: blur(12px);
 }
 
 .hero-orb {
@@ -399,8 +404,8 @@ select {
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.32), rgba(120,150,255,0.14), transparent 62%);
-  filter: blur(3px);
+  background: radial-gradient(circle, rgba(255,255,255,0.25), rgba(120,150,255,0.10), transparent 62%);
+  filter: blur(4px);
   z-index: 1;
 }
 
@@ -514,8 +519,8 @@ select {
 }
 
 .form-card button.dark-button {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.16);
   color: white;
 }
 
@@ -543,11 +548,11 @@ select {
   gap: 12px;
   align-items: center;
   border: 1px solid rgba(255,255,255,0.13);
-  background: rgba(255,255,255,0.055);
+  background: rgba(255,255,255,0.040);
   border-radius: 20px;
   padding: 12px;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .item-icon {
@@ -556,7 +561,7 @@ select {
   border-radius: 16px;
   display: grid;
   place-items: center;
-  background: rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.075);
   color: white;
   font-family: "Orbitron", sans-serif;
   font-size: 15px;
@@ -589,7 +594,7 @@ select {
 
 .item-actions button {
   border: 1px solid rgba(255,255,255,0.13);
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
   color: white;
   border-radius: 10px;
   height: 28px;
@@ -672,16 +677,16 @@ select {
   width: min(410px, calc(100% - 28px));
   height: 78px;
   border-radius: 31px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(5, 7, 11, 0.72);
-  backdrop-filter: blur(26px) saturate(130%);
-  -webkit-backdrop-filter: blur(26px) saturate(130%);
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(5, 7, 11, 0.56);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
   display: grid;
   grid-template-columns: 1fr 1fr 78px 1fr 1fr;
   align-items: center;
   padding: 0 8px;
   z-index: 100;
-  box-shadow: 0 22px 70px rgba(0,0,0,0.58);
+  box-shadow: 0 22px 70px rgba(0,0,0,0.48);
 }
 
 .nav-item {
