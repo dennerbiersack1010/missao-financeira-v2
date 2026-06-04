@@ -541,8 +541,31 @@ async function excluirSaida(id) {
 
 /* AÇÕES METAS */
 
-async function excluirMeta(id) {
-  metas = metas.filter((meta) => meta.id !== id);
+async function adicionarValorMeta(id) {
+  const meta = metas.find((item) => item.id === id);
+
+  if (!meta) return;
+
+  const valorAdicionar = prompt(
+    `Quanto você quer adicionar na meta "${meta.nome}"?`,
+    0
+  );
+
+  if (valorAdicionar === null) return;
+
+  const valorConvertido = converterValorDigitado(valorAdicionar);
+
+  if (isNaN(valorConvertido) || valorConvertido <= 0) {
+    alert("Digite um valor válido.");
+    return;
+  }
+
+  meta.valorAtual = Number(meta.valorAtual || 0) + valorConvertido;
+
+  if (meta.valorAtual > meta.valorTotal) {
+    meta.valorAtual = meta.valorTotal;
+  }
+
   await salvarDados();
   atualizarTela();
 }
@@ -552,22 +575,50 @@ async function editarMeta(id) {
 
   if (!meta) return;
 
-  const novoValor = prompt(
-    `Quanto você tem guardado agora para "${meta.nome}"?`,
-    meta.valorAtual || 0
-  );
+  const novoNome = prompt("Nome da meta:", meta.nome);
+  if (novoNome === null) return;
 
-  if (novoValor === null) return;
+  const nomeFinal = novoNome.trim();
 
-  const valorConvertido = converterValorDigitado(novoValor);
-
-  if (isNaN(valorConvertido) || valorConvertido < 0) {
-    alert("Digite um valor válido.");
+  if (!nomeFinal) {
+    alert("O nome da meta não pode ficar vazio.");
     return;
   }
 
-  meta.valorAtual = valorConvertido;
+  const novoValorTotal = prompt("Valor total da meta:", meta.valorTotal);
+  if (novoValorTotal === null) return;
 
+  const valorTotalFinal = converterValorDigitado(novoValorTotal);
+
+  if (isNaN(valorTotalFinal) || valorTotalFinal <= 0) {
+    alert("Digite um valor total válido.");
+    return;
+  }
+
+  const novoValorAtual = prompt("Valor já guardado:", meta.valorAtual || 0);
+  if (novoValorAtual === null) return;
+
+  let valorAtualFinal = converterValorDigitado(novoValorAtual);
+
+  if (isNaN(valorAtualFinal) || valorAtualFinal < 0) {
+    alert("Digite um valor guardado válido.");
+    return;
+  }
+
+  if (valorAtualFinal > valorTotalFinal) {
+    valorAtualFinal = valorTotalFinal;
+  }
+
+  meta.nome = nomeFinal;
+  meta.valorTotal = valorTotalFinal;
+  meta.valorAtual = valorAtualFinal;
+
+  await salvarDados();
+  atualizarTela();
+}
+
+async function excluirMeta(id) {
+  metas = metas.filter((meta) => meta.id !== id);
   await salvarDados();
   atualizarTela();
 }
@@ -901,43 +952,101 @@ function atualizarContas() {
     .join("");
 }
 
-/* METAS */
+/* METAS PREMIUM */
+
+function criarCardMeta(meta) {
+  const progresso = meta.valorTotal > 0
+    ? Math.min((Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100, 100)
+    : 0;
+
+  const porcentagem = Math.round(progresso);
+  const falta = Math.max(Number(meta.valorTotal || 0) - Number(meta.valorAtual || 0), 0);
+  const concluida = progresso >= 100;
+
+  return `
+    <div class="goal-card glass-card goal-card-premium ${concluida ? "goal-complete" : ""}">
+      <div class="goal-premium-head">
+        <div>
+          <span class="goal-status">${concluida ? "META CONCLUÍDA" : "META EM ANDAMENTO"}</span>
+          <h3>${meta.nome}</h3>
+        </div>
+
+        <strong class="goal-percent">${porcentagem}%</strong>
+      </div>
+
+      <div class="goal-premium-values">
+        <div>
+          <span>Guardado</span>
+          <strong>${moeda(meta.valorAtual)}</strong>
+        </div>
+
+        <div>
+          <span>Falta</span>
+          <strong>${moeda(falta)}</strong>
+        </div>
+
+        <div>
+          <span>Meta</span>
+          <strong>${moeda(meta.valorTotal)}</strong>
+        </div>
+      </div>
+
+      <div class="progress-track goal-progress-track">
+        <div class="progress-fill" style="width:${progresso}%"></div>
+      </div>
+
+      <div class="goal-actions-premium">
+        ${concluida ? "" : `<button onclick="adicionarValorMeta(${meta.id})">Adicionar valor</button>`}
+        <button onclick="editarMeta(${meta.id})">Editar</button>
+        <button onclick="excluirMeta(${meta.id})">Excluir</button>
+      </div>
+    </div>
+  `;
+}
 
 function atualizarMetas() {
   const lista = pegar("listaMetas");
+
+  if (!lista) return;
 
   if (!metas.length) {
     lista.innerHTML = `<p class="empty">Nenhuma meta cadastrada.</p>`;
     return;
   }
 
-  lista.innerHTML = metas.map((meta) => {
+  const metasEmAndamento = metas.filter((meta) => {
     const progresso = meta.valorTotal > 0
-      ? Math.min((meta.valorAtual / meta.valorTotal) * 100, 100)
+      ? (Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100
       : 0;
 
-    const falta = Math.max(meta.valorTotal - meta.valorAtual, 0);
+    return progresso < 100;
+  });
 
-    return `
-      <div class="goal-card glass-card">
-        <h3>${meta.nome}</h3>
+  const metasConcluidas = metas.filter((meta) => {
+    const progresso = meta.valorTotal > 0
+      ? (Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100
+      : 0;
 
-        <div class="goal-info">
-          <span>${moeda(meta.valorAtual)} guardado</span>
-          <span>Falta ${moeda(falta)}</span>
-        </div>
+    return progresso >= 100;
+  });
 
-        <div class="progress-track">
-          <div class="progress-fill" style="width:${progresso}%"></div>
-        </div>
+  let html = "";
 
-        <div class="item-actions">
-          <button onclick="editarMeta(${meta.id})">Editar</button>
-          <button onclick="excluirMeta(${meta.id})">Excluir</button>
-        </div>
-      </div>
+  if (metasEmAndamento.length) {
+    html += `
+      <div class="goal-section-title">Em andamento</div>
+      ${metasEmAndamento.map((meta) => criarCardMeta(meta)).join("")}
     `;
-  }).join("");
+  }
+
+  if (metasConcluidas.length) {
+    html += `
+      <div class="goal-section-title">Concluídas</div>
+      ${metasConcluidas.map((meta) => criarCardMeta(meta)).join("")}
+    `;
+  }
+
+  lista.innerHTML = html;
 }
 
 /* AGENDA INTELIGENTE */
@@ -1057,32 +1166,14 @@ function atualizarHome() {
   if (!metas.length) {
     metaDestaque.innerHTML = `<p class="empty">Nenhuma meta criada ainda.</p>`;
   } else {
-    const meta = metas[0];
+    const metasOrdenadas = [...metas].sort((a, b) => {
+      const progressoA = a.valorTotal > 0 ? (a.valorAtual / a.valorTotal) * 100 : 0;
+      const progressoB = b.valorTotal > 0 ? (b.valorAtual / b.valorTotal) * 100 : 0;
 
-    const progresso = meta.valorTotal > 0
-      ? Math.min((meta.valorAtual / meta.valorTotal) * 100, 100)
-      : 0;
+      return progressoB - progressoA;
+    });
 
-    const falta = Math.max(meta.valorTotal - meta.valorAtual, 0);
-
-    metaDestaque.innerHTML = `
-      <div class="goal-card glass-card">
-        <h3>${meta.nome}</h3>
-
-        <div class="goal-info">
-          <span>${Math.round(progresso)}% completo</span>
-          <span>Falta ${moeda(falta)}</span>
-        </div>
-
-        <div class="progress-track">
-          <div class="progress-fill" style="width:${progresso}%"></div>
-        </div>
-
-        <div class="item-actions">
-          <button onclick="editarMeta(${meta.id})">Editar</button>
-        </div>
-      </div>
-    `;
+    metaDestaque.innerHTML = criarCardMeta(metasOrdenadas[0]);
   }
 }
 
@@ -1129,6 +1220,7 @@ window.editarSaida = editarSaida;
 window.excluirSaida = excluirSaida;
 window.excluirMeta = excluirMeta;
 window.editarMeta = editarMeta;
+window.adicionarValorMeta = adicionarValorMeta;
 window.apagarTudo = apagarTudo;
 window.aplicarFiltroContas = aplicarFiltroContas;
 
