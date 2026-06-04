@@ -2190,3 +2190,76 @@ img {
   transform: scale(0.92) !important;
   opacity: 0.7 !important;
 }
+
+/* VISUAL PREMIUM — CONTAS PAGAS */
+
+.conta-paga {
+  position: relative !important;
+
+  background:
+    linear-gradient(145deg, rgba(12, 42, 70, 0.28), rgba(6, 18, 34, 0.22)) !important;
+
+  border: 1px solid rgba(140, 215, 255, 0.24) !important;
+
+  opacity: 0.82 !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 18px rgba(80, 180, 255, 0.08) !important;
+}
+
+.conta-paga::before {
+  content: "✓";
+  position: absolute;
+  top: 12px;
+  right: 14px;
+
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-family: "Orbitron", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(145deg, rgba(120, 210, 255, 0.32), rgba(40, 120, 180, 0.24));
+
+  border: 1px solid rgba(200, 235, 255, 0.35);
+
+  box-shadow:
+    0 0 14px rgba(120, 210, 255, 0.18),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+.conta-paga h4 {
+  color: rgba(255,255,255,0.88) !important;
+}
+
+.conta-paga small {
+  color: rgba(185, 225, 255, 0.82) !important;
+}
+
+.conta-paga strong {
+  color: rgba(255,255,255,0.86) !important;
+}
+
+.conta-paga .item-icon {
+  opacity: 0.72 !important;
+  filter: saturate(0.75) brightness(0.92);
+}
+
+.conta-paga .item-actions button:first-child {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(60, 120, 170, 0.12)) !important;
+
+  border-color: rgba(190, 225, 255, 0.22) !important;
+  color: rgba(235, 245, 255, 0.88) !important;
+}
