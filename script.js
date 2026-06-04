@@ -243,6 +243,8 @@ function openTab(tab, botao = null) {
       "bg-goals",
       "bg-calendar",
       "bg-transactions",
+      "bg-income",
+      "bg-expenses",
       "bg-insights"
     );
 
@@ -453,7 +455,7 @@ async function excluirConta(index) {
   atualizarTela();
 }
 
-/* AÇÕES GERAIS */
+/* AÇÕES ENTRADAS E SAÍDAS */
 
 async function excluirEntrada(id) {
   entradas = entradas.filter((item) => item.id !== id);
@@ -466,6 +468,8 @@ async function excluirSaida(id) {
   await salvarDados();
   atualizarTela();
 }
+
+/* AÇÕES METAS */
 
 async function excluirMeta(id) {
   metas = metas.filter((meta) => meta.id !== id);
@@ -523,6 +527,9 @@ function atualizarTela() {
   escrever("totalContasPendentes", moeda(resumo.totalContasPendentes));
   escrever("totalMetas", metas.length);
 
+  escrever("resumoGanhosTela", moeda(resumo.totalEntradas));
+  escrever("resumoSaidasTela", moeda(resumo.totalSaidas));
+
   escrever("resumoContas", moeda(resumo.totalContasPendentes));
   escrever("qtdVencimentos", resumo.contasPendentes.length);
 
@@ -536,53 +543,89 @@ function atualizarTela() {
     resumo.caixaAtual >= 0 ? "Saldo operacional positivo" : "Atenção: caixa negativo"
   );
 
-  atualizarTransacoes();
+  atualizarEntradas();
+  atualizarSaidas();
   atualizarContas();
   atualizarMetas();
   atualizarCalendario();
   atualizarHome();
 }
 
-/* TRANSAÇÕES */
+/* GANHOS */
 
-function atualizarTransacoes() {
-  const lista = pegar("listaTransacoes");
+function atualizarEntradas() {
+  const lista = pegar("listaEntradas");
 
-  const transacoes = [
-    ...entradas.map((item) => ({ ...item, tipo: "entrada" })),
-    ...saidas.map((item) => ({ ...item, tipo: "saida" }))
-  ].sort((a, b) => b.id - a.id);
+  if (!lista) return;
 
-  if (!transacoes.length) {
-    lista.innerHTML = `<p class="empty">Nenhuma movimentação registrada.</p>`;
+  if (!entradas.length) {
+    lista.innerHTML = `<p class="empty">Nenhum ganho registrado.</p>`;
     return;
   }
 
-  lista.innerHTML = transacoes.map((item) => {
-    const positivo = item.tipo === "entrada";
-    const funcao = positivo ? "excluirEntrada" : "excluirSaida";
-    const iconeTransacao = positivo ? "icone-entradas.png" : "icone-saidas.png";
-    const textoAlt = positivo ? "Entrada" : "Saída";
+  const ordenadas = [...entradas].sort((a, b) => b.id - a.id);
 
+  lista.innerHTML = ordenadas.map((item) => {
     return `
       <div class="item">
         <div class="item-icon">
           <img
-            src="assets/${iconeTransacao}"
-            alt="${textoAlt}"
+            src="assets/icone-entradas.png"
+            alt="Entrada"
             class="transaction-icon-img"
           >
         </div>
 
         <div>
           <h4>${item.nome}</h4>
-          <small>${positivo ? "Entrada" : "Saída"} • ${item.data}</small>
+          <small>Entrada • ${item.data}</small>
         </div>
 
         <div>
-          <strong>${positivo ? "+" : "-"} ${moeda(item.valor)}</strong>
+          <strong>+ ${moeda(item.valor)}</strong>
           <div class="item-actions">
-            <button onclick="${funcao}(${item.id})">Excluir</button>
+            <button onclick="excluirEntrada(${item.id})">Excluir</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* SAÍDAS */
+
+function atualizarSaidas() {
+  const lista = pegar("listaSaidas");
+
+  if (!lista) return;
+
+  if (!saidas.length) {
+    lista.innerHTML = `<p class="empty">Nenhuma saída registrada.</p>`;
+    return;
+  }
+
+  const ordenadas = [...saidas].sort((a, b) => b.id - a.id);
+
+  lista.innerHTML = ordenadas.map((item) => {
+    return `
+      <div class="item">
+        <div class="item-icon">
+          <img
+            src="assets/icone-saidas.png"
+            alt="Saída"
+            class="transaction-icon-img"
+          >
+        </div>
+
+        <div>
+          <h4>${item.nome}</h4>
+          <small>Saída • ${item.data}</small>
+        </div>
+
+        <div>
+          <strong>- ${moeda(item.valor)}</strong>
+          <div class="item-actions">
+            <button onclick="excluirSaida(${item.id})">Excluir</button>
           </div>
         </div>
       </div>
