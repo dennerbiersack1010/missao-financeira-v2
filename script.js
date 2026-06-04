@@ -439,7 +439,7 @@ function atualizarMetas() {
     const falta = Math.max(meta.valorTotal - meta.valorAtual, 0);
 
     return `
-      <div class="goal-card">
+      <div class="goal-card glass-card">
         <h3>${meta.nome}</h3>
 
         <div class="goal-info">
@@ -529,7 +529,7 @@ function atualizarHome() {
       : 0;
 
     metaDestaque.innerHTML = `
-      <div class="goal-card">
+      <div class="goal-card glass-card">
         <h3>${meta.nome}</h3>
         <div class="goal-info">
           <span>${Math.round(progresso)}% completo</span>
