@@ -37,9 +37,9 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.86)),
-    url("assets/bg-splash.png") center center / cover no-repeat;
-  opacity: 0.72;
+    linear-gradient(180deg, rgba(0,0,0,0.16), rgba(0,0,0,0.84)),
+    url("assets/bg-splash.PNG") center center / cover no-repeat;
+  opacity: 0.9;
   z-index: -3;
 }
 
@@ -48,9 +48,9 @@ body::after {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 0%, rgba(120,150,255,0.20), transparent 35%),
-    radial-gradient(circle at 0% 80%, rgba(255,255,255,0.08), transparent 30%),
-    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.68) 100%);
+    radial-gradient(circle at 50% 0%, rgba(120,150,255,0.18), transparent 34%),
+    radial-gradient(circle at 0% 80%, rgba(255,255,255,0.05), transparent 30%),
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.62) 100%);
   z-index: -2;
   pointer-events: none;
 }
@@ -89,6 +89,8 @@ select {
   color: #ffffff;
 }
 
+/* APP */
+
 .app {
   width: 100%;
   max-width: 430px;
@@ -108,28 +110,33 @@ select {
   justify-content: center;
   overflow: hidden;
   background: #030508;
+  opacity: 1;
+  visibility: visible;
 }
 
-.splash-screen-v2::before {
-  content: "";
+.splash-bg {
   position: absolute;
   inset: 0;
   background: url("assets/bg-splash.PNG") center center / cover no-repeat;
-  transform: scale(1.04);
+  transform: scale(1.015);
+  opacity: 1;
+  filter: brightness(1.08) contrast(1.08);
+  z-index: 1;
 }
 
 .splash-overlay {
   position: absolute;
   inset: 0;
+  z-index: 2;
   background:
-    radial-gradient(circle at top center, rgba(105,132,255,0.16), transparent 42%),
-    linear-gradient(180deg, rgba(2,4,8,0.34) 0%, rgba(2,4,8,0.74) 56%, rgba(2,4,8,0.96) 100%);
-  backdrop-filter: blur(3px);
+    radial-gradient(circle at top center, rgba(105,132,255,0.06), transparent 42%),
+    linear-gradient(180deg, rgba(2,4,8,0.06) 0%, rgba(2,4,8,0.16) 56%, rgba(2,4,8,0.40) 100%);
+  backdrop-filter: blur(0px);
 }
 
 .splash-content-v2 {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: calc(100% - 56px);
   max-width: 420px;
   text-align: center;
@@ -138,26 +145,27 @@ select {
   align-items: center;
 }
 
-.system-loader h1 {
-  display: none;
+.splash-logo-v2 {
+  width: 245px;
+  max-width: 78%;
+  height: auto;
+  margin-bottom: 42px;
+  display: block;
+  filter: drop-shadow(0 0 24px rgba(255,255,255,0.14));
+}
+
+.system-loader {
+  width: 100%;
 }
 
 .loading-title {
   margin: 0 0 28px;
   font-family: "Orbitron", sans-serif;
-  color: rgba(245, 248, 255, 0.86);
-  font-size: 18px;
+  color: rgba(245, 248, 255, 0.88);
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.10em;
   text-transform: uppercase;
-}
-
-.system-loader p {
-  margin: 0 0 28px;
-  color: rgba(235,240,255,0.72);
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
 }
 
 #loadingPercent {
@@ -167,6 +175,7 @@ select {
   font-size: 44px;
   font-weight: 800;
   letter-spacing: 0.08em;
+  color: #ffffff;
 }
 
 .loading-track {
@@ -175,7 +184,7 @@ select {
   border-radius: 999px;
   overflow: hidden;
   background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 .loading-bar {
@@ -193,7 +202,7 @@ select {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  transition: opacity 0.55s ease, visibility 0.55s ease;
 }
 
 /* GLOBAL */
@@ -660,5 +669,13 @@ select {
   .metric-card strong,
   .insight-card strong {
     font-size: 15px;
+  }
+
+  .splash-logo-v2 {
+    width: 220px;
+  }
+
+  #loadingPercent {
+    font-size: 38px;
   }
 }
