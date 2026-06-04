@@ -61,6 +61,10 @@ function converterValorDigitado(valor) {
   );
 }
 
+function hojeBR() {
+  return new Date().toLocaleDateString("pt-BR");
+}
+
 function hojeSemHora() {
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
@@ -77,8 +81,10 @@ function calcularDias(vencimento) {
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
-function textoDias(vencimento, paga = false) {
-  if (paga) return "Conta paga";
+function textoDias(vencimento, paga = false, pagaEm = null) {
+  if (paga) {
+    return pagaEm ? `Paga em ${pagaEm}` : "Conta paga";
+  }
 
   const dias = calcularDias(vencimento);
 
@@ -138,28 +144,29 @@ function estaNoPeriodo(dataBR, filtro) {
   return true;
 }
 
-function estaNoMesAtual(dataBR) {
+function dataBRNoMes(dataBR, mes, ano) {
   const data = converterDataBRParaDate(dataBR);
   if (!data) return false;
 
-  const hoje = new Date();
-
-  return (
-    data.getMonth() === hoje.getMonth() &&
-    data.getFullYear() === hoje.getFullYear()
-  );
+  return data.getMonth() === mes && data.getFullYear() === ano;
 }
 
-function vencimentoNoMesAtual(vencimento) {
+function vencimentoNoMes(vencimento, mes, ano) {
   if (!vencimento) return false;
 
   const data = new Date(vencimento + "T00:00:00");
-  const hoje = new Date();
 
-  return (
-    data.getMonth() === hoje.getMonth() &&
-    data.getFullYear() === hoje.getFullYear()
-  );
+  return data.getMonth() === mes && data.getFullYear() === ano;
+}
+
+function contaPagaNoMes(conta, mes, ano) {
+  if (conta.status !== "paga") return false;
+
+  if (conta.pagaEm) {
+    return dataBRNoMes(conta.pagaEm, mes, ano);
+  }
+
+  return vencimentoNoMes(conta.vencimento, mes, ano);
 }
 
 /* ÍCONE PNG POR CATEGORIA */
@@ -298,30 +305,16 @@ function calcularResumo() {
 }
 
 function calcularResumoMensal(mes = mesResumoSelecionado, ano = anoResumoSelecionado) {
-  const entradasDoMes = entradas.filter((item) => {
-    const data = converterDataBRParaDate(item.data);
-    if (!data) return false;
+  const entradasDoMes = entradas.filter((item) => dataBRNoMes(item.data, mes, ano));
+  const saidasDoMes = saidas.filter((item) => dataBRNoMes(item.data, mes, ano));
 
-    return data.getMonth() === mes && data.getFullYear() === ano;
+  const contasPendentesDoMes = contas.filter((conta) => {
+    return conta.status !== "paga" && vencimentoNoMes(conta.vencimento, mes, ano);
   });
 
-  const saidasDoMes = saidas.filter((item) => {
-    const data = converterDataBRParaDate(item.data);
-    if (!data) return false;
-
-    return data.getMonth() === mes && data.getFullYear() === ano;
+  const contasPagasDoMes = contas.filter((conta) => {
+    return contaPagaNoMes(conta, mes, ano);
   });
-
-  const contasDoMes = contas.filter((conta) => {
-    if (!conta.vencimento) return false;
-
-    const data = new Date(conta.vencimento + "T00:00:00");
-
-    return data.getMonth() === mes && data.getFullYear() === ano;
-  });
-
-  const contasPendentesDoMes = contasDoMes.filter((conta) => conta.status !== "paga");
-  const contasPagasDoMes = contasDoMes.filter((conta) => conta.status === "paga");
 
   const totalEntradas = entradasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
   const totalSaidas = saidasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
@@ -400,7 +393,7 @@ async function adicionarEntrada() {
     id: Date.now() + Math.random(),
     nome,
     valor,
-    data: new Date().toLocaleDateString("pt-BR")
+    data: hojeBR()
   });
 
   nomeInput.value = "";
@@ -426,7 +419,7 @@ async function adicionarSaida() {
     id: Date.now() + Math.random(),
     nome,
     valor,
-    data: new Date().toLocaleDateString("pt-BR")
+    data: hojeBR()
   });
 
   nomeInput.value = "";
@@ -453,7 +446,8 @@ async function adicionarConta() {
     valor,
     vencimento,
     categoria,
-    status: "pendente"
+    status: "pendente",
+    pagaEm: null
   });
 
   pegar("contaNome").value = "";
@@ -495,7 +489,13 @@ async function adicionarMeta() {
 async function marcarContaPaga(index) {
   if (!contas[index]) return;
 
-  contas[index].status = contas[index].status === "paga" ? "pendente" : "paga";
+  if (contas[index].status === "paga") {
+    contas[index].status = "pendente";
+    contas[index].pagaEm = null;
+  } else {
+    contas[index].status = "paga";
+    contas[index].pagaEm = hojeBR();
+  }
 
   await salvarDados();
   atualizarTela();
@@ -1284,7 +1284,7 @@ function atualizarContas() {
 
           <div>
             <h4>${conta.nome}</h4>
-            <small>${conta.categoria} • ${textoDias(conta.vencimento, estaPaga)}</small>
+            <small>${conta.categoria} • ${textoDias(conta.vencimento, estaPaga, conta.pagaEm)}</small>
           </div>
 
           <div>
@@ -1415,7 +1415,7 @@ function montarGrupoAgenda(titulo, listaDeContas) {
 
         <div>
           <h4>${conta.nome}</h4>
-          <small>${textoDias(conta.vencimento, estaPaga)}</small>
+          <small>${textoDias(conta.vencimento, estaPaga, conta.pagaEm)}</small>
         </div>
 
         <div>
