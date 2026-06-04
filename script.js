@@ -42,6 +42,18 @@ function moeda(valor) {
   });
 }
 
+function converterValorDigitado(valor) {
+  if (valor === null || valor === undefined) return NaN;
+
+  return Number(
+    valor
+      .toString()
+      .trim()
+      .replace(/\./g, "")
+      .replace(",", ".")
+  );
+}
+
 function hojeSemHora() {
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
@@ -93,7 +105,10 @@ function iconeConta(nome, categoria) {
   } else if (
     texto.includes("internet") ||
     texto.includes("wifi") ||
-    texto.includes("wi-fi")
+    texto.includes("wi-fi") ||
+    texto.includes("claro") ||
+    texto.includes("vivo") ||
+    texto.includes("tim")
   ) {
     arquivo = "icone-wifi.png";
   } else if (
@@ -343,12 +358,87 @@ async function adicionarMeta() {
   atualizarTela();
 }
 
-/* AÇÕES */
+/* AÇÕES CONTAS */
 
 async function marcarContaPaga(index) {
   if (!contas[index]) return;
 
   contas[index].status = contas[index].status === "paga" ? "pendente" : "paga";
+
+  await salvarDados();
+  atualizarTela();
+}
+
+async function editarConta(index) {
+  const conta = contas[index];
+
+  if (!conta) return;
+
+  const novoNome = prompt("Nome da conta:", conta.nome);
+  if (novoNome === null) return;
+
+  const nomeFinal = novoNome.trim();
+
+  if (!nomeFinal) {
+    alert("O nome da conta não pode ficar vazio.");
+    return;
+  }
+
+  const novoValor = prompt("Valor da conta:", conta.valor);
+  if (novoValor === null) return;
+
+  const valorFinal = converterValorDigitado(novoValor);
+
+  if (isNaN(valorFinal) || valorFinal <= 0) {
+    alert("Digite um valor válido.");
+    return;
+  }
+
+  const novoVencimento = prompt(
+    "Data de vencimento no formato AAAA-MM-DD:",
+    conta.vencimento
+  );
+
+  if (novoVencimento === null) return;
+
+  const vencimentoFinal = novoVencimento.trim();
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(vencimentoFinal)) {
+    alert("Use o formato correto: AAAA-MM-DD. Exemplo: 2026-06-15");
+    return;
+  }
+
+  const novaCategoria = prompt(
+    "Categoria: Streaming, Internet, Apps, Pessoa, Serviço, Moradia ou Outro",
+    conta.categoria
+  );
+
+  if (novaCategoria === null) return;
+
+  const categoriaFinal = novaCategoria.trim();
+
+  const categoriasPermitidas = [
+    "Streaming",
+    "Internet",
+    "Apps",
+    "Pessoa",
+    "Serviço",
+    "Moradia",
+    "Outro"
+  ];
+
+  const categoriaFormatada =
+    categoriasPermitidas.find(
+      (cat) => cat.toLowerCase() === categoriaFinal.toLowerCase()
+    ) || "Outro";
+
+  contas[index] = {
+    ...conta,
+    nome: nomeFinal,
+    valor: valorFinal,
+    vencimento: vencimentoFinal,
+    categoria: categoriaFormatada
+  };
 
   await salvarDados();
   atualizarTela();
@@ -362,6 +452,8 @@ async function excluirConta(index) {
   await salvarDados();
   atualizarTela();
 }
+
+/* AÇÕES GERAIS */
 
 async function excluirEntrada(id) {
   entradas = entradas.filter((item) => item.id !== id);
@@ -393,12 +485,7 @@ async function editarMeta(id) {
 
   if (novoValor === null) return;
 
-  const valorConvertido = Number(
-    novoValor
-      .toString()
-      .replace(/\./g, "")
-      .replace(",", ".")
-  );
+  const valorConvertido = converterValorDigitado(novoValor);
 
   if (isNaN(valorConvertido) || valorConvertido < 0) {
     alert("Digite um valor válido.");
@@ -531,6 +618,7 @@ function atualizarContas() {
               <button onclick="marcarContaPaga(${conta.indexOriginal})">
                 ${estaPaga ? "Reabrir" : "Pagar"}
               </button>
+              <button onclick="editarConta(${conta.indexOriginal})">Editar</button>
               <button onclick="excluirConta(${conta.indexOriginal})">Excluir</button>
             </div>
           </div>
@@ -712,6 +800,7 @@ window.adicionarSaida = adicionarSaida;
 window.adicionarConta = adicionarConta;
 window.adicionarMeta = adicionarMeta;
 window.marcarContaPaga = marcarContaPaga;
+window.editarConta = editarConta;
 window.excluirConta = excluirConta;
 window.excluirEntrada = excluirEntrada;
 window.excluirSaida = excluirSaida;
