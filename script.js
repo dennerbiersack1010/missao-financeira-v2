@@ -33,6 +33,8 @@ let filtroSaidasAtual = "mes";
 let mesResumoSelecionado = new Date().getMonth();
 let anoResumoSelecionado = new Date().getFullYear();
 
+let contaEditandoIndex = null;
+
 function pegar(id) {
   return document.getElementById(id);
 }
@@ -501,119 +503,8 @@ async function marcarContaPaga(index) {
   atualizarTela();
 }
 
-async function editarConta(index) {
-  const conta = contas[index];
-
-  if (!conta) return;
-
-  const novoNome = prompt("Nome da conta:", conta.nome);
-  if (novoNome === null) return;
-
-  const nomeFinal = novoNome.trim();
-
-  if (!nomeFinal) {
-    alert("O nome da conta não pode ficar vazio.");
-    return;
-  }
-
-  const novoValor = prompt("Valor da conta:", conta.valor);
-  if (novoValor === null) return;
-
-  const valorFinal = converterValorDigitado(novoValor);
-
-  if (isNaN(valorFinal) || valorFinal <= 0) {
-    alert("Digite um valor válido.");
-    return;
-  }
-
-  const novoVencimento = prompt(
-    "Data de vencimento no formato AAAA-MM-DD:",
-    conta.vencimento
-  );
-
-  if (novoVencimento === null) return;
-
-  const vencimentoFinal = novoVencimento.trim();
-
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(vencimentoFinal)) {
-    alert("Use o formato correto: AAAA-MM-DD. Exemplo: 2026-06-15");
-    return;
-  }
-
-  const novaCategoria = prompt(
-    "Categoria:\n\nStreaming\nInternet\nApps\nPessoa\nServiço\nMoradia\nOutro",
-    conta.categoria
-  );
-
-  if (novaCategoria === null) return;
-
-  const categoriaFinal = novaCategoria.trim();
-
-  const categoriasPermitidas = [
-    "Streaming",
-    "Internet",
-    "Apps",
-    "Pessoa",
-    "Serviço",
-    "Moradia",
-    "Outro"
-  ];
-
-  const categoriaFormatada =
-    categoriasPermitidas.find(
-      (cat) => cat.toLowerCase() === categoriaFinal.toLowerCase()
-    ) || "Outro";
-
-  const statusAtual = conta.status || "pendente";
-
-  const novoStatus = prompt(
-    "Status da conta:\n\nDigite: paga ou pendente",
-    statusAtual
-  );
-
-  if (novoStatus === null) return;
-
-  const statusFinal = novoStatus.trim().toLowerCase();
-
-  if (statusFinal !== "paga" && statusFinal !== "pendente") {
-    alert("Status inválido. Use apenas: paga ou pendente.");
-    return;
-  }
-
-  let pagaEmFinal = conta.pagaEm || null;
-
-  if (statusFinal === "paga") {
-    const novaDataPagamento = prompt(
-      "Data de pagamento no formato DD/MM/AAAA:",
-      conta.pagaEm || hojeBR()
-    );
-
-    if (novaDataPagamento === null) return;
-
-    const dataPagamentoFinal = novaDataPagamento.trim();
-
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataPagamentoFinal)) {
-      alert("Use o formato correto: DD/MM/AAAA. Exemplo: 04/06/2026");
-      return;
-    }
-
-    pagaEmFinal = dataPagamentoFinal;
-  } else {
-    pagaEmFinal = null;
-  }
-
-  contas[index] = {
-    ...conta,
-    nome: nomeFinal,
-    valor: valorFinal,
-    vencimento: vencimentoFinal,
-    categoria: categoriaFormatada,
-    status: statusFinal,
-    pagaEm: pagaEmFinal
-  };
-
-  await salvarDados();
-  atualizarTela();
+function editarConta(index) {
+  abrirModalEditarConta(index);
 }
 
 async function excluirConta(index) {
@@ -1148,6 +1039,170 @@ function importarBackupArquivo(event) {
   leitor.readAsText(arquivo);
 }
 
+/* MODAL PREMIUM — EDITAR CONTA */
+
+function criarModalEditarConta() {
+  if (pegar("modalEditarConta")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "modalEditarConta";
+  modal.className = "modal-overlay";
+
+  modal.innerHTML = `
+    <div class="modal-card glass-card">
+      <div class="modal-head">
+        <div>
+          <span>MISSION_EDIT</span>
+          <h3>Editar conta</h3>
+        </div>
+
+        <button type="button" class="modal-close" onclick="fecharModalEditarConta()">×</button>
+      </div>
+
+      <div class="modal-form">
+        <label>
+          Nome da conta
+          <input id="editarContaNome" type="text" placeholder="Nome da conta">
+        </label>
+
+        <label>
+          Valor
+          <input id="editarContaValor" type="number" step="0.01" placeholder="Valor da conta">
+        </label>
+
+        <label>
+          Vencimento
+          <input id="editarContaVencimento" type="date">
+        </label>
+
+        <label>
+          Categoria
+          <select id="editarContaCategoria">
+            <option value="Streaming">Streaming</option>
+            <option value="Internet">Internet</option>
+            <option value="Apps">Apps</option>
+            <option value="Pessoa">Pessoa</option>
+            <option value="Serviço">Serviço</option>
+            <option value="Moradia">Moradia</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </label>
+
+        <label>
+          Status
+          <select id="editarContaStatus" onchange="alternarCampoDataPagamento()">
+            <option value="pendente">Pendente</option>
+            <option value="paga">Paga</option>
+          </select>
+        </label>
+
+        <label id="campoDataPagamento" class="hidden">
+          Data de pagamento
+          <input id="editarContaPagaEm" type="text" placeholder="DD/MM/AAAA">
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-save" onclick="salvarEdicaoConta()">Salvar alterações</button>
+        <button type="button" class="modal-cancel" onclick="fecharModalEditarConta()">Cancelar</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+}
+
+function abrirModalEditarConta(index) {
+  criarModalEditarConta();
+
+  const conta = contas[index];
+  if (!conta) return;
+
+  contaEditandoIndex = index;
+
+  pegar("editarContaNome").value = conta.nome || "";
+  pegar("editarContaValor").value = conta.valor || "";
+  pegar("editarContaVencimento").value = conta.vencimento || "";
+  pegar("editarContaCategoria").value = conta.categoria || "Outro";
+  pegar("editarContaStatus").value = conta.status || "pendente";
+  pegar("editarContaPagaEm").value = conta.pagaEm || hojeBR();
+
+  alternarCampoDataPagamento();
+
+  pegar("modalEditarConta").classList.add("active");
+}
+
+function fecharModalEditarConta() {
+  const modal = pegar("modalEditarConta");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
+  contaEditandoIndex = null;
+}
+
+function alternarCampoDataPagamento() {
+  const status = pegar("editarContaStatus")?.value;
+  const campo = pegar("campoDataPagamento");
+
+  if (!campo) return;
+
+  if (status === "paga") {
+    campo.classList.remove("hidden");
+
+    if (!pegar("editarContaPagaEm").value) {
+      pegar("editarContaPagaEm").value = hojeBR();
+    }
+  } else {
+    campo.classList.add("hidden");
+  }
+}
+
+async function salvarEdicaoConta() {
+  if (contaEditandoIndex === null) return;
+
+  const conta = contas[contaEditandoIndex];
+
+  if (!conta) return;
+
+  const nome = pegar("editarContaNome").value.trim();
+  const valor = Number(pegar("editarContaValor").value);
+  const vencimento = pegar("editarContaVencimento").value;
+  const categoria = pegar("editarContaCategoria").value;
+  const status = pegar("editarContaStatus").value;
+  let pagaEm = null;
+
+  if (!nome || valor <= 0 || !vencimento) {
+    alert("Preencha nome, valor e vencimento.");
+    return;
+  }
+
+  if (status === "paga") {
+    pagaEm = pegar("editarContaPagaEm").value.trim();
+
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(pagaEm)) {
+      alert("Use a data de pagamento no formato DD/MM/AAAA. Exemplo: 04/06/2026");
+      return;
+    }
+  }
+
+  contas[contaEditandoIndex] = {
+    ...conta,
+    nome,
+    valor,
+    vencimento,
+    categoria,
+    status,
+    pagaEm
+  };
+
+  await salvarDados();
+
+  fecharModalEditarConta();
+  atualizarTela();
+}
+
 /* ATUALIZAR TELA */
 
 function atualizarTela() {
@@ -1628,6 +1683,10 @@ window.exportarBackup = exportarBackup;
 window.abrirImportarBackup = abrirImportarBackup;
 window.importarBackupArquivo = importarBackupArquivo;
 window.mudarMesResumo = mudarMesResumo;
+window.abrirModalEditarConta = abrirModalEditarConta;
+window.fecharModalEditarConta = fecharModalEditarConta;
+window.salvarEdicaoConta = salvarEdicaoConta;
+window.alternarCampoDataPagamento = alternarCampoDataPagamento;
 
 /* INICIAR APP */
 
