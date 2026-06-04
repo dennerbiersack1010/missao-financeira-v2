@@ -804,3 +804,39 @@ select {
   backdrop-filter: blur(6px) saturate(140%) !important;
   -webkit-backdrop-filter: blur(6px) saturate(140%) !important;
 }
+
+/* CONTA PAGA — DESTACAR SOMENTE A CONTA CLICADA */
+
+.conta-item.conta-paga {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(105, 145, 255, 0.28),
+      rgba(25, 65, 135, 0.18)
+    ) !important;
+  border: 1px solid rgba(185, 210, 255, 0.42) !important;
+  box-shadow:
+    0 0 22px rgba(115, 155, 255, 0.20),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(255,255,255,0.08) !important;
+}
+
+.conta-item.conta-paga .item-icon {
+  background: rgba(175, 200, 255, 0.22) !important;
+  border: 1px solid rgba(210, 225, 255, 0.34);
+}
+
+.conta-item.conta-paga h4,
+.conta-item.conta-paga strong {
+  color: #ffffff !important;
+}
+
+.conta-item.conta-paga small {
+  color: rgba(220, 232, 255, 0.86) !important;
+}
+
+.conta-item.conta-paga .item-actions button {
+  background: rgba(190, 210, 255, 0.15) !important;
+  border: 1px solid rgba(220, 232, 255, 0.28) !important;
+  color: #ffffff !important;
+}
