@@ -330,6 +330,36 @@ async function excluirMeta(id) {
   atualizarTela();
 }
 
+async function editarMeta(id) {
+  const meta = metas.find((item) => item.id === id);
+
+  if (!meta) return;
+
+  const novoValor = prompt(
+    `Quanto você tem guardado agora para "${meta.nome}"?`,
+    meta.valorAtual || 0
+  );
+
+  if (novoValor === null) return;
+
+  const valorConvertido = Number(
+    novoValor
+      .toString()
+      .replace(/\./g, "")
+      .replace(",", ".")
+  );
+
+  if (isNaN(valorConvertido) || valorConvertido < 0) {
+    alert("Digite um valor válido.");
+    return;
+  }
+
+  meta.valorAtual = valorConvertido;
+
+  await salvarDados();
+  atualizarTela();
+}
+
 async function apagarTudo() {
   const confirmar = confirm("Tem certeza que deseja apagar todos os dados da V2?");
 
@@ -490,6 +520,7 @@ function atualizarMetas() {
         </div>
 
         <div class="item-actions">
+          <button onclick="editarMeta(${meta.id})">Editar</button>
           <button onclick="excluirMeta(${meta.id})">Excluir</button>
         </div>
       </div>
@@ -572,15 +603,23 @@ function atualizarHome() {
       ? Math.min((meta.valorAtual / meta.valorTotal) * 100, 100)
       : 0;
 
+    const falta = Math.max(meta.valorTotal - meta.valorAtual, 0);
+
     metaDestaque.innerHTML = `
       <div class="goal-card glass-card">
         <h3>${meta.nome}</h3>
+
         <div class="goal-info">
           <span>${Math.round(progresso)}% completo</span>
-          <span>${moeda(meta.valorAtual)} / ${moeda(meta.valorTotal)}</span>
+          <span>Falta ${moeda(falta)}</span>
         </div>
+
         <div class="progress-track">
           <div class="progress-fill" style="width:${progresso}%"></div>
+        </div>
+
+        <div class="item-actions">
+          <button onclick="editarMeta(${meta.id})">Editar</button>
         </div>
       </div>
     `;
@@ -626,6 +665,7 @@ window.excluirConta = excluirConta;
 window.excluirEntrada = excluirEntrada;
 window.excluirSaida = excluirSaida;
 window.excluirMeta = excluirMeta;
+window.editarMeta = editarMeta;
 window.apagarTudo = apagarTudo;
 
 /* INICIAR APP */
