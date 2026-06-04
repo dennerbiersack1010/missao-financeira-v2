@@ -27,6 +27,8 @@ let contas = [];
 let metas = [];
 
 let filtroContasAtual = "todas";
+let filtroEntradasAtual = "mes";
+let filtroSaidasAtual = "mes";
 
 function pegar(id) {
   return document.getElementById(id);
@@ -83,6 +85,54 @@ function textoDias(vencimento, paga = false) {
   if (dias === 1) return "Vence amanhã";
 
   return `Vence em ${dias} dias`;
+}
+
+function converterDataBRParaDate(dataBR) {
+  if (!dataBR) return null;
+
+  const partes = dataBR.split("/");
+  if (partes.length !== 3) return null;
+
+  const dia = Number(partes[0]);
+  const mes = Number(partes[1]) - 1;
+  const ano = Number(partes[2]);
+
+  const data = new Date(ano, mes, dia);
+  data.setHours(0, 0, 0, 0);
+
+  return data;
+}
+
+function estaNoPeriodo(dataBR, filtro) {
+  if (filtro === "todos") return true;
+
+  const data = converterDataBRParaDate(dataBR);
+  if (!data) return true;
+
+  const hoje = hojeSemHora();
+
+  if (filtro === "hoje") {
+    return data.getTime() === hoje.getTime();
+  }
+
+  if (filtro === "semana") {
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+
+    const fimSemana = new Date(inicioSemana);
+    fimSemana.setDate(inicioSemana.getDate() + 6);
+
+    return data >= inicioSemana && data <= fimSemana;
+  }
+
+  if (filtro === "mes") {
+    return (
+      data.getMonth() === hoje.getMonth() &&
+      data.getFullYear() === hoje.getFullYear()
+    );
+  }
+
+  return true;
 }
 
 /* ÍCONE PNG POR CATEGORIA */
@@ -689,6 +739,54 @@ function filtrarContasParaTela(lista) {
   return lista;
 }
 
+/* FILTROS PERÍODO */
+
+function criarFiltrosPeriodo(tipo) {
+  const lista = tipo === "entradas" ? pegar("listaEntradas") : pegar("listaSaidas");
+  if (!lista) return;
+
+  const painel = lista.closest(".panel");
+  if (!painel) return;
+
+  const idFiltro = tipo === "entradas" ? "filtrosEntradas" : "filtrosSaidas";
+
+  let filtros = pegar(idFiltro);
+
+  if (!filtros) {
+    filtros = document.createElement("div");
+    filtros.id = idFiltro;
+    filtros.className = "period-filters";
+
+    const funcao = tipo === "entradas" ? "aplicarFiltroEntradas" : "aplicarFiltroSaidas";
+
+    filtros.innerHTML = `
+      <button type="button" data-filter="hoje" onclick="${funcao}('hoje')">Hoje</button>
+      <button type="button" data-filter="semana" onclick="${funcao}('semana')">Semana</button>
+      <button type="button" data-filter="mes" onclick="${funcao}('mes')">Mês</button>
+      <button type="button" data-filter="todos" onclick="${funcao}('todos')">Todos</button>
+    `;
+
+    const listaElemento = painel.querySelector(".list");
+    painel.insertBefore(filtros, listaElemento);
+  }
+
+  const filtroAtual = tipo === "entradas" ? filtroEntradasAtual : filtroSaidasAtual;
+
+  filtros.querySelectorAll("button").forEach((botao) => {
+    botao.classList.toggle("active", botao.dataset.filter === filtroAtual);
+  });
+}
+
+function aplicarFiltroEntradas(filtro) {
+  filtroEntradasAtual = filtro;
+  atualizarEntradas();
+}
+
+function aplicarFiltroSaidas(filtro) {
+  filtroSaidasAtual = filtro;
+  atualizarSaidas();
+}
+
 /* RESUMO MENSAL */
 
 function mensagemResumoMensal(resumo) {
@@ -785,9 +883,6 @@ function atualizarTela() {
   escrever("totalContasPendentes", moeda(resumo.totalContasPendentes));
   escrever("totalMetas", metas.length);
 
-  escrever("resumoGanhosTela", moeda(resumo.totalEntradas));
-  escrever("resumoSaidasTela", moeda(resumo.totalSaidas));
-
   escrever("resumoContas", moeda(resumo.totalContasPendentes));
   escrever("qtdVencimentos", resumo.contasPendentes.length);
 
@@ -817,22 +912,31 @@ function atualizarEntradas() {
 
   if (!lista) return;
 
+  criarFiltrosPeriodo("entradas");
+
   if (!entradas.length) {
     lista.innerHTML = `<p class="empty">Nenhum ganho registrado.</p>`;
+    escrever("resumoGanhosTela", moeda(0));
     return;
   }
 
-  const ordenadas = [...entradas].sort((a, b) => b.id - a.id);
+  const filtradas = entradas
+    .filter((item) => estaNoPeriodo(item.data, filtroEntradasAtual))
+    .sort((a, b) => b.id - a.id);
 
-  lista.innerHTML = ordenadas.map((item) => {
+  const totalFiltrado = filtradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  escrever("resumoGanhosTela", moeda(totalFiltrado));
+
+  if (!filtradas.length) {
+    lista.innerHTML = `<p class="empty">Nenhum ganho encontrado neste período.</p>`;
+    return;
+  }
+
+  lista.innerHTML = filtradas.map((item) => {
     return `
       <div class="item transaction-item">
         <div class="item-icon">
-          <img
-            src="assets/icone-entradas.png"
-            alt="Entrada"
-            class="transaction-icon-img"
-          >
+          <img src="assets/icone-entradas.png" alt="Entrada" class="transaction-icon-img">
         </div>
 
         <div>
@@ -859,22 +963,31 @@ function atualizarSaidas() {
 
   if (!lista) return;
 
+  criarFiltrosPeriodo("saidas");
+
   if (!saidas.length) {
     lista.innerHTML = `<p class="empty">Nenhuma saída registrada.</p>`;
+    escrever("resumoSaidasTela", moeda(0));
     return;
   }
 
-  const ordenadas = [...saidas].sort((a, b) => b.id - a.id);
+  const filtradas = saidas
+    .filter((item) => estaNoPeriodo(item.data, filtroSaidasAtual))
+    .sort((a, b) => b.id - a.id);
 
-  lista.innerHTML = ordenadas.map((item) => {
+  const totalFiltrado = filtradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  escrever("resumoSaidasTela", moeda(totalFiltrado));
+
+  if (!filtradas.length) {
+    lista.innerHTML = `<p class="empty">Nenhuma saída encontrada neste período.</p>`;
+    return;
+  }
+
+  lista.innerHTML = filtradas.map((item) => {
     return `
       <div class="item transaction-item">
         <div class="item-icon">
-          <img
-            src="assets/icone-saidas.png"
-            alt="Saída"
-            class="transaction-icon-img"
-          >
+          <img src="assets/icone-saidas.png" alt="Saída" class="transaction-icon-img">
         </div>
 
         <div>
@@ -965,7 +1078,6 @@ function criarCardMeta(meta) {
 
   return `
     <div class="goal-card glass-card goal-card-premium ${concluida ? "goal-complete" : ""}">
-      
       <div class="goal-title-column">
         <span class="goal-status">${concluida ? "META CONCLUÍDA" : "META EM ANDAMENTO"}</span>
         <h3>${meta.nome}</h3>
@@ -1050,7 +1162,7 @@ function atualizarMetas() {
   lista.innerHTML = html;
 }
 
-/* AGENDA INTELIGENTE */
+/* AGENDA */
 
 function montarGrupoAgenda(titulo, listaDeContas) {
   if (!listaDeContas.length) return "";
@@ -1224,6 +1336,8 @@ window.editarMeta = editarMeta;
 window.adicionarValorMeta = adicionarValorMeta;
 window.apagarTudo = apagarTudo;
 window.aplicarFiltroContas = aplicarFiltroContas;
+window.aplicarFiltroEntradas = aplicarFiltroEntradas;
+window.aplicarFiltroSaidas = aplicarFiltroSaidas;
 
 /* INICIAR APP */
 
@@ -1231,222 +1345,3 @@ document.addEventListener("DOMContentLoaded", () => {
   iniciarSplashV2();
   carregarDados();
 });
-
-/* FILTROS POR PERÍODO — GANHOS E SAÍDAS */
-
-let filtroEntradasAtual = "mes";
-let filtroSaidasAtual = "mes";
-
-function converterDataBRParaDate(dataBR) {
-  if (!dataBR) return null;
-
-  const partes = dataBR.split("/");
-  if (partes.length !== 3) return null;
-
-  const dia = Number(partes[0]);
-  const mes = Number(partes[1]) - 1;
-  const ano = Number(partes[2]);
-
-  const data = new Date(ano, mes, dia);
-  data.setHours(0, 0, 0, 0);
-
-  return data;
-}
-
-function estaNoPeriodo(dataBR, filtro) {
-  if (filtro === "todos") return true;
-
-  const data = converterDataBRParaDate(dataBR);
-  if (!data) return true;
-
-  const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0);
-
-  if (filtro === "hoje") {
-    return data.getTime() === hoje.getTime();
-  }
-
-  if (filtro === "semana") {
-    const inicioSemana = new Date(hoje);
-    inicioSemana.setDate(hoje.getDate() - hoje.getDay());
-
-    const fimSemana = new Date(inicioSemana);
-    fimSemana.setDate(inicioSemana.getDate() + 6);
-
-    return data >= inicioSemana && data <= fimSemana;
-  }
-
-  if (filtro === "mes") {
-    return (
-      data.getMonth() === hoje.getMonth() &&
-      data.getFullYear() === hoje.getFullYear()
-    );
-  }
-
-  return true;
-}
-
-function criarFiltrosPeriodo(tipo) {
-  const lista = tipo === "entradas" ? pegar("listaEntradas") : pegar("listaSaidas");
-  if (!lista) return;
-
-  const painel = lista.closest(".panel");
-  if (!painel) return;
-
-  const idFiltro = tipo === "entradas" ? "filtrosEntradas" : "filtrosSaidas";
-
-  let filtros = pegar(idFiltro);
-
-  if (!filtros) {
-    filtros = document.createElement("div");
-    filtros.id = idFiltro;
-    filtros.className = "period-filters";
-
-    const funcao = tipo === "entradas" ? "aplicarFiltroEntradas" : "aplicarFiltroSaidas";
-
-    filtros.innerHTML = `
-      <button type="button" data-filter="hoje" onclick="${funcao}('hoje')">Hoje</button>
-      <button type="button" data-filter="semana" onclick="${funcao}('semana')">Semana</button>
-      <button type="button" data-filter="mes" onclick="${funcao}('mes')">Mês</button>
-      <button type="button" data-filter="todos" onclick="${funcao}('todos')">Todos</button>
-    `;
-
-    const listaElemento = painel.querySelector(".list");
-    painel.insertBefore(filtros, listaElemento);
-  }
-
-  const filtroAtual = tipo === "entradas" ? filtroEntradasAtual : filtroSaidasAtual;
-
-  filtros.querySelectorAll("button").forEach((botao) => {
-    botao.classList.toggle("active", botao.dataset.filter === filtroAtual);
-  });
-}
-
-function aplicarFiltroEntradas(filtro) {
-  filtroEntradasAtual = filtro;
-  atualizarEntradas();
-}
-
-function aplicarFiltroSaidas(filtro) {
-  filtroSaidasAtual = filtro;
-  atualizarSaidas();
-}
-
-/* GANHOS COM FILTRO */
-
-function atualizarEntradas() {
-  const lista = pegar("listaEntradas");
-
-  if (!lista) return;
-
-  criarFiltrosPeriodo("entradas");
-
-  if (!entradas.length) {
-    lista.innerHTML = `<p class="empty">Nenhum ganho registrado.</p>`;
-    escrever("resumoGanhosTela", moeda(0));
-    return;
-  }
-
-  const filtradas = entradas
-    .filter((item) => estaNoPeriodo(item.data, filtroEntradasAtual))
-    .sort((a, b) => b.id - a.id);
-
-  const totalFiltrado = filtradas.reduce((soma, item) => {
-    return soma + Number(item.valor || 0);
-  }, 0);
-
-  escrever("resumoGanhosTela", moeda(totalFiltrado));
-
-  if (!filtradas.length) {
-    lista.innerHTML = `<p class="empty">Nenhum ganho encontrado neste período.</p>`;
-    return;
-  }
-
-  lista.innerHTML = filtradas.map((item) => {
-    return `
-      <div class="item transaction-item">
-        <div class="item-icon">
-          <img
-            src="assets/icone-entradas.png"
-            alt="Entrada"
-            class="transaction-icon-img"
-          >
-        </div>
-
-        <div>
-          <h4>${item.nome}</h4>
-          <small>Entrada • ${item.data}</small>
-        </div>
-
-        <div>
-          <strong>+ ${moeda(item.valor)}</strong>
-          <div class="item-actions transaction-actions">
-            <button onclick="editarEntrada(${item.id})">Editar</button>
-            <button onclick="excluirEntrada(${item.id})">Excluir</button>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-/* SAÍDAS COM FILTRO */
-
-function atualizarSaidas() {
-  const lista = pegar("listaSaidas");
-
-  if (!lista) return;
-
-  criarFiltrosPeriodo("saidas");
-
-  if (!saidas.length) {
-    lista.innerHTML = `<p class="empty">Nenhuma saída registrada.</p>`;
-    escrever("resumoSaidasTela", moeda(0));
-    return;
-  }
-
-  const filtradas = saidas
-    .filter((item) => estaNoPeriodo(item.data, filtroSaidasAtual))
-    .sort((a, b) => b.id - a.id);
-
-  const totalFiltrado = filtradas.reduce((soma, item) => {
-    return soma + Number(item.valor || 0);
-  }, 0);
-
-  escrever("resumoSaidasTela", moeda(totalFiltrado));
-
-  if (!filtradas.length) {
-    lista.innerHTML = `<p class="empty">Nenhuma saída encontrada neste período.</p>`;
-    return;
-  }
-
-  lista.innerHTML = filtradas.map((item) => {
-    return `
-      <div class="item transaction-item">
-        <div class="item-icon">
-          <img
-            src="assets/icone-saidas.png"
-            alt="Saída"
-            class="transaction-icon-img"
-          >
-        </div>
-
-        <div>
-          <h4>${item.nome}</h4>
-          <small>Saída • ${item.data}</small>
-        </div>
-
-        <div>
-          <strong>- ${moeda(item.valor)}</strong>
-          <div class="item-actions transaction-actions">
-            <button onclick="editarSaida(${item.id})">Editar</button>
-            <button onclick="excluirSaida(${item.id})">Excluir</button>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-window.aplicarFiltroEntradas = aplicarFiltroEntradas;
-window.aplicarFiltroSaidas = aplicarFiltroSaidas;
