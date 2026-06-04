@@ -71,19 +71,70 @@ function textoDias(vencimento, paga = false) {
   return `Vence em ${dias} dias`;
 }
 
+/* ÍCONE PNG POR CATEGORIA */
+
 function iconeConta(nome, categoria) {
   const texto = `${nome} ${categoria}`.toLowerCase();
 
-  if (texto.includes("spotify")) return "SP";
-  if (texto.includes("netflix")) return "NX";
-  if (texto.includes("internet") || texto.includes("wifi")) return "WI";
-  if (texto.includes("chatgpt") || texto.includes("openai")) return "AI";
-  if (texto.includes("youtube")) return "YT";
-  if (texto.includes("pessoa")) return "PS";
-  if (texto.includes("aluguel")) return "AL";
-  if (texto.includes("app")) return "AP";
+  let arquivo = "icone-outros.png";
 
-  return categoria ? categoria.slice(0, 2).toUpperCase() : "MF";
+  if (
+    texto.includes("spotify") ||
+    texto.includes("netflix") ||
+    texto.includes("youtube") ||
+    texto.includes("streaming") ||
+    texto.includes("prime") ||
+    texto.includes("disney") ||
+    texto.includes("max") ||
+    texto.includes("hbo") ||
+    texto.includes("globoplay")
+  ) {
+    arquivo = "icone-streaming.png";
+  } else if (
+    texto.includes("internet") ||
+    texto.includes("wifi") ||
+    texto.includes("wi-fi")
+  ) {
+    arquivo = "icone-wifi.png";
+  } else if (
+    texto.includes("app") ||
+    texto.includes("apps") ||
+    texto.includes("chatgpt") ||
+    texto.includes("openai") ||
+    texto.includes("canva") ||
+    texto.includes("software")
+  ) {
+    arquivo = "icone-apps.png";
+  } else if (
+    texto.includes("pessoa") ||
+    texto.includes("fulano") ||
+    texto.includes("empréstimo") ||
+    texto.includes("emprestimo") ||
+    texto.includes("amigo") ||
+    texto.includes("familiar")
+  ) {
+    arquivo = "icone-pessoa.png";
+  } else if (
+    texto.includes("serviço") ||
+    texto.includes("servico") ||
+    texto.includes("manutenção") ||
+    texto.includes("manutencao") ||
+    texto.includes("freela") ||
+    texto.includes("profissional")
+  ) {
+    arquivo = "icone-servicos.png";
+  } else if (
+    texto.includes("moradia") ||
+    texto.includes("aluguel") ||
+    texto.includes("casa") ||
+    texto.includes("apartamento") ||
+    texto.includes("condomínio") ||
+    texto.includes("condominio")
+  ) {
+    arquivo = "icone-moradia.png";
+  }
+
+  return `<img src="assets/${arquivo}" alt="${categoria}" class="account-icon-img">`;
 }
 
 /* FIREBASE */
