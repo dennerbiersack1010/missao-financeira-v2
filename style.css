@@ -1227,3 +1227,131 @@ img {
     0 0 34px rgba(160, 200, 255, 0.42),
     0 0 70px rgba(70, 140, 255, 0.18);
 }
+
+/* ÍCONES 3D DO MENU RÁPIDO — FEITOS NO CÓDIGO */
+
+.quick-menu button span {
+  position: relative;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  border-radius: 16px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-family: "Orbitron", sans-serif !important;
+  font-size: 0 !important;
+
+  background:
+    linear-gradient(145deg, rgba(210, 235, 255, 0.26), rgba(20, 65, 125, 0.32)),
+    radial-gradient(circle at 30% 18%, rgba(255,255,255,0.55), transparent 32%),
+    radial-gradient(circle at 70% 82%, rgba(0,145,255,0.55), transparent 45%) !important;
+
+  border: 1px solid rgba(210, 235, 255, 0.34) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.42),
+    inset 0 -8px 18px rgba(0, 40, 95, 0.34),
+    0 0 14px rgba(120, 190, 255, 0.36),
+    0 0 30px rgba(40, 130, 255, 0.16),
+    0 12px 20px rgba(0,0,0,0.28) !important;
+
+  overflow: hidden;
+}
+
+/* brilho diagonal */
+.quick-menu button span::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -65%;
+  width: 80%;
+  height: 180%;
+  transform: rotate(28deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.55),
+    transparent
+  );
+  opacity: 0.35;
+}
+
+/* GANHO — símbolo + em 3D */
+.quick-menu button:nth-child(1) span::before {
+  content: "+";
+  font-size: 27px;
+  font-weight: 800;
+  color: #eef6ff;
+  text-shadow:
+    0 0 8px rgba(160, 220, 255, 0.9),
+    0 0 18px rgba(60, 160, 255, 0.55);
+}
+
+/* SAÍDA — símbolo - em 3D */
+.quick-menu button:nth-child(2) span::before {
+  content: "−";
+  font-size: 30px;
+  font-weight: 800;
+  color: #eef6ff;
+  text-shadow:
+    0 0 8px rgba(160, 220, 255, 0.9),
+    0 0 18px rgba(60, 160, 255, 0.55);
+}
+
+/* CONTA — cartão/retângulo 3D */
+.quick-menu button:nth-child(3) span::before {
+  content: "";
+  width: 24px;
+  height: 17px;
+  border-radius: 5px;
+  border: 2px solid rgba(240, 248, 255, 0.96);
+  box-shadow:
+    0 0 8px rgba(160, 220, 255, 0.9),
+    inset 0 0 8px rgba(110, 190, 255, 0.38);
+}
+
+.quick-menu button:nth-child(3) span::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 2px;
+  left: 14px;
+  top: 25px;
+  border-radius: 5px;
+  background: rgba(240, 248, 255, 0.95);
+  box-shadow: 0 0 8px rgba(160, 220, 255, 0.9);
+}
+
+/* META — diamante/cristal 3D */
+.quick-menu button:nth-child(4) span::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+  transform: rotate(45deg);
+  border: 2px solid rgba(240, 248, 255, 0.96);
+  border-radius: 4px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.28), rgba(50,160,255,0.12));
+  box-shadow:
+    0 0 8px rgba(160, 220, 255, 0.9),
+    inset 0 0 10px rgba(110, 190, 255, 0.38);
+}
+
+/* melhora o card do menu */
+.quick-menu button {
+  background:
+    linear-gradient(145deg, rgba(10, 35, 75, 0.38), rgba(8, 18, 40, 0.28)) !important;
+  border: 1px solid rgba(205, 230, 255, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.13),
+    inset 0 -1px 0 rgba(255,255,255,0.04),
+    0 0 22px rgba(65, 145, 255, 0.12) !important;
+}
+
+/* efeito ao tocar */
+.quick-menu button:active span {
+  transform: scale(0.94);
+}
