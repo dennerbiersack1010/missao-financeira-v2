@@ -1,1 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <title>Missão Financeira V2</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splashScreen" class="splash-screen-v2">
+    <div class="splash-overlay"></div>
+
+    <div class="splash-content-v2">
+      <img src="assets/logo-v2.png" alt="Missão Financeira" class="splash-logo-v2">
+
+      <div class="system-loader">
+        <h1>SYSTEM_LOADING...</h1>
+        <p>Initializing financial system...</p>
+
+        <strong id="loadingPercent">000%</strong>
+
+        <div class="loading-track">
+          <div id="loadingBar" class="loading-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div class="app">
+
+    <header class="top-header">
+      <div>
+        <span class="system-label">MISSION CONTROL</span>
+        <h1>Bem-vindo, Dener</h1>
+      </div>
+
+      <button class="profile-button" type="button">
+        <span>D</span>
+      </button>
+    </header>
+
+    <main class="main">
+
+      <!-- HOME -->
+      <section class="screen active" id="home">
+        <section class="hero-card">
+          <div class="hero-copy">
+            <span>Caixa atual</span>
+            <h2 id="caixaAtual">R$ 0,00</h2>
+            <p id="statusFinanceiro">Sistema financeiro ativo</p>
+          </div>
+
+          <div class="hero-orb">
+            <div></div>
+          </div>
+        </section>
+
+        <section class="metrics-grid">
+          <div class="glass-card metric-card">
+            <span>Ganhos</span>
+            <strong id="totalGanhos">R$ 0,00</strong>
+            <small>Entradas registradas</small>
+          </div>
+
+          <div class="glass-card metric-card">
+            <span>Saídas</span>
+            <strong id="totalSaidas">R$ 0,00</strong>
+            <small>Gastos registrados</small>
+          </div>
+
+          <div class="glass-card metric-card">
+            <span>Contas</span>
+            <strong id="totalContasPendentes">R$ 0,00</strong>
+            <small>Pendentes</small>
+          </div>
+
+          <div class="glass-card metric-card">
+            <span>Metas</span>
+            <strong id="totalMetas">0</strong>
+            <small>Ativas</small>
+          </div>
+        </section>
+
+        <section class="glass-card panel">
+          <div class="panel-head">
+            <div>
+              <h3>Próximos vencimentos</h3>
+              <p>Contas que precisam de atenção</p>
+            </div>
+            <span id="qtdVencimentos">0</span>
+          </div>
+
+          <div class="list" id="listaProximosVencimentos"></div>
+        </section>
+
+        <section class="glass-card panel">
+          <div class="panel-head">
+            <div>
+              <h3>Meta em destaque</h3>
+              <p>Quadro de evolução</p>
+            </div>
+          </div>
+
+          <div id="metaDestaque" class="goal-preview"></div>
+        </section>
+      </section>
+
+      <!-- TRANSAÇÕES -->
+      <section class="screen" id="transactions">
+        <div class="page-title">
+          <span>TRANSACTIONS</span>
+          <h2>Ganhos e saídas</h2>
+        </div>
+
+        <div class="glass-card form-card">
+          <h3>Nova entrada</h3>
+          <input id="entradaNome" type="text" placeholder="Nome do trabalho" />
+          <input id="entradaValor" type="number" placeholder="Valor recebido" />
+          <button type="button" onclick="adicionarEntrada()">Adicionar ganho</button>
+        </div>
+
+        <div class="glass-card form-card">
+          <h3>Nova saída</h3>
+          <input id="saidaNome" type="text" placeholder="Nome do gasto" />
+          <input id="saidaValor" type="number" placeholder="Valor gasto" />
+          <button class="dark-button" type="button" onclick="adicionarSaida()">Adicionar saída</button>
+        </div>
+
+        <section class="glass-card panel">
+          <div class="panel-head">
+            <div>
+              <h3>Histórico</h3>
+              <p>Últimas movimentações</p>
+            </div>
+          </div>
+
+          <div class="list" id="listaTransacoes"></div>
+        </section>
+      </section>
+
+      <!-- CONTAS -->
+      <section class="screen" id="bills">
+        <div class="page-title">
+          <span>BILLS</span>
+          <h2>Contas a pagar</h2>
+        </div>
+
+        <section class="glass-card form-card">
+          <h3>Nova conta</h3>
+
+          <input id="contaNome" type="text" placeholder="Ex: Spotify, Internet, Pessoa..." />
+          <input id="contaValor" type="number" placeholder="Valor da conta" />
+          <input id="contaVencimento" type="date" />
+
+          <select id="contaCategoria">
+            <option value="Streaming">Streaming</option>
+            <option value="Internet">Internet</option>
+            <option value="Apps">Apps</option>
+            <option value="Pessoa">Pessoa</option>
+            <option value="Serviço">Serviço</option>
+            <option value="Moradia">Moradia</option>
+            <option value="Outro">Outro</option>
+          </select>
+
+          <button type="button" onclick="adicionarConta()">Adicionar conta</button>
+        </section>
+
+        <section class="glass-card panel">
+          <div class="panel-head">
+            <div>
+              <h3>Total pendente</h3>
+              <p>Contas ainda não pagas</p>
+            </div>
+            <strong id="resumoContas">R$ 0,00</strong>
+          </div>
+        </section>
+
+        <section class="glass-card panel">
+          <div class="list" id="listaContas"></div>
+        </section>
+      </section>
+
+      <!-- METAS -->
+      <section class="screen" id="goals">
+        <div class="page-title">
+          <span>DREAM BOARD</span>
+          <h2>Metas</h2>
+        </div>
+
+        <section class="glass-card form-card">
+          <h3>Nova meta</h3>
+
+          <input id="metaNome" type="text" placeholder="Ex: Notebook, viagem, reserva..." />
+          <input id="metaValorTotal" type="number" placeholder="Valor total da meta" />
+          <input id="metaValorAtual" type="number" placeholder="Quanto já tem guardado" />
+
+          <button type="button" onclick="adicionarMeta()">Criar meta</button>
+        </section>
+
+        <section class="goals-grid" id="listaMetas"></section>
+      </section>
+
+      <!-- CALENDÁRIO -->
+      <section class="screen" id="calendar">
+        <div class="page-title">
+          <span>CALENDAR</span>
+          <h2>Agenda financeira</h2>
+        </div>
+
+        <section class="glass-card panel">
+          <div class="panel-head">
+            <div>
+              <h3>Vencimentos</h3>
+              <p>Ordenado por data de pagamento</p>
+            </div>
+          </div>
+
+          <div class="list" id="listaCalendario"></div>
+        </section>
+      </section>
+
+      <!-- INSIGHTS -->
+      <section class="screen" id="insights">
+        <div class="page-title">
+          <span>INSIGHTS</span>
+          <h2>Leitura do sistema</h2>
+        </div>
+
+        <section class="insights-grid">
+          <div class="glass-card insight-card">
+            <span>Entradas</span>
+            <strong id="insightEntradas">R$ 0,00</strong>
+          </div>
+
+          <div class="glass-card insight-card">
+            <span>Saídas</span>
+            <strong id="insightSaidas">R$ 0,00</strong>
+          </div>
+
+          <div class="glass-card insight-card">
+            <span>Devo pagar</span>
+            <strong id="insightDevido">R$ 0,00</strong>
+          </div>
+
+          <div class="glass-card insight-card">
+            <span>Registros</span>
+            <strong id="insightRegistros">0</strong>
+          </div>
+        </section>
+
+        <button class="danger-button" type="button" onclick="apagarTudo()">Apagar dados da V2</button>
+      </section>
+
+    </main>
+
+    <!-- MENU -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" type="button" onclick="openTab('home', this)">
+        <span>⌂</span>
+        <small>Início</small>
+      </button>
+
+      <button class="nav-item" type="button" onclick="openTab('bills', this)">
+        <span>▣</span>
+        <small>Contas</small>
+      </button>
+
+      <button class="center-action" type="button" onclick="openTab('transactions')">+</button>
+
+      <button class="nav-item" type="button" onclick="openTab('goals', this)">
+        <span>◇</span>
+        <small>Metas</small>
+      </button>
+
+      <button class="nav-item" type="button" onclick="openTab('calendar', this)">
+        <span>◷</span>
+        <small>Agenda</small>
+      </button>
+    </nav>
+
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
