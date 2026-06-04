@@ -1019,3 +1019,115 @@ img {
   margin-bottom: 4px !important;
   line-height: 1.05 !important;
 }
+
+/* AJUSTE PREMIUM — BOTÕES DAS CONTAS MAIS COMPACTOS */
+
+.conta-item {
+  grid-template-columns: 66px 1fr 92px !important;
+  column-gap: 18px !important;
+  align-items: center !important;
+  padding: 16px !important;
+}
+
+.conta-item h4 {
+  font-size: 17px !important;
+  line-height: 1.05 !important;
+  margin-bottom: 3px !important;
+  max-width: 120px !important;
+}
+
+.conta-item small {
+  font-size: 13px !important;
+  line-height: 1.08 !important;
+  max-width: 125px !important;
+}
+
+.conta-item strong {
+  display: block !important;
+  text-align: right !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+  white-space: nowrap !important;
+}
+
+.conta-item .item-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 5px !important;
+  justify-content: end !important;
+  align-items: center !important;
+  margin-top: 0 !important;
+}
+
+.conta-item .item-actions button {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+
+  font-size: 0 !important;
+  color: transparent !important;
+
+  background: rgba(255, 255, 255, 0.075) !important;
+  border: 1px solid rgba(210, 230, 255, 0.20) !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 0 12px rgba(90,150,255,0.08) !important;
+}
+
+/* ÍCONE PAGAR / REABRIR */
+
+.conta-item .item-actions button:nth-child(1)::before {
+  content: "✓";
+  font-size: 15px;
+  color: #dfeaff;
+  line-height: 1;
+}
+
+/* ÍCONE EDITAR */
+
+.conta-item .item-actions button:nth-child(2)::before {
+  content: "✎";
+  font-size: 14px;
+  color: #dfeaff;
+  line-height: 1;
+}
+
+/* ÍCONE EXCLUIR */
+
+.conta-item .item-actions button:nth-child(3)::before {
+  content: "×";
+  font-size: 18px;
+  color: #dfeaff;
+  line-height: 1;
+}
+
+/* CONTA PAGA — BOTÃO REABRIR */
+
+.conta-item.conta-paga .item-actions button:nth-child(1)::before {
+  content: "↺";
+  font-size: 15px;
+}
+
+/* ESTADO DESTAQUE PARA CONTA PAGA */
+
+.conta-item.conta-paga .item-actions button {
+  background: rgba(210, 225, 255, 0.12) !important;
+  border: 1px solid rgba(230, 240, 255, 0.28) !important;
+}
+
+/* AJUSTE PARA NÃO QUEBRAR FEIO O TEXTO */
+
+.conta-item > div:nth-child(2) {
+  min-width: 0 !important;
+}
+
+.conta-item > div:nth-child(3) {
+  min-width: 92px !important;
+}
