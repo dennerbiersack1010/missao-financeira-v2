@@ -1947,7 +1947,7 @@ img {
 .backup-actions {
   display: flex !important;
   flex-direction: column !important;
-  gap: 16px !important;
+  gap: 20px !important;
   margin-top: 24px !important;
 }
 
