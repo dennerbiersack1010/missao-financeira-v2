@@ -957,3 +957,28 @@ img {
 .nav-item.active img[src*="Icone-contas"] {
   transform: translateY(0px) scale(1.28) !important;
 }
+
+/* ÍCONES PNG DAS CATEGORIAS DE CONTAS */
+
+.item-icon {
+  overflow: visible !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+}
+
+.item .item-icon {
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  border-radius: 18px !important;
+}
+
+.account-icon-img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  display: block;
+  filter:
+    drop-shadow(0 0 8px rgba(120, 190, 255, 0.45))
+    drop-shadow(0 0 18px rgba(60, 140, 255, 0.22))
+    saturate(1.2);
+}
