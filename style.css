@@ -3207,3 +3207,95 @@ img {
   z-index: 5 !important;
   pointer-events: auto !important;
 }
+
+/* =====================================================
+   ÍCONE DE PAGO / VERIFICADO
+   menor, mais alto e afastado do valor
+   ===================================================== */
+
+.conta-paga,
+.conta-card.paga,
+.agenda-card.paga,
+.item-pago {
+  position: relative;
+}
+
+/* valor da conta paga ganha espaço à direita */
+.conta-paga .item-valor,
+.conta-card.paga .item-valor,
+.agenda-card.paga .item-valor,
+.item-pago .item-valor,
+.conta-paga .valor,
+.conta-card.paga .valor,
+.agenda-card.paga .valor,
+.item-pago .valor {
+  padding-right: 52px !important;
+}
+
+/* ícone de verificado/pago */
+.conta-paga .status-pago,
+.conta-card.paga .status-pago,
+.agenda-card.paga .status-pago,
+.item-pago .status-pago,
+.conta-paga .pago-icon,
+.conta-card.paga .pago-icon,
+.agenda-card.paga .pago-icon,
+.item-pago .pago-icon,
+.conta-paga .status-check,
+.conta-card.paga .status-check,
+.agenda-card.paga .status-check,
+.item-pago .status-check {
+  position: absolute !important;
+  top: 18px !important;
+  right: 14px !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background: rgba(120, 170, 255, 0.18) !important;
+  border: 1px solid rgba(180, 210, 255, 0.35) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 0 10px rgba(140, 180, 255, 0.12) !important;
+
+  z-index: 3 !important;
+}
+
+/* símbolo do check */
+.conta-paga .status-pago svg,
+.conta-card.paga .status-pago svg,
+.agenda-card.paga .status-pago svg,
+.item-pago .status-pago svg,
+.conta-paga .pago-icon svg,
+.conta-card.paga .pago-icon svg,
+.agenda-card.paga .pago-icon svg,
+.item-pago .pago-icon svg,
+.conta-paga .status-check svg,
+.conta-card.paga .status-check svg,
+.agenda-card.paga .status-check svg,
+.item-pago .status-check svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.conta-paga .status-pago,
+.conta-card.paga .status-pago,
+.agenda-card.paga .status-pago,
+.item-pago .status-pago,
+.conta-paga .pago-icon,
+.conta-card.paga .pago-icon,
+.agenda-card.paga .pago-icon,
+.item-pago .pago-icon,
+.conta-paga .status-check,
+.conta-card.paga .status-check,
+.agenda-card.paga .status-check,
+.item-pago .status-check {
+  font-size: 13px !important;
+  color: #ffffff !important;
+}
