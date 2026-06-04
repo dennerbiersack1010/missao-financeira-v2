@@ -926,6 +926,68 @@ function criarResumoMensalNaHome(resumo) {
   `;
 }
 
+/* BACKUP */
+
+function criarAreaBackupNaHome() {
+  const home = pegar("home");
+  if (!home) return;
+
+  let blocoBackup = pegar("backupHome");
+
+  if (!blocoBackup) {
+    blocoBackup = document.createElement("section");
+    blocoBackup.id = "backupHome";
+    blocoBackup.className = "panel glass-card backup-panel";
+
+    blocoBackup.innerHTML = `
+      <div class="panel-head">
+        <div>
+          <h3>Sistema</h3>
+          <p>Backup dos dados financeiros</p>
+        </div>
+      </div>
+
+      <div class="backup-actions">
+        <button type="button" onclick="exportarBackup()">Exportar backup</button>
+      </div>
+    `;
+
+    home.appendChild(blocoBackup);
+  }
+}
+
+function exportarBackup() {
+  const dadosBackup = {
+    app: "Missao Financeira V2",
+    usuario: "Dener",
+    exportadoEm: new Date().toISOString(),
+    entradas,
+    saidas,
+    contas,
+    metas
+  };
+
+  const conteudo = JSON.stringify(dadosBackup, null, 2);
+
+  const arquivo = new Blob([conteudo], {
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(arquivo);
+
+  const link = document.createElement("a");
+  link.href = url;
+
+  const dataHoje = new Date().toISOString().slice(0, 10);
+  link.download = `backup-missao-financeira-${dataHoje}.json`;
+
+  document.body.appendChild(link);
+  link.click();
+
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 /* ATUALIZAR TELA */
 
 function atualizarTela() {
@@ -958,6 +1020,7 @@ function atualizarTela() {
   atualizarCalendario();
   atualizarHome();
   criarResumoMensalNaHome(resumoMensal);
+  criarAreaBackupNaHome();
 }
 
 /* GANHOS */
@@ -1393,6 +1456,7 @@ window.apagarTudo = apagarTudo;
 window.aplicarFiltroContas = aplicarFiltroContas;
 window.aplicarFiltroEntradas = aplicarFiltroEntradas;
 window.aplicarFiltroSaidas = aplicarFiltroSaidas;
+window.exportarBackup = exportarBackup;
 
 /* INICIAR APP */
 
