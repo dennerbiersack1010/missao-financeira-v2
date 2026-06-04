@@ -965,13 +965,10 @@ function criarCardMeta(meta) {
 
   return `
     <div class="goal-card glass-card goal-card-premium ${concluida ? "goal-complete" : ""}">
-      <div class="goal-premium-head">
-        <div>
-          <span class="goal-status">${concluida ? "META CONCLUÍDA" : "META EM ANDAMENTO"}</span>
-          <h3>${meta.nome}</h3>
-        </div>
-
-        <strong class="goal-percent">${porcentagem}%</strong>
+      
+      <div class="goal-title-column">
+        <span class="goal-status">${concluida ? "META CONCLUÍDA" : "META EM ANDAMENTO"}</span>
+        <h3>${meta.nome}</h3>
       </div>
 
       <div class="goal-premium-values">
@@ -991,8 +988,12 @@ function criarCardMeta(meta) {
         </div>
       </div>
 
-      <div class="progress-track goal-progress-track">
-        <div class="progress-fill" style="width:${progresso}%"></div>
+      <div class="goal-progress-row">
+        <div class="progress-track goal-progress-track">
+          <div class="progress-fill" style="width:${progresso}%"></div>
+        </div>
+
+        <strong class="goal-percent-small">${porcentagem}%</strong>
       </div>
 
       <div class="goal-actions-premium">
