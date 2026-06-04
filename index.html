@@ -260,6 +260,31 @@
 
     </main>
 
+    <!-- MENU RÁPIDO DO BOTÃO + -->
+    <input type="checkbox" id="quickToggle" class="quick-toggle">
+
+    <div class="quick-menu glass-card">
+      <button type="button" onclick="document.getElementById('quickToggle').checked = false; openTab('transactions')">
+        <span>+</span>
+        <strong>Ganho</strong>
+      </button>
+
+      <button type="button" onclick="document.getElementById('quickToggle').checked = false; openTab('transactions')">
+        <span>−</span>
+        <strong>Saída</strong>
+      </button>
+
+      <button type="button" onclick="document.getElementById('quickToggle').checked = false; openTab('bills')">
+        <span>□</span>
+        <strong>Conta</strong>
+      </button>
+
+      <button type="button" onclick="document.getElementById('quickToggle').checked = false; openTab('goals')">
+        <span>◇</span>
+        <strong>Meta</strong>
+      </button>
+    </div>
+
     <!-- MENU COM ÍCONES PNG -->
     <nav class="bottom-nav glass-nav">
 
@@ -273,7 +298,7 @@
         <small>Contas</small>
       </button>
 
-      <button class="center-action" type="button" onclick="openTab('transactions')">+</button>
+      <label class="center-action" for="quickToggle">+</label>
 
       <button class="nav-item" type="button" onclick="openTab('goals', this)">
         <img src="assets/icone-metas.png" alt="Metas" class="nav-icon-img">
