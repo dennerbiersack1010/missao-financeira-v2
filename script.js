@@ -786,21 +786,12 @@ function atualizarMetas() {
   }).join("");
 }
 
-/* CALENDÁRIO */
+/* AGENDA INTELIGENTE */
 
-function atualizarCalendario() {
-  const lista = pegar("listaCalendario");
+function montarGrupoAgenda(titulo, listaDeContas) {
+  if (!listaDeContas.length) return "";
 
-  const ordenadas = [...contas].sort((a, b) => {
-    return new Date(a.vencimento) - new Date(b.vencimento);
-  });
-
-  if (!ordenadas.length) {
-    lista.innerHTML = `<p class="empty">Nenhum vencimento cadastrado.</p>`;
-    return;
-  }
-
-  lista.innerHTML = ordenadas.map((conta) => {
+  const itens = listaDeContas.map((conta) => {
     const estaPaga = conta.status === "paga";
 
     return `
@@ -818,6 +809,62 @@ function atualizarCalendario() {
       </div>
     `;
   }).join("");
+
+  return `
+    <div class="agenda-group">
+      <h3>${titulo}</h3>
+      <div class="list">${itens}</div>
+    </div>
+  `;
+}
+
+function atualizarCalendario() {
+  const lista = pegar("listaCalendario");
+
+  if (!lista) return;
+
+  if (!contas.length) {
+    lista.innerHTML = `<p class="empty">Nenhum vencimento cadastrado.</p>`;
+    return;
+  }
+
+  const ordenadas = [...contas].sort((a, b) => {
+    return new Date(a.vencimento) - new Date(b.vencimento);
+  });
+
+  const atrasadas = [];
+  const hoje = [];
+  const proximos7Dias = [];
+  const esteMes = [];
+  const pagas = [];
+
+  ordenadas.forEach((conta) => {
+    const dias = calcularDias(conta.vencimento);
+
+    if (conta.status === "paga") {
+      pagas.push(conta);
+      return;
+    }
+
+    if (dias < 0) {
+      atrasadas.push(conta);
+    } else if (dias === 0) {
+      hoje.push(conta);
+    } else if (dias > 0 && dias <= 7) {
+      proximos7Dias.push(conta);
+    } else {
+      esteMes.push(conta);
+    }
+  });
+
+  const html =
+    montarGrupoAgenda("Atrasadas", atrasadas) +
+    montarGrupoAgenda("Vence hoje", hoje) +
+    montarGrupoAgenda("Próximos 7 dias", proximos7Dias) +
+    montarGrupoAgenda("Este mês", esteMes) +
+    montarGrupoAgenda("Pagas", pagas);
+
+  lista.innerHTML = html || `<p class="empty">Nenhum vencimento encontrado.</p>`;
 }
 
 /* HOME */
