@@ -811,7 +811,7 @@ select {
 
 /* botão do status também transparente */
 .hero-copy p {
-  background: rgba(255,255,255,0.055) !important;
+  background: rgba(255, 255, 255, 0.008) !important; 
   border: 1px solid rgba(255,255,255,0.18) !important;
   color: rgba(230,240,255,0.86) !important;
   backdrop-filter: blur(14px) saturate(150%) !important;
