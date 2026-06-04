@@ -982,3 +982,26 @@ img {
     drop-shadow(0 0 18px rgba(60, 140, 255, 0.22))
     saturate(1.2);
 }
+
+/* AJUSTE — ESPAÇO ENTRE ÍCONES DAS CONTAS E INFORMAÇÕES */
+
+.item {
+  grid-template-columns: 64px 1fr auto !important;
+  column-gap: 18px !important;
+  padding: 14px 16px !important;
+}
+
+.item .item-icon {
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.account-icon-img {
+  width: 52px !important;
+  height: 52px !important;
+  object-fit: contain !important;
+}
