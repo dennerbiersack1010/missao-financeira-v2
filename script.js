@@ -455,10 +455,76 @@ async function excluirConta(index) {
   atualizarTela();
 }
 
-/* AÇÕES ENTRADAS E SAÍDAS */
+/* AÇÕES ENTRADAS */
+
+async function editarEntrada(id) {
+  const entrada = entradas.find((item) => item.id === id);
+
+  if (!entrada) return;
+
+  const novoNome = prompt("Nome do ganho:", entrada.nome);
+  if (novoNome === null) return;
+
+  const nomeFinal = novoNome.trim();
+
+  if (!nomeFinal) {
+    alert("O nome do ganho não pode ficar vazio.");
+    return;
+  }
+
+  const novoValor = prompt("Valor recebido:", entrada.valor);
+  if (novoValor === null) return;
+
+  const valorFinal = converterValorDigitado(novoValor);
+
+  if (isNaN(valorFinal) || valorFinal <= 0) {
+    alert("Digite um valor válido.");
+    return;
+  }
+
+  entrada.nome = nomeFinal;
+  entrada.valor = valorFinal;
+
+  await salvarDados();
+  atualizarTela();
+}
 
 async function excluirEntrada(id) {
   entradas = entradas.filter((item) => item.id !== id);
+  await salvarDados();
+  atualizarTela();
+}
+
+/* AÇÕES SAÍDAS */
+
+async function editarSaida(id) {
+  const saida = saidas.find((item) => item.id === id);
+
+  if (!saida) return;
+
+  const novoNome = prompt("Nome da saída:", saida.nome);
+  if (novoNome === null) return;
+
+  const nomeFinal = novoNome.trim();
+
+  if (!nomeFinal) {
+    alert("O nome da saída não pode ficar vazio.");
+    return;
+  }
+
+  const novoValor = prompt("Valor gasto:", saida.valor);
+  if (novoValor === null) return;
+
+  const valorFinal = converterValorDigitado(novoValor);
+
+  if (isNaN(valorFinal) || valorFinal <= 0) {
+    alert("Digite um valor válido.");
+    return;
+  }
+
+  saida.nome = nomeFinal;
+  saida.valor = valorFinal;
+
   await salvarDados();
   atualizarTela();
 }
@@ -567,7 +633,7 @@ function atualizarEntradas() {
 
   lista.innerHTML = ordenadas.map((item) => {
     return `
-      <div class="item">
+      <div class="item transaction-item">
         <div class="item-icon">
           <img
             src="assets/icone-entradas.png"
@@ -583,7 +649,8 @@ function atualizarEntradas() {
 
         <div>
           <strong>+ ${moeda(item.valor)}</strong>
-          <div class="item-actions">
+          <div class="item-actions transaction-actions">
+            <button onclick="editarEntrada(${item.id})">Editar</button>
             <button onclick="excluirEntrada(${item.id})">Excluir</button>
           </div>
         </div>
@@ -608,7 +675,7 @@ function atualizarSaidas() {
 
   lista.innerHTML = ordenadas.map((item) => {
     return `
-      <div class="item">
+      <div class="item transaction-item">
         <div class="item-icon">
           <img
             src="assets/icone-saidas.png"
@@ -624,7 +691,8 @@ function atualizarSaidas() {
 
         <div>
           <strong>- ${moeda(item.valor)}</strong>
-          <div class="item-actions">
+          <div class="item-actions transaction-actions">
+            <button onclick="editarSaida(${item.id})">Editar</button>
             <button onclick="excluirSaida(${item.id})">Excluir</button>
           </div>
         </div>
@@ -853,7 +921,9 @@ window.adicionarMeta = adicionarMeta;
 window.marcarContaPaga = marcarContaPaga;
 window.editarConta = editarConta;
 window.excluirConta = excluirConta;
+window.editarEntrada = editarEntrada;
 window.excluirEntrada = excluirEntrada;
+window.editarSaida = editarSaida;
 window.excluirSaida = excluirSaida;
 window.excluirMeta = excluirMeta;
 window.editarMeta = editarMeta;
