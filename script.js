@@ -561,10 +561,18 @@ function atualizarTransacoes() {
   lista.innerHTML = transacoes.map((item) => {
     const positivo = item.tipo === "entrada";
     const funcao = positivo ? "excluirEntrada" : "excluirSaida";
+    const iconeTransacao = positivo ? "icone-entradas.png" : "icone-saidas.png";
+    const textoAlt = positivo ? "Entrada" : "Saída";
 
     return `
       <div class="item">
-        <div class="item-icon">${positivo ? "IN" : "OUT"}</div>
+        <div class="item-icon">
+          <img
+            src="assets/${iconeTransacao}"
+            alt="${textoAlt}"
+            class="transaction-icon-img"
+          >
+        </div>
 
         <div>
           <h4>${item.nome}</h4>
