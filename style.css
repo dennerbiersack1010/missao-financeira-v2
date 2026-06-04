@@ -2048,3 +2048,72 @@ img {
 .month-selector button:active {
   transform: scale(0.94);
 }
+
+/* AJUSTE FINAL — SELETOR DE MÊS SEM FUNDO NAS SETAS */
+
+.month-selector {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+
+  margin-top: 18px !important;
+  margin-bottom: 26px !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.month-selector strong {
+  font-family: "Rajdhani", sans-serif !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  text-transform: lowercase !important;
+
+  color: #ffffff !important;
+  text-align: left !important;
+  line-height: 1 !important;
+}
+
+.month-selector button {
+  width: auto !important;
+  height: auto !important;
+  min-width: auto !important;
+  min-height: auto !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  color: #ffffff !important;
+
+  font-family: "Rajdhani", sans-serif !important;
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+.month-selector button:active {
+  transform: scale(0.92) !important;
+  opacity: 0.7 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.month-selector button:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+}
