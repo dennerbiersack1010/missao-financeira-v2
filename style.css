@@ -845,3 +845,60 @@ select {
   color: #ffffff !important;
   text-shadow: 0 0 10px rgba(255,255,255,0.22);
 }
+
+/* CORREÇÃO DO AVATAR NO TOPO */
+
+.top-header {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  margin-bottom: 24px !important;
+}
+
+.top-header > div:first-child {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.top-user-box {
+  width: 74px !important;
+  height: 74px !important;
+  min-width: 74px !important;
+  max-width: 74px !important;
+  min-height: 74px !important;
+  max-height: 74px !important;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  flex: 0 0 74px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background: rgba(12, 26, 48, 0.18) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255,255,255,0.10) !important;
+
+  backdrop-filter: blur(10px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+}
+
+.top-user-photo {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  border-radius: 24px !important;
+}
+
+/* evita qualquer imagem solta quebrar a tela */
+img {
+  max-width: 100%;
+}
