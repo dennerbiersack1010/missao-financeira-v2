@@ -135,6 +135,30 @@ function estaNoPeriodo(dataBR, filtro) {
   return true;
 }
 
+function estaNoMesAtual(dataBR) {
+  const data = converterDataBRParaDate(dataBR);
+  if (!data) return false;
+
+  const hoje = new Date();
+
+  return (
+    data.getMonth() === hoje.getMonth() &&
+    data.getFullYear() === hoje.getFullYear()
+  );
+}
+
+function vencimentoNoMesAtual(vencimento) {
+  if (!vencimento) return false;
+
+  const data = new Date(vencimento + "T00:00:00");
+  const hoje = new Date();
+
+  return (
+    data.getMonth() === hoje.getMonth() &&
+    data.getFullYear() === hoje.getFullYear()
+  );
+}
+
 /* ÍCONE PNG POR CATEGORIA */
 
 function iconeConta(nome, categoria) {
@@ -263,6 +287,36 @@ function calcularResumo() {
     totalSaidas,
     contasPendentes,
     contasPagas,
+    totalContasPendentes,
+    totalContasPagas,
+    caixaAtual,
+    saldoProjetado
+  };
+}
+
+function calcularResumoMensal() {
+  const entradasDoMes = entradas.filter((item) => estaNoMesAtual(item.data));
+  const saidasDoMes = saidas.filter((item) => estaNoMesAtual(item.data));
+
+  const contasDoMes = contas.filter((conta) => vencimentoNoMesAtual(conta.vencimento));
+
+  const contasPendentesDoMes = contasDoMes.filter((conta) => conta.status !== "paga");
+  const contasPagasDoMes = contasDoMes.filter((conta) => conta.status === "paga");
+
+  const totalEntradas = entradasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalSaidas = saidasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+
+  const totalContasPendentes = contasPendentesDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalContasPagas = contasPagasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+
+  const caixaAtual = totalEntradas - totalSaidas - totalContasPagas;
+  const saldoProjetado = caixaAtual - totalContasPendentes;
+
+  return {
+    totalEntradas,
+    totalSaidas,
+    contasPendentes: contasPendentesDoMes,
+    contasPagas: contasPagasDoMes,
     totalContasPendentes,
     totalContasPagas,
     caixaAtual,
@@ -876,6 +930,7 @@ function criarResumoMensalNaHome(resumo) {
 
 function atualizarTela() {
   const resumo = calcularResumo();
+  const resumoMensal = calcularResumoMensal();
 
   escrever("caixaAtual", moeda(resumo.caixaAtual));
   escrever("totalGanhos", moeda(resumo.totalEntradas));
@@ -902,7 +957,7 @@ function atualizarTela() {
   atualizarMetas();
   atualizarCalendario();
   atualizarHome();
-  criarResumoMensalNaHome(resumo);
+  criarResumoMensalNaHome(resumoMensal);
 }
 
 /* GANHOS */
