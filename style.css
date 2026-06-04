@@ -114,7 +114,7 @@ select {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("assets/bg-splash.png") center center / cover no-repeat;
+  background: url("assets/bg-splash.PNG") center center / cover no-repeat;
   transform: scale(1.04);
 }
 
