@@ -949,7 +949,16 @@ function criarAreaBackupNaHome() {
 
       <div class="backup-actions">
         <button type="button" onclick="exportarBackup()">Exportar backup</button>
+        <button type="button" onclick="abrirImportarBackup()">Importar backup</button>
       </div>
+
+      <input
+        type="file"
+        id="inputImportarBackup"
+        accept="application/json,.json"
+        style="display:none"
+        onchange="importarBackupArquivo(event)"
+      >
     `;
 
     home.appendChild(blocoBackup);
@@ -986,6 +995,69 @@ function exportarBackup() {
 
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+function abrirImportarBackup() {
+  const input = pegar("inputImportarBackup");
+
+  if (!input) {
+    alert("Campo de importação não encontrado.");
+    return;
+  }
+
+  input.value = "";
+  input.click();
+}
+
+function importarBackupArquivo(event) {
+  const arquivo = event.target.files[0];
+
+  if (!arquivo) return;
+
+  const leitor = new FileReader();
+
+  leitor.onload = async function(e) {
+    try {
+      const conteudo = e.target.result;
+      const dados = JSON.parse(conteudo);
+
+      if (!dados || typeof dados !== "object") {
+        alert("Arquivo de backup inválido.");
+        return;
+      }
+
+      if (
+        !Array.isArray(dados.entradas) ||
+        !Array.isArray(dados.saidas) ||
+        !Array.isArray(dados.contas) ||
+        !Array.isArray(dados.metas)
+      ) {
+        alert("Esse arquivo não parece ser um backup válido do app.");
+        return;
+      }
+
+      const confirmar = confirm(
+        "Tem certeza que deseja importar este backup? Isso substituirá os dados atuais do app."
+      );
+
+      if (!confirmar) return;
+
+      entradas = dados.entradas;
+      saidas = dados.saidas;
+      contas = dados.contas;
+      metas = dados.metas;
+
+      await salvarDados();
+      atualizarTela();
+
+      alert("Backup importado com sucesso.");
+    } catch (erro) {
+      console.error("Erro ao importar backup:", erro);
+      alert("Erro ao importar backup. Verifique se o arquivo é um JSON válido.");
+    }
+  };
+
+  leitor.readAsText(arquivo);
 }
 
 /* ATUALIZAR TELA */
@@ -1457,6 +1529,8 @@ window.aplicarFiltroContas = aplicarFiltroContas;
 window.aplicarFiltroEntradas = aplicarFiltroEntradas;
 window.aplicarFiltroSaidas = aplicarFiltroSaidas;
 window.exportarBackup = exportarBackup;
+window.abrirImportarBackup = abrirImportarBackup;
+window.importarBackupArquivo = importarBackupArquivo;
 
 /* INICIAR APP */
 
