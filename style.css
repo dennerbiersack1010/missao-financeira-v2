@@ -138,21 +138,18 @@ select {
   align-items: center;
 }
 
-.splash-logo-v2 {
-  width: 245px;
-  max-width: 78%;
-  height: auto;
-  margin-bottom: 42px;
-  display: block;
-  filter: drop-shadow(0 0 24px rgba(255,255,255,0.12));
+.system-loader h1 {
+  display: none;
 }
 
-.system-loader h1 {
-  margin: 0 0 10px;
+.loading-title {
+  margin: 0 0 28px;
   font-family: "Orbitron", sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  color: rgba(245, 248, 255, 0.86);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
 }
 
 .system-loader p {
