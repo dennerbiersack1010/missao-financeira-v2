@@ -1903,3 +1903,41 @@ img {
 .backup-actions button:active {
   transform: scale(0.97);
 }
+
+/* BACKUP — BOTÕES EXPORTAR / IMPORTAR */
+
+.backup-actions {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.backup-actions button {
+  min-height: 52px;
+  border-radius: 18px;
+
+  border: 1px solid rgba(205, 230, 255, 0.22);
+  background:
+    linear-gradient(145deg, rgba(120, 180, 255, 0.22), rgba(20, 60, 120, 0.20));
+
+  color: #ffffff;
+
+  font-family: "Rajdhani", sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 0 22px rgba(80, 160, 255, 0.12);
+}
+
+.backup-actions button:nth-child(2) {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(20, 60, 120, 0.14));
+}
+
+.backup-actions button:active {
+  transform: scale(0.97);
+}
