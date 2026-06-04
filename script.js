@@ -172,8 +172,6 @@ function contaPagaNoMes(conta, mes, ano) {
   return vencimentoNoMes(conta.vencimento, mes, ano);
 }
 
-/* ÍCONE PNG POR CATEGORIA */
-
 function iconeConta(nome, categoria) {
   const texto = `${nome} ${categoria}`.toLowerCase();
 
@@ -241,8 +239,6 @@ function iconeConta(nome, categoria) {
   return `<img src="assets/${arquivo}" alt="${categoria}" class="account-icon-img">`;
 }
 
-/* FIREBASE */
-
 async function carregarDados() {
   try {
     const snapshot = await getDoc(documentoRef);
@@ -279,8 +275,6 @@ async function salvarDados() {
     alert("Erro ao salvar dados da V2.");
   }
 }
-
-/* CÁLCULOS */
 
 function calcularResumo() {
   const totalEntradas = entradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
@@ -342,8 +336,6 @@ function calcularResumoMensal(mes = mesResumoSelecionado, ano = anoResumoSelecio
   };
 }
 
-/* ABAS */
-
 function openTab(tab, botao = null) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.remove("active");
@@ -377,8 +369,6 @@ function openTab(tab, botao = null) {
     appContainer.classList.add(`bg-${tab}`);
   }
 }
-
-/* ADICIONAR DADOS */
 
 async function adicionarEntrada() {
   const nomeInput = pegar("entradaNome");
@@ -487,8 +477,6 @@ async function adicionarMeta() {
   atualizarTela();
 }
 
-/* AÇÕES CONTAS */
-
 async function marcarContaPaga(index) {
   if (!contas[index]) return;
 
@@ -516,8 +504,6 @@ async function excluirConta(index) {
   await salvarDados();
   atualizarTela();
 }
-
-/* AÇÕES ENTRADAS */
 
 async function editarEntrada(id) {
   const entrada = entradas.find((item) => item.id === id);
@@ -557,8 +543,6 @@ async function excluirEntrada(id) {
   atualizarTela();
 }
 
-/* AÇÕES SAÍDAS */
-
 async function editarSaida(id) {
   const saida = saidas.find((item) => item.id === id);
 
@@ -596,8 +580,6 @@ async function excluirSaida(id) {
   await salvarDados();
   atualizarTela();
 }
-
-/* AÇÕES METAS */
 
 async function adicionarValorMeta(id) {
   const meta = metas.find((item) => item.id === id);
@@ -652,8 +634,6 @@ async function apagarTudo() {
   atualizarTela();
 }
 
-/* FILTROS CONTAS */
-
 function aplicarFiltroContas(filtro) {
   filtroContasAtual = filtro;
   atualizarContas();
@@ -704,8 +684,6 @@ function filtrarContasParaTela(lista) {
   return lista;
 }
 
-/* FILTROS PERÍODO */
-
 function criarFiltrosPeriodo(tipo) {
   const lista = tipo === "entradas" ? pegar("listaEntradas") : pegar("listaSaidas");
   if (!lista) return;
@@ -751,8 +729,6 @@ function aplicarFiltroSaidas(filtro) {
   filtroSaidasAtual = filtro;
   atualizarSaidas();
 }
-
-/* RESUMO MENSAL */
 
 function mensagemResumoMensal(resumo) {
   if (resumo.caixaAtual >= 0 && resumo.saldoProjetado >= 0) {
@@ -862,8 +838,6 @@ function mudarMesResumo(direcao) {
 
   atualizarTela();
 }
-
-/* BACKUP */
 
 function criarAreaBackupNaHome() {
   const home = pegar("home");
@@ -996,8 +970,6 @@ function importarBackupArquivo(event) {
 
   leitor.readAsText(arquivo);
 }
-
-/* MODAL PREMIUM — EDITAR CONTA */
 
 function criarModalEditarConta() {
   if (pegar("modalEditarConta")) return;
@@ -1161,8 +1133,6 @@ async function salvarEdicaoConta() {
   atualizarTela();
 }
 
-/* MODAL PREMIUM — EDITAR META */
-
 function criarModalEditarMeta() {
   if (pegar("modalEditarMeta")) return;
 
@@ -1267,8 +1237,6 @@ async function salvarEdicaoMeta() {
   atualizarTela();
 }
 
-/* ATUALIZAR TELA */
-
 function atualizarTela() {
   const resumo = calcularResumo();
   const resumoMensal = calcularResumoMensal();
@@ -1301,8 +1269,6 @@ function atualizarTela() {
   criarResumoMensalNaHome(resumoMensal);
   criarAreaBackupNaHome();
 }
-
-/* GANHOS */
 
 function atualizarEntradas() {
   const lista = pegar("listaEntradas");
@@ -1353,8 +1319,6 @@ function atualizarEntradas() {
   }).join("");
 }
 
-/* SAÍDAS */
-
 function atualizarSaidas() {
   const lista = pegar("listaSaidas");
 
@@ -1403,8 +1367,6 @@ function atualizarSaidas() {
     `;
   }).join("");
 }
-
-/* CONTAS */
 
 function atualizarContas() {
   const lista = pegar("listaContas");
@@ -1463,8 +1425,6 @@ function atualizarContas() {
     })
     .join("");
 }
-
-/* METAS */
 
 function criarCardMeta(meta) {
   const progresso = meta.valorTotal > 0
@@ -1561,8 +1521,6 @@ function atualizarMetas() {
   lista.innerHTML = html;
 }
 
-/* AGENDA */
-
 function montarGrupoAgenda(titulo, listaDeContas) {
   if (!listaDeContas.length) return "";
 
@@ -1645,8 +1603,6 @@ function atualizarCalendario() {
   lista.innerHTML = html || `<p class="empty">Nenhum vencimento encontrado.</p>`;
 }
 
-/* HOME */
-
 function atualizarHome() {
   const proximos = pegar("listaProximosVencimentos");
   const metaDestaque = pegar("metaDestaque");
@@ -1695,8 +1651,6 @@ function atualizarHome() {
   }
 }
 
-/* SPLASH */
-
 function iniciarSplashV2() {
   const splash = pegar("splashScreen");
   const percent = pegar("loadingPercent");
@@ -1721,8 +1675,6 @@ function iniciarSplashV2() {
     }
   }, 22);
 }
-
-/* EXPOR FUNÇÕES PARA O HTML */
 
 window.openTab = openTab;
 window.adicionarEntrada = adicionarEntrada;
@@ -1764,8 +1716,6 @@ window.alternarCampoDataPagamento = alternarCampoDataPagamento;
 window.abrirModalEditarMeta = abrirModalEditarMeta;
 window.fecharModalEditarMeta = fecharModalEditarMeta;
 window.salvarEdicaoMeta = salvarEdicaoMeta;
-
-/* INICIAR APP */
 
 document.addEventListener("DOMContentLoaded", () => {
   iniciarSplashV2();
