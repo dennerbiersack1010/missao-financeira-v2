@@ -1448,3 +1448,93 @@ img {
 .agenda-atrasada small {
   color: rgba(255, 205, 215, 0.92) !important;
 }
+
+/* RESUMO MENSAL NA HOME */
+
+.monthly-summary-panel {
+  margin-top: 26px !important;
+  margin-bottom: 26px !important;
+}
+
+.monthly-summary-head span {
+  font-family: "Orbitron", sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: rgba(210, 230, 255, 0.82);
+  letter-spacing: 0.08em;
+}
+
+.monthly-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.monthly-summary-item {
+  min-height: 92px;
+  padding: 16px;
+  border-radius: 22px;
+
+  background:
+    linear-gradient(145deg, rgba(12, 40, 82, 0.34), rgba(7, 18, 38, 0.28)) !important;
+
+  border: 1px solid rgba(205, 230, 255, 0.18);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 0 18px rgba(70, 150, 255, 0.08);
+}
+
+.monthly-summary-item span {
+  display: block;
+  font-size: 14px;
+  color: rgba(225, 235, 255, 0.78);
+  margin-bottom: 8px;
+}
+
+.monthly-summary-item strong {
+  display: block;
+  font-family: "Orbitron", sans-serif;
+  font-size: 18px;
+  color: #ffffff;
+  line-height: 1.08;
+}
+
+.monthly-summary-item.highlight {
+  background:
+    linear-gradient(145deg, rgba(20, 60, 118, 0.46), rgba(8, 24, 52, 0.34)) !important;
+}
+
+.monthly-summary-item.positive {
+  border-color: rgba(120, 210, 255, 0.28);
+}
+
+.monthly-summary-item.negative {
+  border-color: rgba(255, 80, 105, 0.42);
+  background:
+    linear-gradient(145deg, rgba(95, 8, 18, 0.38), rgba(18, 4, 8, 0.30)) !important;
+}
+
+.monthly-summary-message {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 22px;
+
+  font-size: 15px;
+  line-height: 1.25;
+  color: rgba(240, 246, 255, 0.94);
+
+  border: 1px solid rgba(210, 230, 255, 0.16);
+  background: rgba(255,255,255,0.045);
+}
+
+.monthly-summary-message.warning {
+  border-color: rgba(255, 95, 120, 0.36);
+  box-shadow: 0 0 22px rgba(255, 40, 75, 0.10);
+}
+
+.monthly-summary-message.safe {
+  border-color: rgba(120, 200, 255, 0.22);
+  box-shadow: 0 0 22px rgba(80, 160, 255, 0.10);
+}
