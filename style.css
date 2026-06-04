@@ -740,3 +740,67 @@ select {
     font-size: 10px;
   }
 }
+
+/* AJUSTE FINAL — MENOS BLUR + MAIS TRANSPARÊNCIA */
+
+.glass-card,
+.hero-card,
+.metric-card,
+.panel,
+.form-card,
+.goal-card,
+.insight-card {
+  background: rgba(12, 26, 48, 0.08) !important;
+  backdrop-filter: blur(7px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(7px) saturate(145%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+.glass-card::before,
+.hero-card::before,
+.metric-card::before,
+.panel::before,
+.form-card::before,
+.goal-card::before,
+.insight-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.10) 0%,
+    rgba(255,255,255,0.025) 34%,
+    rgba(255,255,255,0.00) 70%
+  ) !important;
+}
+
+.glass-card::after,
+.hero-card::after,
+.metric-card::after,
+.panel::after,
+.form-card::after,
+.goal-card::after,
+.insight-card::after {
+  background: radial-gradient(circle, rgba(120, 160, 255, 0.045), transparent 70%) !important;
+  filter: blur(14px) !important;
+}
+
+.item {
+  background: rgba(12, 26, 48, 0.07) !important;
+  backdrop-filter: blur(6px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(145%) !important;
+}
+
+.bottom-nav {
+  background: rgba(12, 26, 48, 0.12) !important;
+  backdrop-filter: blur(8px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(150%) !important;
+}
+
+#statusFinanceiro {
+  background: rgba(255,255,255,0.055) !important;
+  color: #657386 !important;
+  backdrop-filter: blur(6px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(140%) !important;
+}
