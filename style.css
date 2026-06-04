@@ -937,11 +937,12 @@ img {
 /* AJUSTE INDIVIDUAL DO ÍCONE CONTAS */
 
 .nav-item img[src*="Icone-contas"] {
-  width: 48px !important;
-  height: 48px !important;
+  width: 56px !important;
+  height: 56px !important;
   transform: translateY(-3px) scale(1.18);
 }
 
 .nav-item.active img[src*="Icone-contas"] {
-  transform: translateY(-5px) scale(1.28) !important;
+  transform: translateY(-5px) scale(1.25) !important;
 }
+
