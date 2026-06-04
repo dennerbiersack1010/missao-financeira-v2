@@ -1748,3 +1748,69 @@ img {
     grid-template-columns: 1fr;
   }
 }
+
+/* AJUSTE FINAL — CARD DE METAS COM STATUS EM CIMA */
+
+.goal-premium-head {
+  display: none !important;
+}
+
+.goal-title-row {
+  display: none !important;
+}
+
+.goal-title-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.goal-title-column .goal-status {
+  margin: 0 0 8px 0 !important;
+
+  font-family: "Orbitron", sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  color: rgba(190, 215, 255, 0.82);
+  white-space: nowrap;
+}
+
+.goal-title-column h3 {
+  color: #ffffff !important;
+  font-size: 26px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+.goal-progress-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+.goal-progress-row .goal-progress-track {
+  margin: 0 !important;
+}
+
+.goal-percent-small {
+  font-family: "Orbitron", sans-serif;
+  font-size: 14px !important;
+  line-height: 1;
+  color: #ffffff;
+
+  min-width: 42px;
+  text-align: right;
+
+  text-shadow:
+    0 0 8px rgba(150, 205, 255, 0.35),
+    0 0 18px rgba(70, 150, 255, 0.22);
+}
+
+.goal-percent {
+  display: none !important;
+}
