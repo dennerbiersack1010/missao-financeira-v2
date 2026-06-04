@@ -946,3 +946,14 @@ img {
   transform: translateY(-5px) scale(1.25) !important;
 }
 
+/* AJUSTE FINAL — DESCER ÍCONE CONTAS */
+
+.nav-item img[src*="Icone-contas"] {
+  width: 48px !important;
+  height: 48px !important;
+  transform: translateY(2px) scale(1.18) !important;
+}
+
+.nav-item.active img[src*="Icone-contas"] {
+  transform: translateY(0px) scale(1.28) !important;
+}
