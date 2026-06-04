@@ -3351,3 +3351,52 @@ img {
     0 0 70px rgba(60, 150, 255, 0.22),
     inset 0 1px 0 rgba(255,255,255,0.08) !important;
 }
+
+/* CARD PAGO — SEM ÍCONE DE CHECK E COM AZUL MAIS FORTE */
+
+.conta-paga::before,
+.conta-paga::after {
+  content: none !important;
+  display: none !important;
+}
+
+.conta-paga {
+  position: relative !important;
+
+  opacity: 1 !important;
+
+  border: 1px solid rgba(115, 175, 255, 0.62) !important;
+
+  background:
+    radial-gradient(circle at 88% 24%, rgba(95, 160, 255, 0.32), transparent 34%),
+    linear-gradient(
+      145deg,
+      rgba(45, 93, 190, 0.38) 0%,
+      rgba(18, 54, 125, 0.34) 46%,
+      rgba(8, 24, 58, 0.92) 100%
+    ) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 0 30px rgba(85, 150, 255, 0.16),
+    0 0 24px rgba(75, 145, 255, 0.18) !important;
+}
+
+.conta-paga h4,
+.conta-paga strong {
+  color: #ffffff !important;
+}
+
+.conta-paga small {
+  color: rgba(225, 238, 255, 0.82) !important;
+}
+
+.conta-paga .item-icon {
+  opacity: 0.88 !important;
+  filter: saturate(1.05) brightness(1.02) !important;
+}
+
+.conta-paga > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
