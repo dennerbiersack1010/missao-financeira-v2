@@ -541,7 +541,7 @@ async function editarConta(index) {
   }
 
   const novaCategoria = prompt(
-    "Categoria: Streaming, Internet, Apps, Pessoa, Serviço, Moradia ou Outro",
+    "Categoria:\n\nStreaming\nInternet\nApps\nPessoa\nServiço\nMoradia\nOutro",
     conta.categoria
   );
 
@@ -564,12 +564,52 @@ async function editarConta(index) {
       (cat) => cat.toLowerCase() === categoriaFinal.toLowerCase()
     ) || "Outro";
 
+  const statusAtual = conta.status || "pendente";
+
+  const novoStatus = prompt(
+    "Status da conta:\n\nDigite: paga ou pendente",
+    statusAtual
+  );
+
+  if (novoStatus === null) return;
+
+  const statusFinal = novoStatus.trim().toLowerCase();
+
+  if (statusFinal !== "paga" && statusFinal !== "pendente") {
+    alert("Status inválido. Use apenas: paga ou pendente.");
+    return;
+  }
+
+  let pagaEmFinal = conta.pagaEm || null;
+
+  if (statusFinal === "paga") {
+    const novaDataPagamento = prompt(
+      "Data de pagamento no formato DD/MM/AAAA:",
+      conta.pagaEm || hojeBR()
+    );
+
+    if (novaDataPagamento === null) return;
+
+    const dataPagamentoFinal = novaDataPagamento.trim();
+
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataPagamentoFinal)) {
+      alert("Use o formato correto: DD/MM/AAAA. Exemplo: 04/06/2026");
+      return;
+    }
+
+    pagaEmFinal = dataPagamentoFinal;
+  } else {
+    pagaEmFinal = null;
+  }
+
   contas[index] = {
     ...conta,
     nome: nomeFinal,
     valor: valorFinal,
     vencimento: vencimentoFinal,
-    categoria: categoriaFormatada
+    categoria: categoriaFormatada,
+    status: statusFinal,
+    pagaEm: pagaEmFinal
   };
 
   await salvarDados();
