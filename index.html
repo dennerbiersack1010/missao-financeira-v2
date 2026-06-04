@@ -112,11 +112,11 @@
         </section>
       </section>
 
-      <!-- TRANSAÇÕES -->
-      <section class="screen" id="transactions">
+      <!-- GANHOS -->
+      <section class="screen" id="income">
         <div class="page-title">
-          <span>TRANSACTIONS</span>
-          <h2>Ganhos e saídas</h2>
+          <span>INCOME</span>
+          <h2>Ganhos</h2>
         </div>
 
         <div class="form-card glass-card">
@@ -124,6 +124,26 @@
           <input id="entradaNome" type="text" placeholder="Nome do trabalho" />
           <input id="entradaValor" type="number" placeholder="Valor recebido" />
           <button type="button" onclick="adicionarEntrada()">Adicionar ganho</button>
+        </div>
+
+        <section class="panel glass-card">
+          <div class="panel-head">
+            <div>
+              <h3>Histórico de ganhos</h3>
+              <p>Entradas registradas</p>
+            </div>
+            <strong id="resumoGanhosTela">R$ 0,00</strong>
+          </div>
+
+          <div class="list" id="listaEntradas"></div>
+        </section>
+      </section>
+
+      <!-- SAÍDAS -->
+      <section class="screen" id="expenses">
+        <div class="page-title">
+          <span>EXPENSES</span>
+          <h2>Saídas</h2>
         </div>
 
         <div class="form-card glass-card">
@@ -136,12 +156,13 @@
         <section class="panel glass-card">
           <div class="panel-head">
             <div>
-              <h3>Histórico</h3>
-              <p>Últimas movimentações</p>
+              <h3>Histórico de saídas</h3>
+              <p>Gastos registrados</p>
             </div>
+            <strong id="resumoSaidasTela">R$ 0,00</strong>
           </div>
 
-          <div class="list" id="listaTransacoes"></div>
+          <div class="list" id="listaSaidas"></div>
         </section>
       </section>
 
@@ -264,12 +285,12 @@
     <input type="checkbox" id="quickToggle" class="quick-toggle">
 
     <div class="quick-menu glass-card">
-      <button type="button" onclick="document.getElementById('quickToggle').checked = false; openTab('transactions')">
+      <button type="button" onclick="document.getElementById('quickToggle').checked = false; openTab('income')">
         <span>+</span>
         <strong>Ganho</strong>
       </button>
 
-      <button type="button" onclick="document.getElementById('quickToggle').checked = false; openTab('transactions')">
+      <button type="button" onclick="document.getElementById('quickToggle').checked = false; openTab('expenses')">
         <span>−</span>
         <strong>Saída</strong>
       </button>
