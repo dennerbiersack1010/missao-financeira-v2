@@ -1,4 +1,3 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getFirestore,
@@ -26,6 +25,8 @@ let entradas = [];
 let saidas = [];
 let contas = [];
 let metas = [];
+
+let filtroContasAtual = "todas";
 
 function pegar(id) {
   return document.getElementById(id);
@@ -585,6 +586,58 @@ async function apagarTudo() {
   atualizarTela();
 }
 
+/* FILTROS CONTAS */
+
+function aplicarFiltroContas(filtro) {
+  filtroContasAtual = filtro;
+  atualizarContas();
+}
+
+function criarFiltrosContas() {
+  const lista = pegar("listaContas");
+  if (!lista) return;
+
+  const painelLista = lista.closest(".panel");
+  if (!painelLista) return;
+
+  let filtros = pegar("filtrosContas");
+
+  if (!filtros) {
+    filtros = document.createElement("div");
+    filtros.id = "filtrosContas";
+    filtros.className = "bill-filters";
+
+    filtros.innerHTML = `
+      <button type="button" data-filter="todas" onclick="aplicarFiltroContas('todas')">Todas</button>
+      <button type="button" data-filter="pendentes" onclick="aplicarFiltroContas('pendentes')">Pendentes</button>
+      <button type="button" data-filter="pagas" onclick="aplicarFiltroContas('pagas')">Pagas</button>
+      <button type="button" data-filter="atrasadas" onclick="aplicarFiltroContas('atrasadas')">Atrasadas</button>
+    `;
+
+    painelLista.parentNode.insertBefore(filtros, painelLista);
+  }
+
+  filtros.querySelectorAll("button").forEach((botao) => {
+    botao.classList.toggle("active", botao.dataset.filter === filtroContasAtual);
+  });
+}
+
+function filtrarContasParaTela(lista) {
+  if (filtroContasAtual === "pendentes") {
+    return lista.filter((conta) => conta.status !== "paga");
+  }
+
+  if (filtroContasAtual === "pagas") {
+    return lista.filter((conta) => conta.status === "paga");
+  }
+
+  if (filtroContasAtual === "atrasadas") {
+    return lista.filter((conta) => conta.status !== "paga" && calcularDias(conta.vencimento) < 0);
+  }
+
+  return lista;
+}
+
 /* RESUMO MENSAL */
 
 function mensagemResumoMensal(resumo) {
@@ -795,6 +848,10 @@ function atualizarSaidas() {
 function atualizarContas() {
   const lista = pegar("listaContas");
 
+  if (!lista) return;
+
+  criarFiltrosContas();
+
   if (!contas.length) {
     lista.innerHTML = `<p class="empty">Nenhuma conta cadastrada.</p>`;
     return;
@@ -807,12 +864,20 @@ function atualizarContas() {
     }))
     .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
 
-  lista.innerHTML = contasOrdenadas
+  const contasFiltradas = filtrarContasParaTela(contasOrdenadas);
+
+  if (!contasFiltradas.length) {
+    lista.innerHTML = `<p class="empty">Nenhuma conta encontrada neste filtro.</p>`;
+    return;
+  }
+
+  lista.innerHTML = contasFiltradas
     .map((conta) => {
       const estaPaga = conta.status === "paga";
+      const estaAtrasada = !estaPaga && calcularDias(conta.vencimento) < 0;
 
       return `
-        <div class="item conta-item ${estaPaga ? "conta-paga" : ""}">
+        <div class="item conta-item ${estaPaga ? "conta-paga" : ""} ${estaAtrasada ? "agenda-atrasada" : ""}">
           <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
 
           <div>
@@ -1065,6 +1130,7 @@ window.excluirSaida = excluirSaida;
 window.excluirMeta = excluirMeta;
 window.editarMeta = editarMeta;
 window.apagarTudo = apagarTudo;
+window.aplicarFiltroContas = aplicarFiltroContas;
 
 /* INICIAR APP */
 
