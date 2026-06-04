@@ -3515,3 +3515,91 @@ img {
     border-radius: 12px !important;
   }
 }
+
+/* =====================================================
+   CORREÇÃO — BOTÕES DO CARD ALERTA NO MESMO TAMANHO DOS OUTROS
+   ===================================================== */
+
+/* Volta os botões do card laranja para o mesmo padrão dos cards normais */
+.conta-alerta .item-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+
+  gap: 6px !important;
+
+  margin-top: 6px !important;
+  padding: 0 !important;
+
+  width: auto !important;
+}
+
+/* Tamanho igual aos outros cards */
+.conta-alerta .item-actions button {
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border-radius: 11px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+/* Mantém valor e botões alinhados */
+.conta-alerta > div:nth-child(3) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+
+  width: 140px !important;
+  min-width: 140px !important;
+
+  padding: 0 !important;
+}
+
+/* Valor acima dos botões */
+.conta-alerta > div:nth-child(3) strong {
+  margin-bottom: 8px !important;
+  padding: 0 !important;
+
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+/* Ajuste fino no iPhone */
+@media (max-width: 480px) {
+  .conta-alerta {
+    grid-template-columns: 82px 1fr 140px !important;
+    gap: 10px !important;
+  }
+
+  .conta-alerta > div:nth-child(3) {
+    width: 140px !important;
+    min-width: 140px !important;
+  }
+
+  .conta-alerta .item-actions button {
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+
+    border-radius: 11px !important;
+  }
+}
