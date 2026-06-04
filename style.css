@@ -1131,3 +1131,99 @@ img {
 .conta-item > div:nth-child(3) {
   min-width: 92px !important;
 }
+
+/* MENU RÁPIDO DO BOTÃO + */
+
+.quick-toggle {
+  display: none;
+}
+
+.center-action {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  user-select: none !important;
+}
+
+.quick-menu {
+  position: fixed;
+  left: 50%;
+  bottom: 106px;
+  transform: translateX(-50%) translateY(18px) scale(0.96);
+  width: min(370px, calc(100% - 42px));
+  padding: 14px;
+  border-radius: 28px;
+  z-index: 90;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s ease;
+}
+
+.quick-toggle:checked ~ .quick-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.quick-menu button {
+  height: 66px;
+  border: 1px solid rgba(210, 230, 255, 0.18);
+  border-radius: 20px;
+  background: rgba(10, 28, 56, 0.26);
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 11px;
+
+  padding: 0 14px;
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 0 18px rgba(70, 150, 255, 0.10);
+}
+
+.quick-menu button span {
+  width: 34px;
+  height: 34px;
+  border-radius: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Orbitron", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #dce9ff;
+  background: rgba(170, 205, 255, 0.12);
+  border: 1px solid rgba(220, 235, 255, 0.18);
+
+  box-shadow:
+    0 0 12px rgba(130, 190, 255, 0.16),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.quick-menu button strong {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* quando abrir o menu, o botão + fica com brilho */
+.quick-toggle:checked ~ .bottom-nav .center-action {
+  transform: rotate(45deg) scale(1.03);
+  box-shadow:
+    0 0 34px rgba(160, 200, 255, 0.42),
+    0 0 70px rgba(70, 140, 255, 0.18);
+}
