@@ -30,30 +30,6 @@ body {
   overflow-x: hidden;
 }
 
-/* FUNDO DO APP MAIS VISÍVEL */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.42)),
-    url("assets/bg-splash.PNG") center center / cover no-repeat;
-  opacity: 0.95;
-  z-index: -3;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(120,150,255,0.10), transparent 34%),
-    radial-gradient(circle at 0% 80%, rgba(255,255,255,0.035), transparent 30%),
-    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.38) 100%);
-  z-index: -2;
-  pointer-events: none;
-}
-
 button,
 input,
 select {
@@ -89,7 +65,7 @@ select {
   color: #ffffff;
 }
 
-/* APP */
+/* APP COM FUNDO REAL */
 
 .app {
   width: 100%;
@@ -97,6 +73,16 @@ select {
   min-height: 100vh;
   margin: 0 auto;
   padding: 26px 18px 112px;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.10) 0%,
+      rgba(0, 0, 0, 0.38) 52%,
+      rgba(0, 0, 0, 0.72) 100%
+    ),
+    url("assets/bg-splash.PNG") center center / cover no-repeat;
 }
 
 /* SPLASH */
@@ -288,16 +274,16 @@ select {
 .insight-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.18);
   background:
     linear-gradient(
       145deg,
-      rgba(255,255,255,0.060),
-      rgba(255,255,255,0.012)
+      rgba(255,255,255,0.055),
+      rgba(255,255,255,0.010)
     );
   box-shadow:
     0 18px 42px rgba(0,0,0,0.22),
-    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.13),
     inset 0 -1px 0 rgba(255,255,255,0.03);
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
@@ -757,35 +743,4 @@ select {
   .loading-title {
     font-size: 10px;
   }
-}
-
-/* FUNDO DA HOME COM A MESMA IMAGEM DO SPLASH */
-
-.app {
-  position: relative;
-  overflow: hidden;
-  background: transparent;
-}
-
-.app::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.62)),
-    url("assets/bg-splash.PNG") center center / cover no-repeat;
-  opacity: 0.95;
-  z-index: -3;
-  pointer-events: none;
-}
-
-.app::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 50% 8%, rgba(120,150,255,0.12), transparent 34%),
-    linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.50));
-  z-index: -2;
-  pointer-events: none;
 }
