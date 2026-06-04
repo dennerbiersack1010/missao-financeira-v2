@@ -2528,3 +2528,212 @@ img {
   pointer-events: none !important;
   z-index: 2 !important;
 }
+
+/* CORREÇÃO FORÇADA — MODAL EDITAR CONTA */
+
+#modalEditarConta.modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  padding: 22px !important;
+
+  background: rgba(0, 8, 20, 0.78) !important;
+
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+}
+
+#modalEditarConta.modal-overlay.active {
+  display: flex !important;
+}
+
+#modalEditarConta .modal-card {
+  position: relative !important;
+  z-index: 1000000 !important;
+
+  width: 100% !important;
+  max-width: 430px !important;
+  max-height: 82vh !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  padding: 26px !important;
+  padding-bottom: 30px !important;
+
+  border-radius: 30px !important;
+
+  background:
+    linear-gradient(145deg, rgba(7, 22, 46, 0.96), rgba(4, 12, 28, 0.96)) !important;
+
+  border: 1px solid rgba(190, 225, 255, 0.24) !important;
+
+  box-shadow:
+    0 0 70px rgba(60, 150, 255, 0.22),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+#modalEditarConta .modal-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+
+  margin-bottom: 22px !important;
+}
+
+#modalEditarConta .modal-head span {
+  display: block !important;
+
+  margin-bottom: 5px !important;
+
+  font-family: "Orbitron", sans-serif !important;
+  font-size: 10px !important;
+  letter-spacing: 0.18em !important;
+  color: rgba(210, 230, 255, 0.62) !important;
+}
+
+#modalEditarConta .modal-head h3 {
+  margin: 0 !important;
+
+  font-family: "Rajdhani", sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+
+  color: #ffffff !important;
+}
+
+#modalEditarConta .modal-close {
+  width: 38px !important;
+  height: 38px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0 !important;
+
+  border-radius: 14px !important;
+  border: 1px solid rgba(205, 230, 255, 0.20) !important;
+
+  background: rgba(255,255,255,0.08) !important;
+  color: #ffffff !important;
+
+  font-size: 26px !important;
+  line-height: 1 !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10) !important;
+}
+
+#modalEditarConta .modal-form {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 15px !important;
+}
+
+#modalEditarConta .modal-form label {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+
+  width: 100% !important;
+
+  font-family: "Rajdhani", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: rgba(230, 240, 255, 0.84) !important;
+}
+
+#modalEditarConta .modal-form input,
+#modalEditarConta .modal-form select {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 54px !important;
+
+  padding: 0 16px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(205, 230, 255, 0.20) !important;
+
+  background: rgba(4, 16, 34, 0.86) !important;
+  color: #ffffff !important;
+
+  font-family: "Rajdhani", sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+
+  outline: none !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    0 0 18px rgba(80, 160, 255, 0.06) !important;
+
+  box-sizing: border-box !important;
+}
+
+#modalEditarConta .modal-form input:focus,
+#modalEditarConta .modal-form select:focus {
+  border-color: rgba(150, 215, 255, 0.45) !important;
+
+  box-shadow:
+    0 0 20px rgba(80, 170, 255, 0.16),
+    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+#modalEditarConta .modal-actions {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+
+  margin-top: 24px !important;
+}
+
+#modalEditarConta .modal-actions button {
+  width: 100% !important;
+  min-height: 56px !important;
+
+  border-radius: 18px !important;
+  border: 1px solid rgba(205, 230, 255, 0.22) !important;
+
+  font-family: "Rajdhani", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+
+  box-sizing: border-box !important;
+}
+
+#modalEditarConta .modal-save {
+  background:
+    linear-gradient(145deg, rgba(210, 230, 255, 0.98), rgba(135, 180, 255, 0.92)) !important;
+
+  color: #061225 !important;
+}
+
+#modalEditarConta .modal-cancel {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(30, 80, 145, 0.16)) !important;
+
+  color: #ffffff !important;
+}
+
+/* ESCONDE DATA DE PAGAMENTO QUANDO STATUS FOR PENDENTE */
+
+#modalEditarConta .hidden {
+  display: none !important;
+}
+
+/* GARANTE QUE A NAV NÃO FIQUE POR CIMA DO MODAL */
+
+#modalEditarConta ~ .bottom-nav,
+#modalEditarConta.active ~ .bottom-nav {
+  z-index: 1 !important;
+}
