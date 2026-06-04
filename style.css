@@ -758,3 +758,34 @@ select {
     font-size: 10px;
   }
 }
+
+/* FUNDO DA HOME COM A MESMA IMAGEM DO SPLASH */
+
+.app {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+}
+
+.app::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.62)),
+    url("assets/bg-splash.PNG") center center / cover no-repeat;
+  opacity: 0.95;
+  z-index: -3;
+  pointer-events: none;
+}
+
+.app::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(120,150,255,0.12), transparent 34%),
+    linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.50));
+  z-index: -2;
+  pointer-events: none;
+}
