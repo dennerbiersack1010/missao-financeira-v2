@@ -902,3 +902,34 @@ select {
 img {
   max-width: 100%;
 }
+
+/* ÍCONES PNG DO MENU INFERIOR */
+
+.nav-icon-img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+  filter:
+    drop-shadow(0 0 8px rgba(120, 190, 255, 0.35))
+    saturate(1.15);
+  opacity: 0.78;
+  transition: 0.25s ease;
+}
+
+.nav-item.active .nav-icon-img {
+  opacity: 1;
+  transform: translateY(-2px) scale(1.10);
+  filter:
+    drop-shadow(0 0 10px rgba(160, 210, 255, 0.75))
+    drop-shadow(0 0 22px rgba(80, 160, 255, 0.34))
+    saturate(1.35);
+}
+
+.nav-item small {
+  margin-top: -2px;
+}
+
+.nav-item span {
+  display: none;
+}
