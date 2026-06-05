@@ -2299,3 +2299,13 @@ document.addEventListener("DOMContentLoaded", () => {
     removerProximosVencimentosAntigoHome();
   }, 900);
 });
+
+/* =====================================================
+   REMOVER CENTRAL DE ALERTAS DA HOME
+   ===================================================== */
+
+#centralAlertasHome,
+.central-alerts-panel,
+.central-alertas-panel {
+  display: none !important;
+}
