@@ -2245,25 +2245,3 @@ function renderCentralAlertasHomePremium() {
   `;
 }
 
-/* chama a central junto com a atualização geral da tela */
-if (typeof atualizarTela === "function" && !window.centralAlertasPremiumAtiva) {
-  const atualizarTelaOriginalComAlertasPremium = atualizarTela;
-
-  atualizarTela = function() {
-    atualizarTelaOriginalComAlertasPremium();
-    renderCentralAlertasHomePremium();
-  };
-
-  window.centralAlertasPremiumAtiva = true;
-}
-
-/* tentativa extra: renderiza quando a página já carregou */
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    renderCentralAlertasHomePremium();
-  }, 800);
-});
-
-
-
-
