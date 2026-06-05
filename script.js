@@ -1721,3 +1721,145 @@ document.addEventListener("DOMContentLoaded", () => {
   iniciarSplashV2();
   carregarDados();
 });
+
+/* =====================================================
+   EDITAR GANHO / SAÍDA — MODAL PREMIUM
+   Substitui prompt nativo por modal visual
+   ===================================================== */
+
+let transacaoEditandoPremiumTipo = null;
+let transacaoEditandoPremiumId = null;
+
+function criarModalEditarTransacaoPremium() {
+  if (document.getElementById("modalEditarTransacaoPremium")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "modalEditarTransacaoPremium";
+  modal.className = "modal-overlay";
+
+  modal.innerHTML = `
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <span id="editarTransacaoPremiumLabel">MISSION_FLOW</span>
+          <h3 id="editarTransacaoPremiumTitulo">Editar registro</h3>
+        </div>
+
+        <button type="button" class="modal-close" onclick="fecharModalEditarTransacaoPremium()">×</button>
+      </div>
+
+      <div class="modal-form">
+        <label>
+          Nome
+          <input id="editarTransacaoPremiumNome" type="text" placeholder="Nome do registro">
+        </label>
+
+        <label>
+          Valor
+          <input id="editarTransacaoPremiumValor" type="number" step="0.01" placeholder="Valor">
+        </label>
+
+        <label>
+          Data
+          <input id="editarTransacaoPremiumData" type="text" placeholder="DD/MM/AAAA">
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-save" onclick="salvarEditarTransacaoPremium()">Salvar alterações</button>
+        <button type="button" class="modal-cancel" onclick="fecharModalEditarTransacaoPremium()">Cancelar</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+}
+
+function abrirModalEditarTransacaoPremium(tipo, id) {
+  criarModalEditarTransacaoPremium();
+
+  const lista = tipo === "entrada" ? entradas : saidas;
+  const item = lista.find((registro) => registro.id === id);
+
+  if (!item) {
+    alert("Registro não encontrado.");
+    return;
+  }
+
+  transacaoEditandoPremiumTipo = tipo;
+  transacaoEditandoPremiumId = id;
+
+  const titulo = tipo === "entrada" ? "Editar ganho" : "Editar saída";
+  const label = tipo === "entrada" ? "MISSION_INCOME" : "MISSION_OUTFLOW";
+
+  document.getElementById("editarTransacaoPremiumTitulo").textContent = titulo;
+  document.getElementById("editarTransacaoPremiumLabel").textContent = label;
+
+  document.getElementById("editarTransacaoPremiumNome").value = item.nome || "";
+  document.getElementById("editarTransacaoPremiumValor").value = item.valor || "";
+  document.getElementById("editarTransacaoPremiumData").value = item.data || new Date().toLocaleDateString("pt-BR");
+
+  document.getElementById("modalEditarTransacaoPremium").classList.add("active");
+}
+
+function fecharModalEditarTransacaoPremium() {
+  const modal = document.getElementById("modalEditarTransacaoPremium");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
+  transacaoEditandoPremiumTipo = null;
+  transacaoEditandoPremiumId = null;
+}
+
+function validarDataTransacaoPremium(data) {
+  return /^\d{2}\/\d{2}\/\d{4}$/.test(data);
+}
+
+async function salvarEditarTransacaoPremium() {
+  if (!transacaoEditandoPremiumTipo || transacaoEditandoPremiumId === null) return;
+
+  const lista = transacaoEditandoPremiumTipo === "entrada" ? entradas : saidas;
+  const item = lista.find((registro) => registro.id === transacaoEditandoPremiumId);
+
+  if (!item) {
+    alert("Registro não encontrado.");
+    return;
+  }
+
+  const nome = document.getElementById("editarTransacaoPremiumNome").value.trim();
+  const valor = Number(document.getElementById("editarTransacaoPremiumValor").value);
+  const data = document.getElementById("editarTransacaoPremiumData").value.trim();
+
+  if (!nome || valor <= 0) {
+    alert("Preencha o nome e um valor válido.");
+    return;
+  }
+
+  if (!validarDataTransacaoPremium(data)) {
+    alert("Use a data no formato DD/MM/AAAA.");
+    return;
+  }
+
+  item.nome = nome;
+  item.valor = valor;
+  item.data = data;
+
+  await salvarDados();
+
+  fecharModalEditarTransacaoPremium();
+  atualizarTela();
+}
+
+/* sobrescreve os editores antigos com prompt nativo */
+window.editarEntrada = function(id) {
+  abrirModalEditarTransacaoPremium("entrada", id);
+};
+
+window.editarSaida = function(id) {
+  abrirModalEditarTransacaoPremium("saida", id);
+};
+
+window.fecharModalEditarTransacaoPremium = fecharModalEditarTransacaoPremium;
+window.salvarEditarTransacaoPremium = salvarEditarTransacaoPremium;
