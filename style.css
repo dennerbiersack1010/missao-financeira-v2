@@ -1091,3 +1091,75 @@ select:focus {
     bottom: 26px;
   }
 }
+
+/* =====================================================
+   CORREÇÃO FINAL — BOTÕES DO CARD LARANJA IGUAIS AO NORMAL
+===================================================== */
+
+.conta-alerta .item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+
+  margin: 0;
+  padding: 0;
+
+  width: auto;
+  height: auto;
+}
+
+.conta-alerta .item-actions button {
+  width: 34px;
+  min-width: 34px;
+  max-width: 34px;
+
+  height: 34px;
+  min-height: 34px;
+  max-height: 34px;
+
+  padding: 0;
+  margin: 0;
+
+  border-radius: 11px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+
+  flex: 0 0 34px;
+}
+
+/* mantém o bloco do valor igual ao card normal */
+.conta-alerta > div:nth-child(3) {
+  width: 138px;
+  min-width: 138px;
+  max-width: 138px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+
+  padding: 0;
+  margin: 0;
+}
+
+/* valor acima dos botões */
+.conta-alerta > div:nth-child(3) strong {
+  margin: 0 0 9px 0;
+  padding: 0;
+
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* impede que o card laranja aumente os botões por herança */
+.conta-alerta button {
+  transform: none;
+  scale: 1;
+}
