@@ -2020,3 +2020,65 @@ if (typeof atualizarTela === "function" && !window.centralAlertasHomeAtivada) {
 
   window.centralAlertasHomeAtivada = true;
 }
+
+/* =====================================================
+   SOM DE INICIALIZAÇÃO — SPLASH
+   Tenta tocar ao carregar e, no iPhone, toca no primeiro toque
+   ===================================================== */
+
+let somInicializacaoTocado = false;
+
+function tocarSomInicializacao() {
+  if (somInicializacaoTocado) return;
+
+  const audio = new Audio("assets/startup.mp3");
+  audio.volume = 0.35;
+
+  const tentativa = audio.play();
+
+  if (tentativa !== undefined) {
+    tentativa
+      .then(() => {
+        somInicializacaoTocado = true;
+      })
+      .catch(() => {
+        // iPhone/Safari pode bloquear autoplay.
+        // Nesse caso, libera no primeiro toque do usuário.
+        document.addEventListener(
+          "touchstart",
+          function tocarNoPrimeiroToque() {
+            if (somInicializacaoTocado) return;
+
+            audio.play()
+              .then(() => {
+                somInicializacaoTocado = true;
+              })
+              .catch(() => {});
+
+            document.removeEventListener("touchstart", tocarNoPrimeiroToque);
+          },
+          { once: true }
+        );
+
+        document.addEventListener(
+          "click",
+          function tocarNoPrimeiroClick() {
+            if (somInicializacaoTocado) return;
+
+            audio.play()
+              .then(() => {
+                somInicializacaoTocado = true;
+              })
+              .catch(() => {});
+
+            document.removeEventListener("click", tocarNoPrimeiroClick);
+          },
+          { once: true }
+        );
+      });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  tocarSomInicializacao();
+});
