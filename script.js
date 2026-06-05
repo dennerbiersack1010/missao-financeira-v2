@@ -6,10 +6,6 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-/* =========================
-   FIREBASE
-========================= */
-
 const firebaseConfig = {
   apiKey: "AIzaSyBFTV0O2H97bdc_R7izGs9cHxZa4EN31_A",
   authDomain: "missao-financeira.firebaseapp.com",
@@ -22,11 +18,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const documentoRef = doc(db, "dadosFinanceirosV2", "dener");
 
-/* =========================
-   ESTADO
-========================= */
+const documentoRef = doc(db, "dadosFinanceirosV2", "dener");
 
 let entradas = [];
 let saidas = [];
@@ -42,25 +35,14 @@ let anoResumoSelecionado = new Date().getFullYear();
 
 let contaEditandoIndex = null;
 let metaEditandoId = null;
-let transacaoEditandoTipo = null;
-let transacaoEditandoId = null;
-
-/* =========================
-   HELPERS
-========================= */
 
 function pegar(id) {
   return document.getElementById(id);
 }
 
 function escrever(id, texto) {
-  const el = pegar(id);
-  if (el) el.textContent = texto;
-}
-
-function escreverValor(id, valor) {
-  const el = pegar(id);
-  if (el) el.value = valor;
+  const elemento = pegar(id);
+  if (elemento) elemento.textContent = texto;
 }
 
 function moeda(valor) {
@@ -68,24 +50,6 @@ function moeda(valor) {
     style: "currency",
     currency: "BRL"
   });
-}
-
-function numero(valor) {
-  return Number(valor || 0);
-}
-
-function hojeBR() {
-  return new Date().toLocaleDateString("pt-BR");
-}
-
-function hojeSemHora() {
-  const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0);
-  return hoje;
-}
-
-function validarDataBR(data) {
-  return /^\d{2}\/\d{2}\/\d{4}$/.test(data);
 }
 
 function converterValorDigitado(valor) {
@@ -100,15 +64,23 @@ function converterValorDigitado(valor) {
   );
 }
 
+function hojeBR() {
+  return new Date().toLocaleDateString("pt-BR");
+}
+
+function hojeSemHora() {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  return hoje;
+}
+
 function calcularDias(vencimento) {
   if (!vencimento) return null;
 
   const hoje = hojeSemHora();
   const data = new Date(vencimento + "T00:00:00");
-
-  if (isNaN(data.getTime())) return null;
-
   const diff = data - hoje;
+
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
@@ -139,8 +111,6 @@ function converterDataBRParaDate(dataBR) {
 
   const data = new Date(ano, mes, dia);
   data.setHours(0, 0, 0, 0);
-
-  if (isNaN(data.getTime())) return null;
 
   return data;
 }
@@ -188,13 +158,12 @@ function vencimentoNoMes(vencimento, mes, ano) {
   if (!vencimento) return false;
 
   const data = new Date(vencimento + "T00:00:00");
-  if (isNaN(data.getTime())) return false;
 
   return data.getMonth() === mes && data.getFullYear() === ano;
 }
 
 function contaPagaNoMes(conta, mes, ano) {
-  if (!conta || conta.status !== "paga") return false;
+  if (conta.status !== "paga") return false;
 
   if (conta.pagaEm) {
     return dataBRNoMes(conta.pagaEm, mes, ano);
@@ -203,12 +172,8 @@ function contaPagaNoMes(conta, mes, ano) {
   return vencimentoNoMes(conta.vencimento, mes, ano);
 }
 
-/* =========================
-   ÍCONES
-========================= */
-
 function iconeConta(nome, categoria) {
-  const texto = `${nome || ""} ${categoria || ""}`.toLowerCase();
+  const texto = `${nome} ${categoria}`.toLowerCase();
 
   let arquivo = "icone-outros.png";
 
@@ -271,12 +236,8 @@ function iconeConta(nome, categoria) {
     arquivo = "icone-moradia.png";
   }
 
-  return `<img src="assets/${arquivo}" alt="${categoria || "Conta"}" class="account-icon-img">`;
+  return `<img src="assets/${arquivo}" alt="${categoria}" class="account-icon-img">`;
 }
-
-/* =========================
-   FIRESTORE
-========================= */
 
 async function carregarDados() {
   try {
@@ -285,10 +246,10 @@ async function carregarDados() {
     if (snapshot.exists()) {
       const dados = snapshot.data();
 
-      entradas = Array.isArray(dados.entradas) ? dados.entradas : [];
-      saidas = Array.isArray(dados.saidas) ? dados.saidas : [];
-      contas = Array.isArray(dados.contas) ? dados.contas : [];
-      metas = Array.isArray(dados.metas) ? dados.metas : [];
+      entradas = dados.entradas || [];
+      saidas = dados.saidas || [];
+      contas = dados.contas || [];
+      metas = dados.metas || [];
     } else {
       await salvarDados();
     }
@@ -296,7 +257,7 @@ async function carregarDados() {
     atualizarTela();
   } catch (erro) {
     console.error("Erro ao carregar Firebase:", erro);
-    alert("Erro ao carregar dados.");
+    alert("Erro ao carregar dados da V2.");
   }
 }
 
@@ -311,23 +272,19 @@ async function salvarDados() {
     });
   } catch (erro) {
     console.error("Erro ao salvar Firebase:", erro);
-    alert("Erro ao salvar dados.");
+    alert("Erro ao salvar dados da V2.");
   }
 }
 
-/* =========================
-   CÁLCULOS
-========================= */
-
 function calcularResumo() {
-  const totalEntradas = entradas.reduce((soma, item) => soma + numero(item.valor), 0);
-  const totalSaidas = saidas.reduce((soma, item) => soma + numero(item.valor), 0);
+  const totalEntradas = entradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalSaidas = saidas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
 
   const contasPendentes = contas.filter((conta) => conta.status !== "paga");
   const contasPagas = contas.filter((conta) => conta.status === "paga");
 
-  const totalContasPendentes = contasPendentes.reduce((soma, item) => soma + numero(item.valor), 0);
-  const totalContasPagas = contasPagas.reduce((soma, item) => soma + numero(item.valor), 0);
+  const totalContasPendentes = contasPendentes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalContasPagas = contasPagas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
 
   const caixaAtual = totalEntradas - totalSaidas - totalContasPagas;
   const saldoProjetado = caixaAtual - totalContasPendentes;
@@ -356,10 +313,11 @@ function calcularResumoMensal(mes = mesResumoSelecionado, ano = anoResumoSelecio
     return contaPagaNoMes(conta, mes, ano);
   });
 
-  const totalEntradas = entradasDoMes.reduce((soma, item) => soma + numero(item.valor), 0);
-  const totalSaidas = saidasDoMes.reduce((soma, item) => soma + numero(item.valor), 0);
-  const totalContasPendentes = contasPendentesDoMes.reduce((soma, item) => soma + numero(item.valor), 0);
-  const totalContasPagas = contasPagasDoMes.reduce((soma, item) => soma + numero(item.valor), 0);
+  const totalEntradas = entradasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalSaidas = saidasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+
+  const totalContasPendentes = contasPendentesDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalContasPagas = contasPagasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
 
   const caixaAtual = totalEntradas - totalSaidas - totalContasPagas;
   const saldoProjetado = caixaAtual - totalContasPendentes;
@@ -378,10 +336,6 @@ function calcularResumoMensal(mes = mesResumoSelecionado, ano = anoResumoSelecio
   };
 }
 
-/* =========================
-   ABAS
-========================= */
-
 function openTab(tab, botao = null) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.remove("active");
@@ -394,18 +348,31 @@ function openTab(tab, botao = null) {
     item.classList.remove("active");
   });
 
-  if (botao) botao.classList.add("active");
-}
+  if (botao) {
+    botao.classList.add("active");
+  }
 
-/* =========================
-   ADICIONAR
-========================= */
+  const appContainer = document.querySelector(".app");
+
+  if (appContainer) {
+    appContainer.classList.remove(
+      "bg-home",
+      "bg-bills",
+      "bg-goals",
+      "bg-calendar",
+      "bg-transactions",
+      "bg-income",
+      "bg-expenses",
+      "bg-insights"
+    );
+
+    appContainer.classList.add(`bg-${tab}`);
+  }
+}
 
 async function adicionarEntrada() {
   const nomeInput = pegar("entradaNome");
   const valorInput = pegar("entradaValor");
-
-  if (!nomeInput || !valorInput) return;
 
   const nome = nomeInput.value.trim();
   const valor = Number(valorInput.value);
@@ -433,8 +400,6 @@ async function adicionarSaida() {
   const nomeInput = pegar("saidaNome");
   const valorInput = pegar("saidaValor");
 
-  if (!nomeInput || !valorInput) return;
-
   const nome = nomeInput.value.trim();
   const valor = Number(valorInput.value);
 
@@ -458,17 +423,10 @@ async function adicionarSaida() {
 }
 
 async function adicionarConta() {
-  const nomeInput = pegar("contaNome");
-  const valorInput = pegar("contaValor");
-  const vencimentoInput = pegar("contaVencimento");
-  const categoriaInput = pegar("contaCategoria");
-
-  if (!nomeInput || !valorInput || !vencimentoInput || !categoriaInput) return;
-
-  const nome = nomeInput.value.trim();
-  const valor = Number(valorInput.value);
-  const vencimento = vencimentoInput.value;
-  const categoria = categoriaInput.value;
+  const nome = pegar("contaNome").value.trim();
+  const valor = Number(pegar("contaValor").value);
+  const vencimento = pegar("contaVencimento").value;
+  const categoria = pegar("contaCategoria").value;
 
   if (!nome || valor <= 0 || !vencimento) {
     alert("Preencha nome, valor e vencimento da conta.");
@@ -485,25 +443,19 @@ async function adicionarConta() {
     pagaEm: null
   });
 
-  nomeInput.value = "";
-  valorInput.value = "";
-  vencimentoInput.value = "";
-  categoriaInput.value = "Streaming";
+  pegar("contaNome").value = "";
+  pegar("contaValor").value = "";
+  pegar("contaVencimento").value = "";
+  pegar("contaCategoria").value = "Streaming";
 
   await salvarDados();
   atualizarTela();
 }
 
 async function adicionarMeta() {
-  const nomeInput = pegar("metaNome");
-  const valorTotalInput = pegar("metaValorTotal");
-  const valorAtualInput = pegar("metaValorAtual");
-
-  if (!nomeInput || !valorTotalInput || !valorAtualInput) return;
-
-  const nome = nomeInput.value.trim();
-  const valorTotal = Number(valorTotalInput.value);
-  const valorAtual = Number(valorAtualInput.value);
+  const nome = pegar("metaNome").value.trim();
+  const valorTotal = Number(pegar("metaValorTotal").value);
+  const valorAtual = Number(pegar("metaValorAtual").value);
 
   if (!nome || valorTotal <= 0) {
     alert("Preencha o nome e o valor total da meta.");
@@ -517,17 +469,13 @@ async function adicionarMeta() {
     valorAtual: valorAtual || 0
   });
 
-  nomeInput.value = "";
-  valorTotalInput.value = "";
-  valorAtualInput.value = "";
+  pegar("metaNome").value = "";
+  pegar("metaValorTotal").value = "";
+  pegar("metaValorAtual").value = "";
 
   await salvarDados();
   atualizarTela();
 }
-
-/* =========================
-   AÇÕES
-========================= */
 
 async function marcarContaPaga(index) {
   if (!contas[index]) return;
@@ -551,45 +499,98 @@ function editarConta(index) {
 async function excluirConta(index) {
   if (!contas[index]) return;
 
-  if (!confirm("Excluir esta conta?")) return;
-
   contas.splice(index, 1);
 
   await salvarDados();
   atualizarTela();
 }
 
-function editarEntrada(id) {
-  abrirModalEditarTransacao("entrada", id);
-}
+async function editarEntrada(id) {
+  const entrada = entradas.find((item) => item.id === id);
 
-async function excluirEntrada(id) {
-  if (!confirm("Excluir este ganho?")) return;
+  if (!entrada) return;
 
-  entradas = entradas.filter((item) => item.id !== id);
+  const novoNome = prompt("Nome do ganho:", entrada.nome);
+  if (novoNome === null) return;
+
+  const nomeFinal = novoNome.trim();
+
+  if (!nomeFinal) {
+    alert("O nome do ganho não pode ficar vazio.");
+    return;
+  }
+
+  const novoValor = prompt("Valor recebido:", entrada.valor);
+  if (novoValor === null) return;
+
+  const valorFinal = converterValorDigitado(novoValor);
+
+  if (isNaN(valorFinal) || valorFinal <= 0) {
+    alert("Digite um valor válido.");
+    return;
+  }
+
+  entrada.nome = nomeFinal;
+  entrada.valor = valorFinal;
 
   await salvarDados();
   atualizarTela();
 }
 
-function editarSaida(id) {
-  abrirModalEditarTransacao("saida", id);
+async function excluirEntrada(id) {
+  entradas = entradas.filter((item) => item.id !== id);
+  await salvarDados();
+  atualizarTela();
+}
+
+async function editarSaida(id) {
+  const saida = saidas.find((item) => item.id === id);
+
+  if (!saida) return;
+
+  const novoNome = prompt("Nome da saída:", saida.nome);
+  if (novoNome === null) return;
+
+  const nomeFinal = novoNome.trim();
+
+  if (!nomeFinal) {
+    alert("O nome da saída não pode ficar vazio.");
+    return;
+  }
+
+  const novoValor = prompt("Valor gasto:", saida.valor);
+  if (novoValor === null) return;
+
+  const valorFinal = converterValorDigitado(novoValor);
+
+  if (isNaN(valorFinal) || valorFinal <= 0) {
+    alert("Digite um valor válido.");
+    return;
+  }
+
+  saida.nome = nomeFinal;
+  saida.valor = valorFinal;
+
+  await salvarDados();
+  atualizarTela();
 }
 
 async function excluirSaida(id) {
-  if (!confirm("Excluir esta saída?")) return;
-
   saidas = saidas.filter((item) => item.id !== id);
-
   await salvarDados();
   atualizarTela();
 }
 
 async function adicionarValorMeta(id) {
   const meta = metas.find((item) => item.id === id);
+
   if (!meta) return;
 
-  const valorAdicionar = prompt(`Quanto você quer adicionar na meta "${meta.nome}"?`, "0");
+  const valorAdicionar = prompt(
+    `Quanto você quer adicionar na meta "${meta.nome}"?`,
+    0
+  );
+
   if (valorAdicionar === null) return;
 
   const valorConvertido = converterValorDigitado(valorAdicionar);
@@ -599,7 +600,7 @@ async function adicionarValorMeta(id) {
     return;
   }
 
-  meta.valorAtual = numero(meta.valorAtual) + valorConvertido;
+  meta.valorAtual = Number(meta.valorAtual || 0) + valorConvertido;
 
   if (meta.valorAtual > meta.valorTotal) {
     meta.valorAtual = meta.valorTotal;
@@ -614,16 +615,15 @@ function editarMeta(id) {
 }
 
 async function excluirMeta(id) {
-  if (!confirm("Excluir esta meta?")) return;
-
   metas = metas.filter((meta) => meta.id !== id);
-
   await salvarDados();
   atualizarTela();
 }
 
 async function apagarTudo() {
-  if (!confirm("Tem certeza que deseja apagar todos os dados?")) return;
+  const confirmar = confirm("Tem certeza que deseja apagar todos os dados da V2?");
+
+  if (!confirmar) return;
 
   entradas = [];
   saidas = [];
@@ -633,10 +633,6 @@ async function apagarTudo() {
   await salvarDados();
   atualizarTela();
 }
-
-/* =========================
-   FILTROS
-========================= */
 
 function aplicarFiltroContas(filtro) {
   filtroContasAtual = filtro;
@@ -714,11 +710,12 @@ function criarFiltrosPeriodo(tipo) {
     `;
 
     const listaElemento = painel.querySelector(".list");
-    if (listaElemento) painel.insertBefore(filtros, listaElemento);
+    painel.insertBefore(filtros, listaElemento);
   }
 
+  const filtroAtual = tipo === "entradas" ? filtroEntradasAtual : filtroSaidasAtual;
+
   filtros.querySelectorAll("button").forEach((botao) => {
-    const filtroAtual = tipo === "entradas" ? filtroEntradasAtual : filtroSaidasAtual;
     botao.classList.toggle("active", botao.dataset.filter === filtroAtual);
   });
 }
@@ -732,10 +729,6 @@ function aplicarFiltroSaidas(filtro) {
   filtroSaidasAtual = filtro;
   atualizarSaidas();
 }
-
-/* =========================
-   RESUMO MENSAL
-========================= */
 
 function mensagemResumoMensal(resumo) {
   if (resumo.caixaAtual >= 0 && resumo.saldoProjetado >= 0) {
@@ -846,10 +839,6 @@ function mudarMesResumo(direcao) {
   atualizarTela();
 }
 
-/* =========================
-   BACKUP
-========================= */
-
 function criarAreaBackupNaHome() {
   const home = pegar("home");
   if (!home) return;
@@ -899,23 +888,33 @@ function exportarBackup() {
   };
 
   const conteudo = JSON.stringify(dadosBackup, null, 2);
-  const arquivo = new Blob([conteudo], { type: "application/json" });
-  const url = URL.createObjectURL(arquivo);
-  const link = document.createElement("a");
 
+  const arquivo = new Blob([conteudo], {
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(arquivo);
+
+  const link = document.createElement("a");
   link.href = url;
-  link.download = `backup-missao-financeira-${new Date().toISOString().slice(0, 10)}.json`;
+
+  const dataHoje = new Date().toISOString().slice(0, 10);
+  link.download = `backup-missao-financeira-${dataHoje}.json`;
 
   document.body.appendChild(link);
   link.click();
-  document.body.removeChild(link);
 
+  document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
 
 function abrirImportarBackup() {
   const input = pegar("inputImportarBackup");
-  if (!input) return;
+
+  if (!input) {
+    alert("Campo de importação não encontrado.");
+    return;
+  }
 
   input.value = "";
   input.click();
@@ -923,26 +922,36 @@ function abrirImportarBackup() {
 
 function importarBackupArquivo(event) {
   const arquivo = event.target.files[0];
+
   if (!arquivo) return;
 
   const leitor = new FileReader();
 
   leitor.onload = async function(e) {
     try {
-      const dados = JSON.parse(e.target.result);
+      const conteudo = e.target.result;
+      const dados = JSON.parse(conteudo);
+
+      if (!dados || typeof dados !== "object") {
+        alert("Arquivo de backup inválido.");
+        return;
+      }
 
       if (
-        !dados ||
         !Array.isArray(dados.entradas) ||
         !Array.isArray(dados.saidas) ||
         !Array.isArray(dados.contas) ||
         !Array.isArray(dados.metas)
       ) {
-        alert("Backup inválido.");
+        alert("Esse arquivo não parece ser um backup válido do app.");
         return;
       }
 
-      if (!confirm("Importar este backup? Isso substituirá os dados atuais.")) return;
+      const confirmar = confirm(
+        "Tem certeza que deseja importar este backup? Isso substituirá os dados atuais do app."
+      );
+
+      if (!confirmar) return;
 
       entradas = dados.entradas;
       saidas = dados.saidas;
@@ -952,18 +961,15 @@ function importarBackupArquivo(event) {
       await salvarDados();
       atualizarTela();
 
-      alert("Backup importado.");
+      alert("Backup importado com sucesso.");
     } catch (erro) {
-      alert("Erro ao importar backup.");
+      console.error("Erro ao importar backup:", erro);
+      alert("Erro ao importar backup. Verifique se o arquivo é um JSON válido.");
     }
   };
 
   leitor.readAsText(arquivo);
 }
-
-/* =========================
-   MODAIS
-========================= */
 
 function criarModalEditarConta() {
   if (pegar("modalEditarConta")) return;
@@ -979,13 +985,25 @@ function criarModalEditarConta() {
           <span>MISSION_EDIT</span>
           <h3>Editar conta</h3>
         </div>
+
         <button type="button" class="modal-close" onclick="fecharModalEditarConta()">×</button>
       </div>
 
       <div class="modal-form">
-        <label>Nome da conta <input id="editarContaNome" type="text"></label>
-        <label>Valor <input id="editarContaValor" type="number" step="0.01"></label>
-        <label>Vencimento <input id="editarContaVencimento" type="date"></label>
+        <label>
+          Nome da conta
+          <input id="editarContaNome" type="text" placeholder="Nome da conta">
+        </label>
+
+        <label>
+          Valor
+          <input id="editarContaValor" type="number" step="0.01" placeholder="Valor da conta">
+        </label>
+
+        <label>
+          Vencimento
+          <input id="editarContaVencimento" type="date">
+        </label>
 
         <label>
           Categoria
@@ -1032,20 +1050,25 @@ function abrirModalEditarConta(index) {
 
   contaEditandoIndex = index;
 
-  escreverValor("editarContaNome", conta.nome || "");
-  escreverValor("editarContaValor", conta.valor || "");
-  escreverValor("editarContaVencimento", conta.vencimento || "");
-  escreverValor("editarContaCategoria", conta.categoria || "Outro");
-  escreverValor("editarContaStatus", conta.status || "pendente");
-  escreverValor("editarContaPagaEm", conta.pagaEm || hojeBR());
+  pegar("editarContaNome").value = conta.nome || "";
+  pegar("editarContaValor").value = conta.valor || "";
+  pegar("editarContaVencimento").value = conta.vencimento || "";
+  pegar("editarContaCategoria").value = conta.categoria || "Outro";
+  pegar("editarContaStatus").value = conta.status || "pendente";
+  pegar("editarContaPagaEm").value = conta.pagaEm || hojeBR();
 
   alternarCampoDataPagamento();
 
-  pegar("modalEditarConta")?.classList.add("active");
+  pegar("modalEditarConta").classList.add("active");
 }
 
 function fecharModalEditarConta() {
-  pegar("modalEditarConta")?.classList.remove("active");
+  const modal = pegar("modalEditarConta");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
   contaEditandoIndex = null;
 }
 
@@ -1058,8 +1081,9 @@ function alternarCampoDataPagamento() {
   if (status === "paga") {
     campo.classList.remove("hidden");
 
-    const input = pegar("editarContaPagaEm");
-    if (input && !input.value) input.value = hojeBR();
+    if (!pegar("editarContaPagaEm").value) {
+      pegar("editarContaPagaEm").value = hojeBR();
+    }
   } else {
     campo.classList.add("hidden");
   }
@@ -1069,14 +1093,14 @@ async function salvarEdicaoConta() {
   if (contaEditandoIndex === null) return;
 
   const conta = contas[contaEditandoIndex];
+
   if (!conta) return;
 
-  const nome = pegar("editarContaNome")?.value.trim();
-  const valor = Number(pegar("editarContaValor")?.value);
-  const vencimento = pegar("editarContaVencimento")?.value;
-  const categoria = pegar("editarContaCategoria")?.value;
-  const status = pegar("editarContaStatus")?.value;
-
+  const nome = pegar("editarContaNome").value.trim();
+  const valor = Number(pegar("editarContaValor").value);
+  const vencimento = pegar("editarContaVencimento").value;
+  const categoria = pegar("editarContaCategoria").value;
+  const status = pegar("editarContaStatus").value;
   let pagaEm = null;
 
   if (!nome || valor <= 0 || !vencimento) {
@@ -1085,10 +1109,10 @@ async function salvarEdicaoConta() {
   }
 
   if (status === "paga") {
-    pagaEm = pegar("editarContaPagaEm")?.value.trim();
+    pagaEm = pegar("editarContaPagaEm").value.trim();
 
-    if (!validarDataBR(pagaEm)) {
-      alert("Use a data no formato DD/MM/AAAA.");
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(pagaEm)) {
+      alert("Use a data de pagamento no formato DD/MM/AAAA. Exemplo: 04/06/2026");
       return;
     }
   }
@@ -1104,6 +1128,7 @@ async function salvarEdicaoConta() {
   };
 
   await salvarDados();
+
   fecharModalEditarConta();
   atualizarTela();
 }
@@ -1122,13 +1147,25 @@ function criarModalEditarMeta() {
           <span>MISSION_GOAL</span>
           <h3>Editar meta</h3>
         </div>
+
         <button type="button" class="modal-close" onclick="fecharModalEditarMeta()">×</button>
       </div>
 
       <div class="modal-form">
-        <label>Nome da meta <input id="editarMetaNome" type="text"></label>
-        <label>Valor total <input id="editarMetaValorTotal" type="number" step="0.01"></label>
-        <label>Valor guardado <input id="editarMetaValorAtual" type="number" step="0.01"></label>
+        <label>
+          Nome da meta
+          <input id="editarMetaNome" type="text" placeholder="Nome da meta">
+        </label>
+
+        <label>
+          Valor total da meta
+          <input id="editarMetaValorTotal" type="number" step="0.01" placeholder="Valor total">
+        </label>
+
+        <label>
+          Valor já guardado
+          <input id="editarMetaValorAtual" type="number" step="0.01" placeholder="Valor guardado">
+        </label>
       </div>
 
       <div class="modal-actions">
@@ -1149,15 +1186,20 @@ function abrirModalEditarMeta(id) {
 
   metaEditandoId = id;
 
-  escreverValor("editarMetaNome", meta.nome || "");
-  escreverValor("editarMetaValorTotal", meta.valorTotal || "");
-  escreverValor("editarMetaValorAtual", meta.valorAtual || 0);
+  pegar("editarMetaNome").value = meta.nome || "";
+  pegar("editarMetaValorTotal").value = meta.valorTotal || "";
+  pegar("editarMetaValorAtual").value = meta.valorAtual || 0;
 
-  pegar("modalEditarMeta")?.classList.add("active");
+  pegar("modalEditarMeta").classList.add("active");
 }
 
 function fecharModalEditarMeta() {
-  pegar("modalEditarMeta")?.classList.remove("active");
+  const modal = pegar("modalEditarMeta");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
   metaEditandoId = null;
 }
 
@@ -1167,17 +1209,18 @@ async function salvarEdicaoMeta() {
   const meta = metas.find((item) => item.id === metaEditandoId);
   if (!meta) return;
 
-  const nome = pegar("editarMetaNome")?.value.trim();
-  const valorTotal = Number(pegar("editarMetaValorTotal")?.value);
-  let valorAtual = Number(pegar("editarMetaValorAtual")?.value);
+  const nome = pegar("editarMetaNome").value.trim();
+  const valorTotal = Number(pegar("editarMetaValorTotal").value);
+  let valorAtual = Number(pegar("editarMetaValorAtual").value);
 
   if (!nome || valorTotal <= 0) {
-    alert("Preencha o nome e o valor total.");
+    alert("Preencha o nome da meta e o valor total.");
     return;
   }
 
   if (isNaN(valorAtual) || valorAtual < 0) {
-    valorAtual = 0;
+    alert("Digite um valor guardado válido.");
+    return;
   }
 
   if (valorAtual > valorTotal) {
@@ -1189,145 +1232,47 @@ async function salvarEdicaoMeta() {
   meta.valorAtual = valorAtual;
 
   await salvarDados();
+
   fecharModalEditarMeta();
   atualizarTela();
 }
 
-function criarModalEditarTransacao() {
-  if (pegar("modalEditarTransacao")) return;
-
-  const modal = document.createElement("div");
-  modal.id = "modalEditarTransacao";
-  modal.className = "modal-overlay";
-
-  modal.innerHTML = `
-    <div class="modal-card glass-card">
-      <div class="modal-head">
-        <div>
-          <span id="editarTransacaoLabel">MISSION_FLOW</span>
-          <h3 id="editarTransacaoTitulo">Editar registro</h3>
-        </div>
-        <button type="button" class="modal-close" onclick="fecharModalEditarTransacao()">×</button>
-      </div>
-
-      <div class="modal-form">
-        <label>Nome <input id="editarTransacaoNome" type="text"></label>
-        <label>Valor <input id="editarTransacaoValor" type="number" step="0.01"></label>
-        <label>Data <input id="editarTransacaoData" type="text" placeholder="DD/MM/AAAA"></label>
-      </div>
-
-      <div class="modal-actions">
-        <button type="button" class="modal-save" onclick="salvarEdicaoTransacao()">Salvar alterações</button>
-        <button type="button" class="modal-cancel" onclick="fecharModalEditarTransacao()">Cancelar</button>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(modal);
-}
-
-function abrirModalEditarTransacao(tipo, id) {
-  criarModalEditarTransacao();
-
-  const lista = tipo === "entrada" ? entradas : saidas;
-  const item = lista.find((registro) => registro.id === id);
-
-  if (!item) return;
-
-  transacaoEditandoTipo = tipo;
-  transacaoEditandoId = id;
-
-  escrever("editarTransacaoTitulo", tipo === "entrada" ? "Editar ganho" : "Editar saída");
-  escrever("editarTransacaoLabel", tipo === "entrada" ? "MISSION_INCOME" : "MISSION_OUTFLOW");
-
-  escreverValor("editarTransacaoNome", item.nome || "");
-  escreverValor("editarTransacaoValor", item.valor || "");
-  escreverValor("editarTransacaoData", item.data || hojeBR());
-
-  pegar("modalEditarTransacao")?.classList.add("active");
-}
-
-function fecharModalEditarTransacao() {
-  pegar("modalEditarTransacao")?.classList.remove("active");
-
-  transacaoEditandoTipo = null;
-  transacaoEditandoId = null;
-}
-
-async function salvarEdicaoTransacao() {
-  if (!transacaoEditandoTipo || transacaoEditandoId === null) return;
-
-  const lista = transacaoEditandoTipo === "entrada" ? entradas : saidas;
-  const item = lista.find((registro) => registro.id === transacaoEditandoId);
-
-  if (!item) return;
-
-  const nome = pegar("editarTransacaoNome")?.value.trim();
-  const valor = Number(pegar("editarTransacaoValor")?.value);
-  const data = pegar("editarTransacaoData")?.value.trim();
-
-  if (!nome || valor <= 0) {
-    alert("Preencha o nome e um valor válido.");
-    return;
-  }
-
-  if (!validarDataBR(data)) {
-    alert("Use a data no formato DD/MM/AAAA.");
-    return;
-  }
-
-  item.nome = nome;
-  item.valor = valor;
-  item.data = data;
-
-  await salvarDados();
-  fecharModalEditarTransacao();
-  atualizarTela();
-}
-
-/* =========================
-   RENDER
-========================= */
-
 function atualizarTela() {
-  try {
-    const resumo = calcularResumo();
-    const resumoMensal = calcularResumoMensal();
+  const resumo = calcularResumo();
+  const resumoMensal = calcularResumoMensal();
 
-    escrever("caixaAtual", moeda(resumo.caixaAtual));
-    escrever("totalGanhos", moeda(resumo.totalEntradas));
-    escrever("totalSaidas", moeda(resumo.totalSaidas));
-    escrever("totalContasPendentes", moeda(resumo.totalContasPendentes));
-    escrever("totalMetas", metas.length);
+  escrever("caixaAtual", moeda(resumo.caixaAtual));
+  escrever("totalGanhos", moeda(resumo.totalEntradas));
+  escrever("totalSaidas", moeda(resumo.totalSaidas));
+  escrever("totalContasPendentes", moeda(resumo.totalContasPendentes));
+  escrever("totalMetas", metas.length);
 
-    escrever("resumoContas", moeda(resumo.totalContasPendentes));
-    escrever("qtdVencimentos", resumo.contasPendentes.length);
+  escrever("resumoContas", moeda(resumo.totalContasPendentes));
+  escrever("qtdVencimentos", resumo.contasPendentes.length);
 
-    escrever("insightEntradas", moeda(resumo.totalEntradas));
-    escrever("insightSaidas", moeda(resumo.totalSaidas));
-    escrever("insightDevido", moeda(resumo.totalContasPendentes));
-    escrever("insightRegistros", entradas.length + saidas.length + contas.length + metas.length);
+  escrever("insightEntradas", moeda(resumo.totalEntradas));
+  escrever("insightSaidas", moeda(resumo.totalSaidas));
+  escrever("insightDevido", moeda(resumo.totalContasPendentes));
+  escrever("insightRegistros", entradas.length + saidas.length + contas.length + metas.length);
 
-    escrever(
-      "statusFinanceiro",
-      resumo.caixaAtual >= 0 ? "Saldo operacional positivo" : "Atenção: caixa negativo"
-    );
+  escrever(
+    "statusFinanceiro",
+    resumo.caixaAtual >= 0 ? "Saldo operacional positivo" : "Atenção: caixa negativo"
+  );
 
-    atualizarEntradas();
-    atualizarSaidas();
-    atualizarContas();
-    atualizarMetas();
-    atualizarCalendario();
-    atualizarHome();
-    criarResumoMensalNaHome(resumoMensal);
-    criarAreaBackupNaHome();
-  } catch (erro) {
-    console.error("Erro ao atualizar tela:", erro);
-  }
+  atualizarEntradas();
+  atualizarSaidas();
+  atualizarContas();
+  atualizarMetas();
+  atualizarCalendario();
+  atualizarHome();
+  criarResumoMensalNaHome(resumoMensal);
+  criarAreaBackupNaHome();
 }
 
 function atualizarEntradas() {
   const lista = pegar("listaEntradas");
+
   if (!lista) return;
 
   criarFiltrosPeriodo("entradas");
@@ -1342,40 +1287,41 @@ function atualizarEntradas() {
     .filter((item) => estaNoPeriodo(item.data, filtroEntradasAtual))
     .sort((a, b) => b.id - a.id);
 
-  escrever(
-    "resumoGanhosTela",
-    moeda(filtradas.reduce((soma, item) => soma + numero(item.valor), 0))
-  );
+  const totalFiltrado = filtradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  escrever("resumoGanhosTela", moeda(totalFiltrado));
 
   if (!filtradas.length) {
     lista.innerHTML = `<p class="empty">Nenhum ganho encontrado neste período.</p>`;
     return;
   }
 
-  lista.innerHTML = filtradas.map((item) => `
-    <div class="item transaction-item">
-      <div class="item-icon">
-        <img src="assets/icone-entradas.png" alt="Entrada" class="transaction-icon-img">
-      </div>
+  lista.innerHTML = filtradas.map((item) => {
+    return `
+      <div class="item transaction-item">
+        <div class="item-icon">
+          <img src="assets/icone-entradas.png" alt="Entrada" class="transaction-icon-img">
+        </div>
 
-      <div>
-        <h4>${item.nome}</h4>
-        <small>Entrada • ${item.data}</small>
-      </div>
+        <div>
+          <h4>${item.nome}</h4>
+          <small>Entrada • ${item.data}</small>
+        </div>
 
-      <div>
-        <strong>+ ${moeda(item.valor)}</strong>
-        <div class="item-actions transaction-actions">
-          <button type="button" onclick="editarEntrada(${item.id})">✎</button>
-          <button type="button" onclick="excluirEntrada(${item.id})">×</button>
+        <div>
+          <strong>+ ${moeda(item.valor)}</strong>
+          <div class="item-actions transaction-actions">
+            <button onclick="editarEntrada(${item.id})">Editar</button>
+            <button onclick="excluirEntrada(${item.id})">Excluir</button>
+          </div>
         </div>
       </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 function atualizarSaidas() {
   const lista = pegar("listaSaidas");
+
   if (!lista) return;
 
   criarFiltrosPeriodo("saidas");
@@ -1390,74 +1336,41 @@ function atualizarSaidas() {
     .filter((item) => estaNoPeriodo(item.data, filtroSaidasAtual))
     .sort((a, b) => b.id - a.id);
 
-  escrever(
-    "resumoSaidasTela",
-    moeda(filtradas.reduce((soma, item) => soma + numero(item.valor), 0))
-  );
+  const totalFiltrado = filtradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  escrever("resumoSaidasTela", moeda(totalFiltrado));
 
   if (!filtradas.length) {
     lista.innerHTML = `<p class="empty">Nenhuma saída encontrada neste período.</p>`;
     return;
   }
 
-  lista.innerHTML = filtradas.map((item) => `
-    <div class="item transaction-item">
-      <div class="item-icon">
-        <img src="assets/icone-saidas.png" alt="Saída" class="transaction-icon-img">
-      </div>
+  lista.innerHTML = filtradas.map((item) => {
+    return `
+      <div class="item transaction-item">
+        <div class="item-icon">
+          <img src="assets/icone-saidas.png" alt="Saída" class="transaction-icon-img">
+        </div>
 
-      <div>
-        <h4>${item.nome}</h4>
-        <small>Saída • ${item.data}</small>
-      </div>
+        <div>
+          <h4>${item.nome}</h4>
+          <small>Saída • ${item.data}</small>
+        </div>
 
-      <div>
-        <strong>- ${moeda(item.valor)}</strong>
-        <div class="item-actions transaction-actions">
-          <button type="button" onclick="editarSaida(${item.id})">✎</button>
-          <button type="button" onclick="excluirSaida(${item.id})">×</button>
+        <div>
+          <strong>- ${moeda(item.valor)}</strong>
+          <div class="item-actions transaction-actions">
+            <button onclick="editarSaida(${item.id})">Editar</button>
+            <button onclick="excluirSaida(${item.id})">Excluir</button>
+          </div>
         </div>
       </div>
-    </div>
-  `).join("");
-}
-
-function criarHtmlConta(conta, comAcoes = true) {
-  const estaPaga = conta.status === "paga";
-  const diasParaVencer = calcularDias(conta.vencimento);
-  const estaAtrasada = !estaPaga && diasParaVencer < 0;
-  const estaEmAlerta = !estaPaga && diasParaVencer >= 0 && diasParaVencer <= 3;
-
-  return `
-    <div class="item conta-item ${estaPaga ? "conta-paga" : ""} ${estaAtrasada ? "agenda-atrasada" : ""} ${estaEmAlerta ? "conta-alerta" : ""}">
-      <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
-
-      <div>
-        <h4>${conta.nome}</h4>
-        <small>${comAcoes ? `${conta.categoria} • ` : ""}${textoDias(conta.vencimento, estaPaga, conta.pagaEm)}</small>
-      </div>
-
-      <div>
-        <strong>${moeda(conta.valor)}</strong>
-
-        ${
-          comAcoes
-            ? `
-              <div class="item-actions">
-                <button type="button" onclick="marcarContaPaga(${conta.indexOriginal})">${estaPaga ? "↺" : "✓"}</button>
-                <button type="button" onclick="editarConta(${conta.indexOriginal})">✎</button>
-                <button type="button" onclick="excluirConta(${conta.indexOriginal})">×</button>
-              </div>
-            `
-            : ""
-        }
-      </div>
-    </div>
-  `;
+    `;
+  }).join("");
 }
 
 function atualizarContas() {
   const lista = pegar("listaContas");
+
   if (!lista) return;
 
   criarFiltrosContas();
@@ -1481,16 +1394,45 @@ function atualizarContas() {
     return;
   }
 
-  lista.innerHTML = contasFiltradas.map((conta) => criarHtmlConta(conta, true)).join("");
+  lista.innerHTML = contasFiltradas
+    .map((conta) => {
+      const estaPaga = conta.status === "paga";
+      const diasParaVencer = calcularDias(conta.vencimento);
+      const estaAtrasada = !estaPaga && diasParaVencer < 0;
+      const estaEmAlerta = !estaPaga && diasParaVencer >= 0 && diasParaVencer <= 3;
+
+      return `
+        <div class="item conta-item ${estaPaga ? "conta-paga" : ""} ${estaAtrasada ? "agenda-atrasada" : ""} ${estaEmAlerta ? "conta-alerta" : ""}">
+          <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
+
+          <div>
+            <h4>${conta.nome}</h4>
+            <small>${conta.categoria} • ${textoDias(conta.vencimento, estaPaga, conta.pagaEm)}</small>
+          </div>
+
+          <div>
+            <strong>${moeda(conta.valor)}</strong>
+            <div class="item-actions">
+              <button onclick="marcarContaPaga(${conta.indexOriginal})">
+                ${estaPaga ? "Reabrir" : "Pagar"}
+              </button>
+              <button onclick="editarConta(${conta.indexOriginal})">Editar</button>
+              <button onclick="excluirConta(${conta.indexOriginal})">Excluir</button>
+            </div>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 function criarCardMeta(meta) {
   const progresso = meta.valorTotal > 0
-    ? Math.min((numero(meta.valorAtual) / numero(meta.valorTotal)) * 100, 100)
+    ? Math.min((Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100, 100)
     : 0;
 
   const porcentagem = Math.round(progresso);
-  const falta = Math.max(numero(meta.valorTotal) - numero(meta.valorAtual), 0);
+  const falta = Math.max(Number(meta.valorTotal || 0) - Number(meta.valorAtual || 0), 0);
   const concluida = progresso >= 100;
 
   return `
@@ -1526,9 +1468,9 @@ function criarCardMeta(meta) {
       </div>
 
       <div class="goal-actions-premium">
-        ${concluida ? "" : `<button type="button" onclick="adicionarValorMeta(${meta.id})">Adicionar valor</button>`}
-        <button type="button" onclick="editarMeta(${meta.id})">Editar</button>
-        <button type="button" onclick="excluirMeta(${meta.id})">Excluir</button>
+        ${concluida ? "" : `<button onclick="adicionarValorMeta(${meta.id})">Adicionar valor</button>`}
+        <button onclick="editarMeta(${meta.id})">Editar</button>
+        <button onclick="excluirMeta(${meta.id})">Excluir</button>
       </div>
     </div>
   `;
@@ -1536,6 +1478,7 @@ function criarCardMeta(meta) {
 
 function atualizarMetas() {
   const lista = pegar("listaMetas");
+
   if (!lista) return;
 
   if (!metas.length) {
@@ -1545,7 +1488,7 @@ function atualizarMetas() {
 
   const metasEmAndamento = metas.filter((meta) => {
     const progresso = meta.valorTotal > 0
-      ? (numero(meta.valorAtual) / numero(meta.valorTotal)) * 100
+      ? (Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100
       : 0;
 
     return progresso < 100;
@@ -1553,7 +1496,7 @@ function atualizarMetas() {
 
   const metasConcluidas = metas.filter((meta) => {
     const progresso = meta.valorTotal > 0
-      ? (numero(meta.valorAtual) / numero(meta.valorTotal)) * 100
+      ? (Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100
       : 0;
 
     return progresso >= 100;
@@ -1581,18 +1524,39 @@ function atualizarMetas() {
 function montarGrupoAgenda(titulo, listaDeContas) {
   if (!listaDeContas.length) return "";
 
+  const itens = listaDeContas.map((conta) => {
+    const estaPaga = conta.status === "paga";
+    const diasParaVencer = calcularDias(conta.vencimento);
+    const estaAtrasada = !estaPaga && diasParaVencer < 0;
+    const estaEmAlerta = !estaPaga && diasParaVencer >= 0 && diasParaVencer <= 3;
+
+    return `
+      <div class="item conta-item ${estaPaga ? "conta-paga" : ""} ${estaAtrasada ? "agenda-atrasada" : ""} ${estaEmAlerta ? "conta-alerta" : ""}">
+        <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
+
+        <div>
+          <h4>${conta.nome}</h4>
+          <small>${textoDias(conta.vencimento, estaPaga, conta.pagaEm)}</small>
+        </div>
+
+        <div>
+          <strong>${moeda(conta.valor)}</strong>
+        </div>
+      </div>
+    `;
+  }).join("");
+
   return `
     <div class="agenda-group">
       <h3>${titulo}</h3>
-      <div class="list">
-        ${listaDeContas.map((conta) => criarHtmlConta(conta, false)).join("")}
-      </div>
+      <div class="list">${itens}</div>
     </div>
   `;
 }
 
 function atualizarCalendario() {
   const lista = pegar("listaCalendario");
+
   if (!lista) return;
 
   if (!contas.length) {
@@ -1629,73 +1593,90 @@ function atualizarCalendario() {
     }
   });
 
-  lista.innerHTML =
+  const html =
     montarGrupoAgenda("Atrasadas", atrasadas) +
     montarGrupoAgenda("Vence hoje", hoje) +
     montarGrupoAgenda("Próximos 7 dias", proximos7Dias) +
     montarGrupoAgenda("Este mês", esteMes) +
     montarGrupoAgenda("Pagas", pagas);
+
+  lista.innerHTML = html || `<p class="empty">Nenhum vencimento encontrado.</p>`;
 }
 
 function atualizarHome() {
   const proximos = pegar("listaProximosVencimentos");
   const metaDestaque = pegar("metaDestaque");
 
-  if (proximos) {
-    const contasPendentes = contas
-      .filter((conta) => conta.status !== "paga")
-      .map((conta, indexOriginal) => ({
-        ...conta,
-        indexOriginal
-      }))
-      .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento))
-      .slice(0, 3);
+  const contasPendentes = contas
+    .filter((conta) => conta.status !== "paga")
+    .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento))
+    .slice(0, 3);
 
-    if (!contasPendentes.length) {
-      proximos.innerHTML = `<p class="empty">Nenhum vencimento pendente.</p>`;
-    } else {
-      proximos.innerHTML = contasPendentes.map((conta) => criarHtmlConta(conta, false)).join("");
-    }
+  if (!contasPendentes.length) {
+    proximos.innerHTML = `<p class="empty">Nenhum vencimento pendente.</p>`;
+  } else {
+    proximos.innerHTML = contasPendentes.map((conta) => {
+      const diasParaVencer = calcularDias(conta.vencimento);
+      const estaAtrasada = diasParaVencer < 0;
+      const estaEmAlerta = diasParaVencer >= 0 && diasParaVencer <= 3;
+
+      return `
+        <div class="item conta-item ${estaAtrasada ? "agenda-atrasada" : ""} ${estaEmAlerta ? "conta-alerta" : ""}">
+          <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
+
+          <div>
+            <h4>${conta.nome}</h4>
+            <small>${textoDias(conta.vencimento)}</small>
+          </div>
+
+          <div>
+            <strong>${moeda(conta.valor)}</strong>
+          </div>
+        </div>
+      `;
+    }).join("");
   }
 
-  if (metaDestaque) {
-    if (!metas.length) {
-      metaDestaque.innerHTML = `<p class="empty">Nenhuma meta criada ainda.</p>`;
-    } else {
-      const metasOrdenadas = [...metas].sort((a, b) => {
-        const progressoA = a.valorTotal > 0 ? (a.valorAtual / a.valorTotal) * 100 : 0;
-        const progressoB = b.valorTotal > 0 ? (b.valorAtual / b.valorTotal) * 100 : 0;
+  if (!metas.length) {
+    metaDestaque.innerHTML = `<p class="empty">Nenhuma meta criada ainda.</p>`;
+  } else {
+    const metasOrdenadas = [...metas].sort((a, b) => {
+      const progressoA = a.valorTotal > 0 ? (a.valorAtual / a.valorTotal) * 100 : 0;
+      const progressoB = b.valorTotal > 0 ? (b.valorAtual / b.valorTotal) * 100 : 0;
 
-        return progressoB - progressoA;
-      });
+      return progressoB - progressoA;
+    });
 
-      metaDestaque.innerHTML = criarCardMeta(metasOrdenadas[0]);
-    }
+    metaDestaque.innerHTML = criarCardMeta(metasOrdenadas[0]);
   }
 }
-
-/* =========================
-   SPLASH DESLIGADA
-========================= */
 
 function iniciarSplashV2() {
-  const splash = pegar("splashScreen") || document.querySelector(".splash-screen");
+  const splash = pegar("splashScreen");
+  const percent = pegar("loadingPercent");
+  const bar = pegar("loadingBar");
 
-  if (splash) {
-    splash.classList.add("hide");
-    splash.style.display = "none";
-    splash.style.opacity = "0";
-    splash.style.visibility = "hidden";
-    splash.style.pointerEvents = "none";
-  }
+  if (!splash || !percent || !bar) return;
+
+  let progresso = 0;
+
+  const intervalo = setInterval(() => {
+    progresso++;
+
+    percent.textContent = String(progresso).padStart(3, "0") + "%";
+    bar.style.width = progresso + "%";
+
+    if (progresso >= 100) {
+      clearInterval(intervalo);
+
+      setTimeout(() => {
+        splash.classList.add("hide");
+      }, 350);
+    }
+  }, 22);
 }
 
-/* =========================
-   EXPORTAR FUNÇÕES
-========================= */
-
 window.openTab = openTab;
-
 window.adicionarEntrada = adicionarEntrada;
 window.adicionarSaida = adicionarSaida;
 window.adicionarConta = adicionarConta;
@@ -1735,14 +1716,6 @@ window.alternarCampoDataPagamento = alternarCampoDataPagamento;
 window.abrirModalEditarMeta = abrirModalEditarMeta;
 window.fecharModalEditarMeta = fecharModalEditarMeta;
 window.salvarEdicaoMeta = salvarEdicaoMeta;
-
-window.abrirModalEditarTransacao = abrirModalEditarTransacao;
-window.fecharModalEditarTransacao = fecharModalEditarTransacao;
-window.salvarEdicaoTransacao = salvarEdicaoTransacao;
-
-/* =========================
-   INICIAR
-========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
   iniciarSplashV2();
