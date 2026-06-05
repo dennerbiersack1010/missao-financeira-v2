@@ -58,11 +58,20 @@ function escrever(id, texto) {
   if (elemento) elemento.textContent = texto;
 }
 
+function escreverValor(id, valor) {
+  const elemento = pegar(id);
+  if (elemento) elemento.value = valor;
+}
+
 function moeda(valor) {
   return Number(valor || 0).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL"
   });
+}
+
+function numero(valor) {
+  return Number(valor || 0);
 }
 
 function converterValorDigitado(valor) {
@@ -87,13 +96,19 @@ function hojeSemHora() {
   return hoje;
 }
 
+function validarDataBR(data) {
+  return /^\d{2}\/\d{2}\/\d{4}$/.test(data);
+}
+
 function calcularDias(vencimento) {
   if (!vencimento) return null;
 
   const hoje = hojeSemHora();
   const data = new Date(vencimento + "T00:00:00");
-  const diff = data - hoje;
 
+  if (isNaN(data.getTime())) return null;
+
+  const diff = data - hoje;
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
@@ -124,6 +139,8 @@ function converterDataBRParaDate(dataBR) {
 
   const data = new Date(ano, mes, dia);
   data.setHours(0, 0, 0, 0);
+
+  if (isNaN(data.getTime())) return null;
 
   return data;
 }
@@ -171,6 +188,8 @@ function vencimentoNoMes(vencimento, mes, ano) {
   if (!vencimento) return false;
 
   const data = new Date(vencimento + "T00:00:00");
+
+  if (isNaN(data.getTime())) return false;
 
   return data.getMonth() === mes && data.getFullYear() === ano;
 }
@@ -257,7 +276,7 @@ function iconeConta(nome, categoria) {
 }
 
 /* =========================
-   CARREGAR / SALVAR
+   FIRESTORE
 ========================= */
 
 async function carregarDados() {
@@ -278,7 +297,7 @@ async function carregarDados() {
     atualizarTela();
   } catch (erro) {
     console.error("Erro ao carregar Firebase:", erro);
-    alert("Erro ao carregar os dados. O app abriu, mas não conseguiu puxar o Firebase.");
+    alert("Erro ao carregar os dados do Firebase.");
   }
 }
 
@@ -302,14 +321,14 @@ async function salvarDados() {
 ========================= */
 
 function calcularResumo() {
-  const totalEntradas = entradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
-  const totalSaidas = saidas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalEntradas = entradas.reduce((soma, item) => soma + numero(item.valor), 0);
+  const totalSaidas = saidas.reduce((soma, item) => soma + numero(item.valor), 0);
 
   const contasPendentes = contas.filter((conta) => conta.status !== "paga");
   const contasPagas = contas.filter((conta) => conta.status === "paga");
 
-  const totalContasPendentes = contasPendentes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
-  const totalContasPagas = contasPagas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalContasPendentes = contasPendentes.reduce((soma, item) => soma + numero(item.valor), 0);
+  const totalContasPagas = contasPagas.reduce((soma, item) => soma + numero(item.valor), 0);
 
   const caixaAtual = totalEntradas - totalSaidas - totalContasPagas;
   const saldoProjetado = caixaAtual - totalContasPendentes;
@@ -338,11 +357,10 @@ function calcularResumoMensal(mes = mesResumoSelecionado, ano = anoResumoSelecio
     return contaPagaNoMes(conta, mes, ano);
   });
 
-  const totalEntradas = entradasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
-  const totalSaidas = saidasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
-
-  const totalContasPendentes = contasPendentesDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
-  const totalContasPagas = contasPagasDoMes.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalEntradas = entradasDoMes.reduce((soma, item) => soma + numero(item.valor), 0);
+  const totalSaidas = saidasDoMes.reduce((soma, item) => soma + numero(item.valor), 0);
+  const totalContasPendentes = contasPendentesDoMes.reduce((soma, item) => soma + numero(item.valor), 0);
+  const totalContasPagas = contasPagasDoMes.reduce((soma, item) => soma + numero(item.valor), 0);
 
   const caixaAtual = totalEntradas - totalSaidas - totalContasPagas;
   const saldoProjetado = caixaAtual - totalContasPendentes;
@@ -379,23 +397,6 @@ function openTab(tab, botao = null) {
 
   if (botao) {
     botao.classList.add("active");
-  }
-
-  const appContainer = document.querySelector(".app");
-
-  if (appContainer) {
-    appContainer.classList.remove(
-      "bg-home",
-      "bg-bills",
-      "bg-goals",
-      "bg-calendar",
-      "bg-transactions",
-      "bg-income",
-      "bg-expenses",
-      "bg-insights"
-    );
-
-    appContainer.classList.add(`bg-${tab}`);
   }
 }
 
@@ -563,7 +564,7 @@ async function excluirConta(index) {
 }
 
 /* =========================
-   ENTRADAS / SAÍDAS
+   TRANSAÇÕES
 ========================= */
 
 function editarEntrada(id) {
@@ -612,7 +613,7 @@ async function adicionarValorMeta(id) {
     return;
   }
 
-  meta.valorAtual = Number(meta.valorAtual || 0) + valorConvertido;
+  meta.valorAtual = numero(meta.valorAtual) + valorConvertido;
 
   if (meta.valorAtual > meta.valorTotal) {
     meta.valorAtual = meta.valorTotal;
@@ -983,7 +984,7 @@ function importarBackupArquivo(event) {
       alert("Backup importado com sucesso.");
     } catch (erro) {
       console.error("Erro ao importar backup:", erro);
-      alert("Erro ao importar backup. Verifique se o arquivo é um JSON válido.");
+      alert("Erro ao importar backup.");
     }
   };
 
@@ -991,7 +992,7 @@ function importarBackupArquivo(event) {
 }
 
 /* =========================
-   MODAL EDITAR CONTA
+   MODAIS
 ========================= */
 
 function criarModalEditarConta() {
@@ -1015,12 +1016,12 @@ function criarModalEditarConta() {
       <div class="modal-form">
         <label>
           Nome da conta
-          <input id="editarContaNome" type="text" placeholder="Nome da conta">
+          <input id="editarContaNome" type="text">
         </label>
 
         <label>
           Valor
-          <input id="editarContaValor" type="number" step="0.01" placeholder="Valor da conta">
+          <input id="editarContaValor" type="number" step="0.01">
         </label>
 
         <label>
@@ -1086,11 +1087,6 @@ function abrirModalEditarConta(index) {
   if (modal) modal.classList.add("active");
 }
 
-function escreverValor(id, valor) {
-  const elemento = pegar(id);
-  if (elemento) elemento.value = valor;
-}
-
 function fecharModalEditarConta() {
   const modal = pegar("modalEditarConta");
   if (modal) modal.classList.remove("active");
@@ -1136,7 +1132,7 @@ async function salvarEdicaoConta() {
   if (status === "paga") {
     pagaEm = pegar("editarContaPagaEm")?.value.trim();
 
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(pagaEm)) {
+    if (!validarDataBR(pagaEm)) {
       alert("Use a data de pagamento no formato DD/MM/AAAA.");
       return;
     }
@@ -1157,10 +1153,6 @@ async function salvarEdicaoConta() {
   fecharModalEditarConta();
   atualizarTela();
 }
-
-/* =========================
-   MODAL EDITAR META
-========================= */
 
 function criarModalEditarMeta() {
   if (pegar("modalEditarMeta")) return;
@@ -1183,17 +1175,17 @@ function criarModalEditarMeta() {
       <div class="modal-form">
         <label>
           Nome da meta
-          <input id="editarMetaNome" type="text" placeholder="Nome da meta">
+          <input id="editarMetaNome" type="text">
         </label>
 
         <label>
           Valor total da meta
-          <input id="editarMetaValorTotal" type="number" step="0.01" placeholder="Valor total">
+          <input id="editarMetaValorTotal" type="number" step="0.01">
         </label>
 
         <label>
           Valor já guardado
-          <input id="editarMetaValorAtual" type="number" step="0.01" placeholder="Valor guardado">
+          <input id="editarMetaValorAtual" type="number" step="0.01">
         </label>
       </div>
 
@@ -1264,10 +1256,6 @@ async function salvarEdicaoMeta() {
   atualizarTela();
 }
 
-/* =========================
-   MODAL EDITAR TRANSAÇÃO
-========================= */
-
 function criarModalEditarTransacao() {
   if (pegar("modalEditarTransacao")) return;
 
@@ -1289,12 +1277,12 @@ function criarModalEditarTransacao() {
       <div class="modal-form">
         <label>
           Nome
-          <input id="editarTransacaoNome" type="text" placeholder="Nome do registro">
+          <input id="editarTransacaoNome" type="text">
         </label>
 
         <label>
           Valor
-          <input id="editarTransacaoValor" type="number" step="0.01" placeholder="Valor">
+          <input id="editarTransacaoValor" type="number" step="0.01">
         </label>
 
         <label>
@@ -1360,7 +1348,7 @@ async function salvarEdicaoTransacao() {
     return;
   }
 
-  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+  if (!validarDataBR(data)) {
     alert("Use a data no formato DD/MM/AAAA.");
     return;
   }
@@ -1376,7 +1364,7 @@ async function salvarEdicaoTransacao() {
 }
 
 /* =========================
-   ATUALIZAÇÃO DE TELA
+   RENDERIZAÇÃO
 ========================= */
 
 function atualizarTela() {
@@ -1416,10 +1404,6 @@ function atualizarTela() {
   }
 }
 
-/* =========================
-   RENDER — GANHOS
-========================= */
-
 function atualizarEntradas() {
   const lista = pegar("listaEntradas");
   if (!lista) return;
@@ -1436,7 +1420,7 @@ function atualizarEntradas() {
     .filter((item) => estaNoPeriodo(item.data, filtroEntradasAtual))
     .sort((a, b) => b.id - a.id);
 
-  const totalFiltrado = filtradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalFiltrado = filtradas.reduce((soma, item) => soma + numero(item.valor), 0);
 
   escrever("resumoGanhosTela", moeda(totalFiltrado));
 
@@ -1469,10 +1453,6 @@ function atualizarEntradas() {
   }).join("");
 }
 
-/* =========================
-   RENDER — SAÍDAS
-========================= */
-
 function atualizarSaidas() {
   const lista = pegar("listaSaidas");
   if (!lista) return;
@@ -1489,7 +1469,7 @@ function atualizarSaidas() {
     .filter((item) => estaNoPeriodo(item.data, filtroSaidasAtual))
     .sort((a, b) => b.id - a.id);
 
-  const totalFiltrado = filtradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
+  const totalFiltrado = filtradas.reduce((soma, item) => soma + numero(item.valor), 0);
 
   escrever("resumoSaidasTela", moeda(totalFiltrado));
 
@@ -1519,40 +1499,6 @@ function atualizarSaidas() {
         </div>
       </div>
     `;
-  }).join("");
-}
-
-/* =========================
-   RENDER — CONTAS
-========================= */
-
-function atualizarContas() {
-  const lista = pegar("listaContas");
-  if (!lista) return;
-
-  criarFiltrosContas();
-
-  if (!contas.length) {
-    lista.innerHTML = `<p class="empty">Nenhuma conta cadastrada.</p>`;
-    return;
-  }
-
-  const contasOrdenadas = contas
-    .map((conta, indexOriginal) => ({
-      ...conta,
-      indexOriginal
-    }))
-    .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
-
-  const contasFiltradas = filtrarContasParaTela(contasOrdenadas);
-
-  if (!contasFiltradas.length) {
-    lista.innerHTML = `<p class="empty">Nenhuma conta encontrada neste filtro.</p>`;
-    return;
-  }
-
-  lista.innerHTML = contasFiltradas.map((conta) => {
-    return criarHtmlConta(conta, true);
   }).join("");
 }
 
@@ -1590,17 +1536,43 @@ function criarHtmlConta(conta, comAcoes = true) {
   `;
 }
 
-/* =========================
-   RENDER — METAS
-========================= */
+function atualizarContas() {
+  const lista = pegar("listaContas");
+  if (!lista) return;
+
+  criarFiltrosContas();
+
+  if (!contas.length) {
+    lista.innerHTML = `<p class="empty">Nenhuma conta cadastrada.</p>`;
+    return;
+  }
+
+  const contasOrdenadas = contas
+    .map((conta, indexOriginal) => ({
+      ...conta,
+      indexOriginal
+    }))
+    .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+
+  const contasFiltradas = filtrarContasParaTela(contasOrdenadas);
+
+  if (!contasFiltradas.length) {
+    lista.innerHTML = `<p class="empty">Nenhuma conta encontrada neste filtro.</p>`;
+    return;
+  }
+
+  lista.innerHTML = contasFiltradas.map((conta) => {
+    return criarHtmlConta(conta, true);
+  }).join("");
+}
 
 function criarCardMeta(meta) {
   const progresso = meta.valorTotal > 0
-    ? Math.min((Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100, 100)
+    ? Math.min((numero(meta.valorAtual) / numero(meta.valorTotal)) * 100, 100)
     : 0;
 
   const porcentagem = Math.round(progresso);
-  const falta = Math.max(Number(meta.valorTotal || 0) - Number(meta.valorAtual || 0), 0);
+  const falta = Math.max(numero(meta.valorTotal) - numero(meta.valorAtual), 0);
   const concluida = progresso >= 100;
 
   return `
@@ -1655,7 +1627,7 @@ function atualizarMetas() {
 
   const metasEmAndamento = metas.filter((meta) => {
     const progresso = meta.valorTotal > 0
-      ? (Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100
+      ? (numero(meta.valorAtual) / numero(meta.valorTotal)) * 100
       : 0;
 
     return progresso < 100;
@@ -1663,7 +1635,7 @@ function atualizarMetas() {
 
   const metasConcluidas = metas.filter((meta) => {
     const progresso = meta.valorTotal > 0
-      ? (Number(meta.valorAtual || 0) / Number(meta.valorTotal || 0)) * 100
+      ? (numero(meta.valorAtual) / numero(meta.valorTotal)) * 100
       : 0;
 
     return progresso >= 100;
@@ -1687,10 +1659,6 @@ function atualizarMetas() {
 
   lista.innerHTML = html;
 }
-
-/* =========================
-   RENDER — AGENDA
-========================= */
 
 function montarGrupoAgenda(titulo, listaDeContas) {
   if (!listaDeContas.length) return "";
@@ -1754,10 +1722,6 @@ function atualizarCalendario() {
 
   lista.innerHTML = html || `<p class="empty">Nenhum vencimento encontrado.</p>`;
 }
-
-/* =========================
-   HOME
-========================= */
 
 function atualizarHome() {
   const proximos = pegar("listaProximosVencimentos");
@@ -1825,7 +1789,7 @@ function iniciarSplashV2() {
         splash.style.display = "none";
       }, 350);
     }
-  }, 16);
+  }, 18);
 
   setTimeout(() => {
     splash.classList.add("hide");
@@ -1834,7 +1798,7 @@ function iniciarSplashV2() {
 }
 
 /* =========================
-   EXPORTAR FUNÇÕES
+   EXPORTAR
 ========================= */
 
 window.openTab = openTab;
