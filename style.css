@@ -6,22 +6,9 @@
 
 :root {
   --bg-main: #020816;
-  --bg-card: rgba(7, 22, 46, 0.82);
-  --bg-card-strong: rgba(8, 30, 62, 0.92);
-
   --blue-border: rgba(165, 215, 255, 0.22);
   --white: #ffffff;
   --muted: rgba(225, 238, 255, 0.68);
-  --muted-2: rgba(225, 238, 255, 0.48);
-
-  --radius-lg: 34px;
-  --radius-md: 24px;
-  --radius-sm: 16px;
-
-  --shadow-card:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    0 18px 45px rgba(0,0,0,0.22);
-
   --font-title: "Rajdhani", sans-serif;
   --font-tech: "Orbitron", sans-serif;
 }
@@ -39,9 +26,6 @@ body {
   background: #020816;
   color: var(--white);
   font-family: var(--font-title);
-}
-
-body {
   overflow-x: hidden;
 }
 
@@ -53,6 +37,19 @@ select {
 
 button {
   cursor: pointer;
+}
+
+/* ===============================
+   SPLASH DESLIGADA
+================================ */
+
+#splashScreen,
+.splash-screen {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
 }
 
 /* ===============================
@@ -88,23 +85,10 @@ button {
   display: none;
   position: relative;
   z-index: 1;
-  animation: fadeIn 0.25s ease;
 }
 
 .screen.active {
   display: block;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* ===============================
@@ -172,8 +156,10 @@ p {
   background:
     linear-gradient(145deg, rgba(7, 23, 48, 0.86), rgba(4, 14, 32, 0.72));
   border: 1px solid var(--blue-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  border-radius: 34px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 18px 45px rgba(0,0,0,0.22);
   backdrop-filter: blur(14px) saturate(130%);
   -webkit-backdrop-filter: blur(14px) saturate(130%);
 }
@@ -434,13 +420,14 @@ select:focus {
 }
 
 .item-actions button,
-.transaction-actions button {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  max-width: 34px;
-  min-height: 34px;
-  max-height: 34px;
+.transaction-actions button,
+.conta-alerta .item-actions button {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
 
   border-radius: 11px;
   border: 1px solid rgba(210, 230, 255, 0.18);
@@ -458,7 +445,7 @@ select:focus {
   font-weight: 800;
   line-height: 1;
 
-  flex: 0 0 34px;
+  flex: 0 0 34px !important;
 }
 
 /* ===============================
@@ -525,16 +512,6 @@ select:focus {
   color: rgba(255, 232, 185, 0.95);
 }
 
-.conta-alerta .item-actions button {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  max-width: 34px;
-  min-height: 34px;
-  max-height: 34px;
-  flex: 0 0 34px;
-}
-
 .conta-paga {
   opacity: 1;
   border: 1px solid rgba(115, 175, 255, 0.62) !important;
@@ -562,23 +539,11 @@ select:focus {
   color: rgba(225, 238, 255, 0.82);
 }
 
-.conta-paga .item-icon {
-  opacity: 0.9;
-  filter: saturate(1.05) brightness(1.02);
-}
-
 .agenda-atrasada {
   background:
     radial-gradient(circle at 15% 35%, rgba(255, 60, 90, 0.20), transparent 32%),
     linear-gradient(145deg, rgba(130, 18, 35, 0.34), rgba(8, 24, 52, 0.90)) !important;
   border: 1px solid rgba(255, 80, 105, 0.58) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    0 0 20px rgba(255, 70, 95, 0.14) !important;
-}
-
-.agenda-atrasada small {
-  color: rgba(255, 200, 210, 0.92);
 }
 
 /* ===============================
@@ -907,7 +872,7 @@ select:focus {
   right: 18px;
   bottom: 28px;
   height: 92px;
-  z-index: 50;
+  z-index: 9999;
 
   display: grid;
   grid-template-columns: 1fr 1fr 94px 1fr 1fr;
@@ -963,75 +928,6 @@ select:focus {
 }
 
 /* ===============================
-   SPLASH
-================================ */
-
-#splashScreen,
-.splash-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 999999;
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,0.10), rgba(0,0,0,0.35)),
-    url("assets/bg-splash.PNG") center / cover no-repeat,
-    #020816;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
-}
-
-#splashScreen.hide,
-.splash-screen.hide {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  display: none;
-}
-
-.splash-content {
-  width: 82%;
-  max-width: 420px;
-  text-align: center;
-}
-
-.splash-logo {
-  width: 70%;
-  max-width: 340px;
-  margin-bottom: 130px;
-}
-
-.loading-text {
-  font-family: var(--font-tech);
-  font-size: 14px;
-  letter-spacing: 0.10em;
-  color: rgba(235, 245, 255, 0.82);
-  margin-bottom: 28px;
-}
-
-.loading-percent {
-  font-family: var(--font-tech);
-  font-size: 36px;
-  font-weight: 800;
-  margin-bottom: 20px;
-}
-
-.loading-track {
-  width: 100%;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(230, 240, 255, 0.18);
-  overflow: hidden;
-}
-
-.loading-bar {
-  height: 100%;
-  width: 0%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #ffffff, #bcd5ff);
-}
-
-/* ===============================
    EMPTY / MOBILE
 ================================ */
 
@@ -1054,11 +950,6 @@ select:focus {
 
   .panel {
     padding: 22px;
-  }
-
-  .metrics-grid,
-  .monthly-summary-grid {
-    gap: 14px;
   }
 
   .bottom-nav {
