@@ -1,267 +1,111 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@400;500;600;700;800&display=swap");
+
+/* ===============================
+   BASE
+================================ */
 
 :root {
-  --text: #ffffff;
+  --bg-main: #020816;
+  --bg-card: rgba(7, 22, 46, 0.82);
+  --bg-card-strong: rgba(8, 30, 62, 0.92);
+
+  --blue-1: rgba(75, 145, 255, 0.38);
+  --blue-2: rgba(110, 180, 255, 0.24);
+  --blue-border: rgba(165, 215, 255, 0.22);
+
   --white: #ffffff;
-  --muted-white: rgba(255, 255, 255, 0.82);
-  --line: rgba(255, 255, 255, 0.20);
-  --glass-bg: rgba(12, 26, 48, 0.18);
-  --glass-bg-soft: rgba(12, 26, 48, 0.12);
-  --status-color: #6f7d91;
-  --cyan: #bcd2ff;
-  --danger: #ff5e63;
-  --radius-xl: 34px;
-  --radius-lg: 26px;
+  --muted: rgba(225, 238, 255, 0.68);
+  --muted-2: rgba(225, 238, 255, 0.48);
+
+  --danger: #ff4d65;
+  --warning: #ffb33f;
+  --safe: #72b7ff;
+
+  --radius-lg: 34px;
+  --radius-md: 24px;
+  --radius-sm: 16px;
+
+  --shadow-card:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 18px 45px rgba(0,0,0,0.22);
+
+  --font-title: "Rajdhani", sans-serif;
+  --font-tech: "Orbitron", sans-serif;
 }
 
-html {
-  background: #000;
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: #020816;
+  color: var(--white);
+  font-family: var(--font-title);
 }
 
 body {
-  min-height: 100vh;
-  font-family: "Rajdhani", sans-serif;
-  color: var(--text);
-  background: #000;
   overflow-x: hidden;
 }
 
 button,
 input,
 select {
-  font-family: inherit;
+  font-family: var(--font-title);
 }
 
 button {
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
 }
 
-input,
-select {
-  width: 100%;
-  height: 56px;
-  border: 1px solid rgba(255,255,255,0.20);
-  border-radius: 18px;
-  background: rgba(12, 26, 48, 0.18);
-  color: #ffffff;
-  padding: 0 16px;
-  outline: none;
-  font-size: 17px;
-  margin-bottom: 12px;
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-}
-
-input::placeholder {
-  color: rgba(255,255,255,0.62);
-}
-
-select {
-  color: #ffffff;
-}
-
-/* APP COM A MESMA IMAGEM DO SPLASH */
+/* ===============================
+   APP / BACKGROUND
+================================ */
 
 .app {
   width: 100%;
-  max-width: 430px;
   min-height: 100vh;
-  margin: 0 auto;
-  padding: 26px 18px 112px;
+  padding: 34px 18px 150px;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 
-  background-image:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.04) 0%,
-      rgba(0, 0, 0, 0.12) 42%,
-      rgba(0, 0, 0, 0.36) 100%
-    ),
-    url("assets/bg-splash.PNG");
-
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.20), rgba(0,0,0,0.28)),
+    url("assets/bg-splash.PNG") center top / cover no-repeat,
+    var(--bg-main);
 }
 
-/* SPLASH */
-
-.splash-screen-v2 {
+.app::before {
+  content: "";
   position: fixed;
   inset: 0;
-  z-index: 99999;
-  overflow: hidden;
-  background: #030508;
-  opacity: 1;
-  visibility: visible;
-}
-
-.splash-bg {
-  position: absolute;
-  inset: 0;
-  background: url("assets/bg-splash.PNG") center center / cover no-repeat;
-  transform: scale(1.025);
-  opacity: 1;
-  filter: brightness(1.05) contrast(1.05) blur(1.8px);
-  z-index: 1;
-}
-
-.splash-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background:
-    radial-gradient(circle at center, rgba(105,132,255,0.05), transparent 42%),
-    linear-gradient(180deg, rgba(2,4,8,0.04) 0%, rgba(2,4,8,0.13) 56%, rgba(2,4,8,0.38) 100%);
-}
-
-.splash-logo-zone {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.splash-logo-v2 {
-  width: 330px;
-  max-width: 88vw;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 0 24px rgba(255,255,255,0.16));
-}
-
-.system-loader {
-  position: absolute;
-  left: 50%;
-  bottom: 15vh;
-  transform: translateX(-50%);
-  z-index: 4;
-  width: min(300px, 72vw);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.loading-title {
-  margin: 0 0 12px;
-  font-family: "Orbitron", sans-serif;
-  color: rgba(245, 248, 255, 0.82);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.075em;
-  text-transform: uppercase;
-  text-align: center;
-  white-space: nowrap;
-}
-
-#loadingPercent {
-  display: block;
-  margin-bottom: 10px;
-  font-family: "Orbitron", sans-serif;
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: 0.055em;
-  color: #ffffff;
-}
-
-.loading-track {
-  width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.12);
-}
-
-.loading-bar {
-  width: 0%;
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #dfe7ff 0%, #8fb4ff 55%, #ffffff 100%);
-  box-shadow:
-    0 0 14px rgba(143,180,255,0.42),
-    0 0 24px rgba(255,255,255,0.12);
-  transition: width 0.04s linear;
-}
-
-.splash-screen-v2.hide {
-  opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.55s ease, visibility 0.55s ease;
-}
-
-/* HEADER */
-
-.top-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.system-label,
-.page-title span {
-  display: block;
-  margin-bottom: 6px;
-  color: #c8d8ff;
-  font-family: "Orbitron", sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-}
-
-.top-header h1 {
-  color: #ffffff;
-  font-size: 31px;
-  line-height: 1;
-  letter-spacing: -0.6px;
-  font-weight: 700;
-}
-
-.profile-button {
-  width: 54px;
-  height: 54px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.20);
-  background: rgba(12, 26, 48, 0.16);
-  color: white;
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-}
-
-.profile-button span {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 800;
-}
-
-/* TELAS */
-
-.main {
-  position: relative;
+  background:
+    radial-gradient(circle at 80% 18%, rgba(80, 160, 255, 0.14), transparent 30%),
+    radial-gradient(circle at 20% 80%, rgba(80, 180, 255, 0.12), transparent 36%),
+    linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.34));
+  z-index: 0;
 }
 
 .screen {
   display: none;
-  animation: screenIn 0.28s ease;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.25s ease;
 }
 
 .screen.active {
   display: block;
 }
 
-@keyframes screenIn {
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
 
   to {
@@ -270,2074 +114,676 @@ select {
   }
 }
 
-/* GLASS TRANSPARENTE COM BLUR */
+/* ===============================
+   HEADERS
+================================ */
+
+.header,
+.top-header,
+.screen-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.kicker,
+.header span,
+.screen-label {
+  display: block;
+  font-family: var(--font-tech);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: rgba(220, 235, 255, 0.62);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+h1,
+.page-title {
+  margin: 0;
+  font-size: 44px;
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+.avatar,
+.user-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  object-fit: cover;
+  border: 1px solid rgba(200, 230, 255, 0.25);
+  box-shadow: 0 0 28px rgba(80, 160, 255, 0.16);
+}
+
+/* ===============================
+   CARDS GERAIS
+================================ */
 
 .glass-card,
-.hero-card,
-.metric-card,
 .panel,
-.form-card,
-.goal-card,
-.insight-card {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.22);
-  background: rgba(12, 26, 48, 0.16);
-  box-shadow:
-    0 18px 44px rgba(0,0,0,0.24),
-    inset 0 1px 0 rgba(255,255,255,0.16),
-    inset 0 -1px 0 rgba(255,255,255,0.04);
-  backdrop-filter: blur(20px) saturate(175%);
-  -webkit-backdrop-filter: blur(20px) saturate(175%);
-}
-
-/* REFLEXO GLASS */
-
-.glass-card::before,
-.hero-card::before,
-.metric-card::before,
-.panel::before,
-.form-card::before,
-.goal-card::before,
-.insight-card::before {
-  content: "";
-  position: absolute;
-  top: -45%;
-  left: -35%;
-  width: 105%;
-  height: 82%;
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.18) 0%,
-    rgba(255,255,255,0.045) 34%,
-    rgba(255,255,255,0.00) 70%
-  );
-  transform: rotate(-12deg);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* BRILHO AZUL SUAVE */
-
-.glass-card::after,
-.hero-card::after,
-.metric-card::after,
-.panel::after,
-.form-card::after,
-.goal-card::after,
-.insight-card::after {
-  content: "";
-  position: absolute;
-  right: -42px;
-  bottom: -42px;
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(120, 160, 255, 0.09), transparent 70%);
-  filter: blur(20px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.glass-card > *,
-.hero-card > *,
-.metric-card > *,
-.panel > *,
-.form-card > *,
-.goal-card > *,
-.insight-card > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* HOME */
-
-.hero-card {
-  min-height: 196px;
-  border-radius: var(--radius-xl);
-  padding: 26px;
-  margin-bottom: 16px;
-}
-
-.hero-copy span {
-  display: block;
-  color: #ffffff;
-  font-size: 16px;
-  margin-bottom: 12px;
-}
-
-.hero-copy h2 {
-  color: #ffffff;
-  font-family: "Orbitron", sans-serif;
-  font-size: 34px;
-  line-height: 1;
-  letter-spacing: -0.06em;
-  margin-bottom: 16px;
-  white-space: nowrap;
-}
-
-.hero-copy p,
-#statusFinanceiro {
-  display: inline-flex;
-  padding: 8px 13px;
-  border-radius: 999px;
-  color: #657386;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  font-weight: 700;
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-}
-
-/* GRID */
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.metric-card {
+.card,
+.metric-card,
+.hero-card,
+.goal-card {
+  background:
+    linear-gradient(145deg, rgba(7, 23, 48, 0.86), rgba(4, 14, 32, 0.72));
+  border: 1px solid var(--blue-border);
   border-radius: var(--radius-lg);
-  padding: 18px;
-  min-height: 120px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
 }
-
-.metric-card span {
-  display: block;
-  color: #ffffff;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.metric-card strong {
-  display: block;
-  color: #ffffff;
-  font-family: "Orbitron", sans-serif;
-  font-size: 18px;
-  margin-bottom: 8px;
-}
-
-.metric-card small {
-  color: #ffffff;
-  font-size: 13px;
-}
-
-/* PAINÉIS */
 
 .panel {
-  border-radius: var(--radius-lg);
-  padding: 18px;
-  margin-bottom: 16px;
+  padding: 26px;
+  margin-bottom: 24px;
 }
 
 .panel-head {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 14px;
-  margin-bottom: 16px;
+  margin-bottom: 22px;
 }
 
-.panel-head h3 {
-  color: #ffffff;
-  font-size: 21px;
+.panel-head h3,
+.panel h3 {
+  font-size: 30px;
+  font-weight: 800;
   line-height: 1;
-  margin-bottom: 4px;
 }
 
-.panel-head p {
-  color: #ffffff;
-  font-size: 14px;
+.panel-head p,
+.panel p {
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1.15;
+  margin-top: 8px;
 }
 
-.panel-head > span,
-.panel-head > strong {
-  color: #ffffff;
-  font-family: "Orbitron", sans-serif;
-  font-size: 14px;
+/* ===============================
+   HOME
+================================ */
+
+.hero-card {
+  padding: 34px 28px;
+  margin-bottom: 20px;
+  min-height: 190px;
 }
 
-/* FORMULÁRIOS */
-
-.page-title {
-  margin-bottom: 18px;
+.hero-card span {
+  color: var(--muted);
+  font-size: 20px;
 }
 
-.page-title h2 {
-  color: #ffffff;
-  font-size: 34px;
+.hero-card strong,
+#caixaAtual {
+  display: block;
+  font-family: var(--font-tech);
+  font-size: 48px;
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.8px;
+  margin: 18px 0 20px;
 }
 
-.form-card {
-  border-radius: var(--radius-lg);
-  padding: 18px;
-  margin-bottom: 16px;
-}
-
-.form-card h3 {
+.status-pill,
+#statusFinanceiro {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(150, 190, 255, 0.24), rgba(55, 100, 180, 0.22));
+  border: 1px solid rgba(210, 230, 255, 0.20);
   color: #ffffff;
-  font-size: 21px;
-  margin-bottom: 14px;
-}
-
-.form-card button,
-.danger-button {
-  width: 100%;
-  height: 56px;
-  border: none;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #eaf0ff, #a9c7ff);
-  color: #05070b;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 800;
 }
 
-.form-card button.dark-button {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.16);
-  color: white;
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 24px;
 }
 
-.danger-button {
-  margin-top: 14px;
-  color: white;
-  background: linear-gradient(135deg, #ff5e63, #7d1d24);
+.metric-card {
+  min-height: 145px;
+  padding: 22px;
 }
 
-/* LISTAS */
+.metric-card span {
+  color: var(--muted);
+  font-size: 20px;
+}
+
+.metric-card strong {
+  display: block;
+  font-family: var(--font-tech);
+  font-size: 28px;
+  margin: 18px 0 10px;
+}
+
+.metric-card small {
+  color: var(--muted);
+  font-size: 18px;
+}
+
+/* ===============================
+   FORMULÁRIOS
+================================ */
+
+.form-card,
+.form-panel {
+  padding: 26px;
+  margin-bottom: 24px;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 64px;
+  padding: 0 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(190, 225, 255, 0.20);
+  background: rgba(5, 22, 50, 0.78);
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 500;
+  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+input::placeholder {
+  color: rgba(225, 238, 255, 0.40);
+}
+
+input:focus,
+select:focus {
+  border-color: rgba(150, 215, 255, 0.42);
+  box-shadow:
+    0 0 20px rgba(75, 150, 255, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.form-grid,
+.form,
+.modal-form {
+  display: grid;
+  gap: 16px;
+}
+
+.primary-btn,
+.form-card button,
+.form-panel button {
+  width: 100%;
+  min-height: 64px;
+  border: 0;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #edf4ff, #bcd5ff);
+  color: #071225;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+/* ===============================
+   LISTAS / ITEMS
+================================ */
 
 .list {
   display: grid;
-  gap: 11px;
-}
-
-.empty {
-  color: #ffffff;
-  font-size: 15px;
+  gap: 16px;
 }
 
 .item {
+  width: 100%;
+  min-height: 112px;
+  padding: 18px 18px;
+
   display: grid;
-  grid-template-columns: 46px 1fr auto;
-  gap: 12px;
+  grid-template-columns: 86px 1fr 148px;
   align-items: center;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(12, 26, 48, 0.14);
-  border-radius: 20px;
-  padding: 12px;
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  gap: 14px;
+
+  border-radius: 28px;
+  background:
+    linear-gradient(145deg, rgba(8, 32, 70, 0.78), rgba(5, 18, 42, 0.76));
+  border: 1px solid rgba(175, 215, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+
+  position: relative;
+  overflow: hidden;
 }
 
 .item-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  background: rgba(255,255,255,0.08);
-  color: white;
-  font-family: "Orbitron", sans-serif;
-  font-size: 15px;
-  font-weight: 800;
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(110, 170, 255, 0.10);
+  overflow: hidden;
+}
+
+.account-icon-img,
+.transaction-icon-img {
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  display: block;
 }
 
 .item h4 {
-  color: #ffffff;
-  font-size: 17px;
-  line-height: 1;
-  margin-bottom: 4px;
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 0.98;
+  margin-bottom: 8px;
 }
 
 .item small {
-  color: #ffffff;
-  font-size: 13px;
+  display: block;
+  color: var(--muted);
+  font-size: 19px;
+  line-height: 1.15;
 }
 
-.item strong {
-  color: #ffffff;
-  font-family: "Orbitron", sans-serif;
-  font-size: 13px;
-  white-space: nowrap;
+.item > div:nth-child(2) {
+  min-width: 0;
 }
 
-.item-actions {
-  margin-top: 7px;
+.item > div:nth-child(3) {
+  width: 148px;
+  min-width: 148px;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.item > div:nth-child(3) strong {
+  font-family: var(--font-tech);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  text-align: right;
+  margin-bottom: 9px;
+}
+
+.item-actions,
+.transaction-actions,
+.goal-actions-premium {
+  display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 6px;
 }
 
-.item-actions button {
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.06);
-  color: white;
-  border-radius: 10px;
-  height: 28px;
-  padding: 0 8px;
-  font-size: 12px;
-}
-
-/* METAS */
-
-.goals-grid {
-  display: grid;
-  gap: 14px;
-}
-
-.goal-card {
-  border-radius: var(--radius-lg);
-  padding: 18px;
-}
-
-.goal-card h3 {
-  color: #ffffff;
-  font-size: 21px;
-  margin-bottom: 12px;
-}
-
-.goal-info {
-  display: flex;
-  justify-content: space-between;
-  color: #ffffff;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.progress-track {
-  width: 100%;
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.12);
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #a9c7ff, #ffffff);
-}
-
-/* INSIGHTS */
-
-.insights-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.insight-card {
-  min-height: 112px;
-  border-radius: var(--radius-lg);
-  padding: 18px;
-}
-
-.insight-card span {
-  color: #ffffff;
-  font-size: 14px;
-}
-
-.insight-card strong {
-  display: block;
-  margin-top: 12px;
-  color: #ffffff;
-  font-family: "Orbitron", sans-serif;
-  font-size: 18px;
-}
-
-/* MENU */
-
-.bottom-nav {
-  position: fixed;
-  left: 50%;
-  bottom: 17px;
-  transform: translateX(-50%);
-  width: min(410px, calc(100% - 28px));
-  height: 78px;
-  border-radius: 31px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(12, 26, 48, 0.20);
-  backdrop-filter: blur(20px) saturate(170%);
-  -webkit-backdrop-filter: blur(20px) saturate(170%);
-  display: grid;
-  grid-template-columns: 1fr 1fr 78px 1fr 1fr;
-  align-items: center;
-  padding: 0 8px;
-  z-index: 100;
-  box-shadow:
-    0 22px 70px rgba(0,0,0,0.38),
-    inset 0 1px 0 rgba(255,255,255,0.12);
-}
-
-.nav-item {
-  height: 62px;
-  border: none;
-  background: transparent;
-  color: rgba(255,255,255,0.62);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.nav-item span {
-  font-size: 22px;
-}
-
-.nav-item small {
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.nav-item.active {
-  color: #ffffff;
-}
-
-.center-action {
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  border: 4px solid rgba(0,0,0,0.82);
-  margin: -28px auto 0;
-  background: linear-gradient(135deg, #eaf0ff, #a9c7ff);
-  color: #05070b;
-  font-size: 36px;
-  box-shadow: 0 0 36px rgba(169,199,255,0.36);
-}
-
-@media (max-width: 380px) {
-  .app {
-    padding-inline: 14px;
-  }
-
-  .hero-copy h2 {
-    font-size: 29px;
-  }
-
-  .metric-card strong,
-  .insight-card strong {
-    font-size: 15px;
-  }
-
-  .splash-logo-v2 {
-    width: 295px;
-    max-width: 90vw;
-  }
-
-  .system-loader {
-    bottom: 14vh;
-    width: min(280px, 74vw);
-  }
-
-  #loadingPercent {
-    font-size: 22px;
-  }
-
-  .loading-title {
-    font-size: 10px;
-  }
-}
-
-/* AJUSTE FINAL — MENOS BLUR + MAIS TRANSPARÊNCIA */
-
-.glass-card,
-.hero-card,
-.metric-card,
-.panel,
-.form-card,
-.goal-card,
-.insight-card {
-  background: rgba(12, 26, 48, 0.08) !important;
-  backdrop-filter: blur(7px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(7px) saturate(145%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.20),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.03) !important;
-}
-
-.glass-card::before,
-.hero-card::before,
-.metric-card::before,
-.panel::before,
-.form-card::before,
-.goal-card::before,
-.insight-card::before {
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.10) 0%,
-    rgba(255,255,255,0.025) 34%,
-    rgba(255,255,255,0.00) 70%
-  ) !important;
-}
-
-.glass-card::after,
-.hero-card::after,
-.metric-card::after,
-.panel::after,
-.form-card::after,
-.goal-card::after,
-.insight-card::after {
-  background: radial-gradient(circle, rgba(120, 160, 255, 0.045), transparent 70%) !important;
-  filter: blur(14px) !important;
-}
-
-.item {
-  background: rgba(12, 26, 48, 0.07) !important;
-  backdrop-filter: blur(6px) saturate(145%) !important;
-  -webkit-backdrop-filter: blur(6px) saturate(145%) !important;
-}
-
-.bottom-nav {
-  background: rgba(12, 26, 48, 0.12) !important;
-  backdrop-filter: blur(8px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(150%) !important;
-}
-
-#statusFinanceiro {
-  background: rgba(255,255,255,0.055) !important;
-  color: #657386 !important;
-  backdrop-filter: blur(6px) saturate(140%) !important;
-  -webkit-backdrop-filter: blur(6px) saturate(140%) !important;
-}
-
-/* CONTA PAGA — DESTACAR SOMENTE A CONTA CLICADA */
-
-.conta-item.conta-paga {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(105, 145, 255, 0.28),
-      rgba(25, 65, 135, 0.18)
-    ) !important;
-  border: 1px solid rgba(185, 210, 255, 0.42) !important;
-  box-shadow:
-    0 0 22px rgba(115, 155, 255, 0.20),
-    inset 0 1px 0 rgba(255,255,255,0.22),
-    inset 0 -1px 0 rgba(255,255,255,0.08) !important;
-}
-
-.conta-item.conta-paga .item-icon {
-  background: rgba(175, 200, 255, 0.22) !important;
-  border: 1px solid rgba(210, 225, 255, 0.34);
-}
-
-.conta-item.conta-paga h4,
-.conta-item.conta-paga strong {
-  color: #ffffff !important;
-}
-
-.conta-item.conta-paga small {
-  color: rgba(220, 232, 255, 0.86) !important;
-}
-
-.conta-item.conta-paga .item-actions button {
-  background: rgba(190, 210, 255, 0.15) !important;
-  border: 1px solid rgba(220, 232, 255, 0.28) !important;
-  color: #ffffff !important;
-}
-
-#statusFinanceiro {
-  color: #ffffff !important;
-  text-shadow: 0 0 10px rgba(255,255,255,0.22);
-}
-
-/* CORREÇÃO DO AVATAR NO TOPO */
-
-.top-header {
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 16px !important;
-  margin-bottom: 24px !important;
-}
-
-.top-header > div:first-child {
-  flex: 1 !important;
-  min-width: 0 !important;
-}
-
-.top-user-box {
-  width: 74px !important;
-  height: 74px !important;
-  min-width: 74px !important;
-  max-width: 74px !important;
-  min-height: 74px !important;
-  max-height: 74px !important;
-  border-radius: 24px !important;
-  overflow: hidden !important;
-  flex: 0 0 74px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  background: rgba(12, 26, 48, 0.18) !important;
-  border: 1px solid rgba(255,255,255,0.18) !important;
-
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255,255,255,0.10) !important;
-
-  backdrop-filter: blur(10px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
-}
-
-.top-user-photo {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: cover !important;
-  display: block !important;
-  border-radius: 24px !important;
-}
-
-/* evita qualquer imagem solta quebrar a tela */
-img {
-  max-width: 100%;
-}
-
-/* ÍCONES PNG DO MENU INFERIOR */
-
-.nav-icon-img {
+.item-actions button,
+.transaction-actions button {
   width: 34px;
   height: 34px;
-  object-fit: contain;
-  display: block;
-  filter:
-    drop-shadow(0 0 8px rgba(120, 190, 255, 0.35))
-    saturate(1.15);
-  opacity: 0.78;
-  transition: 0.25s ease;
-}
-
-.nav-item.active .nav-icon-img {
-  opacity: 1;
-  transform: translateY(-2px) scale(1.10);
-  filter:
-    drop-shadow(0 0 10px rgba(160, 210, 255, 0.75))
-    drop-shadow(0 0 22px rgba(80, 160, 255, 0.34))
-    saturate(1.35);
-}
-
-.nav-item small {
-  margin-top: -2px;
-}
-
-.nav-item span {
-  display: none;
-}
-
-/* AJUSTE INDIVIDUAL DO ÍCONE CONTAS */
-
-.nav-item img[src*="Icone-contas"] {
-  width: 56px !important;
-  height: 56px !important;
-  transform: translateY(-3px) scale(1.18);
-}
-
-.nav-item.active img[src*="Icone-contas"] {
-  transform: translateY(-5px) scale(1.25) !important;
-}
-
-/* AJUSTE FINAL — DESCER ÍCONE CONTAS */
-
-.nav-item img[src*="Icone-contas"] {
-  width: 58px !important;
-  height: 58px !important;
-  transform: translateY(2px) scale(1.18) !important;
-}
-
-.nav-item.active img[src*="Icone-contas"] {
-  transform: translateY(0px) scale(1.28) !important;
-}
-
-/* ÍCONES PNG DAS CATEGORIAS DE CONTAS */
-
-.item-icon {
-  overflow: visible !important;
-  background: rgba(255, 255, 255, 0.045) !important;
-}
-
-.item .item-icon {
-  width: 58px !important;
-  height: 58px !important;
-  min-width: 58px !important;
-  border-radius: 18px !important;
-}
-
-.account-icon-img {
-  width: 58px;
-  height: 58px;
-  object-fit: contain;
-  display: block;
-  filter:
-    drop-shadow(0 0 8px rgba(120, 190, 255, 0.45))
-    drop-shadow(0 0 18px rgba(60, 140, 255, 0.22))
-    saturate(1.2);
-}
-
-/* AJUSTE — ESPAÇO ENTRE ÍCONES DAS CONTAS E INFORMAÇÕES */
-
-.item {
-  grid-template-columns: 64px 1fr auto !important;
-  column-gap: 18px !important;
-  padding: 14px 16px !important;
-}
-
-.item .item-icon {
-  width: 58px !important;
-  height: 58px !important;
-  min-width: 58px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.account-icon-img {
-  width: 52px !important;
-  height: 52px !important;
-  object-fit: contain !important;
-}
-
-/* AJUSTE — APROXIMAR LINHAS DA DESCRIÇÃO DAS CONTAS */
-
-.item small {
-  display: block !important;
-  line-height: 1.12 !important;
-  margin-top: 2px !important;
-  max-width: 150px !important;
-}
-
-.item h4 {
-  margin-bottom: 4px !important;
-  line-height: 1.05 !important;
-}
-
-/* AJUSTE PREMIUM — BOTÕES DAS CONTAS MAIS COMPACTOS */
-
-.conta-item {
-  grid-template-columns: 66px 1fr 92px !important;
-  column-gap: 18px !important;
-  align-items: center !important;
-  padding: 16px !important;
-}
-
-.conta-item h4 {
-  font-size: 17px !important;
-  line-height: 1.05 !important;
-  margin-bottom: 3px !important;
-  max-width: 120px !important;
-}
-
-.conta-item small {
-  font-size: 13px !important;
-  line-height: 1.08 !important;
-  max-width: 125px !important;
-}
-
-.conta-item strong {
-  display: block !important;
-  text-align: right !important;
-  font-size: 14px !important;
-  margin-bottom: 8px !important;
-  white-space: nowrap !important;
-}
-
-.conta-item .item-actions {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr !important;
-  gap: 5px !important;
-  justify-content: end !important;
-  align-items: center !important;
-  margin-top: 0 !important;
-}
-
-.conta-item .item-actions button {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  padding: 0 !important;
-  border-radius: 10px !important;
-
-  font-size: 0 !important;
-  color: transparent !important;
-
-  background: rgba(255, 255, 255, 0.075) !important;
-  border: 1px solid rgba(210, 230, 255, 0.20) !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    0 0 12px rgba(90,150,255,0.08) !important;
-}
-
-/* ÍCONE PAGAR / REABRIR */
-
-.conta-item .item-actions button:nth-child(1)::before {
-  content: "✓";
-  font-size: 15px;
-  color: #dfeaff;
-  line-height: 1;
-}
-
-/* ÍCONE EDITAR */
-
-.conta-item .item-actions button:nth-child(2)::before {
-  content: "✎";
-  font-size: 14px;
-  color: #dfeaff;
-  line-height: 1;
-}
-
-/* ÍCONE EXCLUIR */
-
-.conta-item .item-actions button:nth-child(3)::before {
-  content: "×";
-  font-size: 18px;
-  color: #dfeaff;
-  line-height: 1;
-}
-
-/* CONTA PAGA — BOTÃO REABRIR */
-
-.conta-item.conta-paga .item-actions button:nth-child(1)::before {
-  content: "↺";
-  font-size: 15px;
-}
-
-/* ESTADO DESTAQUE PARA CONTA PAGA */
-
-.conta-item.conta-paga .item-actions button {
-  background: rgba(210, 225, 255, 0.12) !important;
-  border: 1px solid rgba(230, 240, 255, 0.28) !important;
-}
-
-/* AJUSTE PARA NÃO QUEBRAR FEIO O TEXTO */
-
-.conta-item > div:nth-child(2) {
-  min-width: 0 !important;
-}
-
-.conta-item > div:nth-child(3) {
-  min-width: 92px !important;
-}
-
-/* MENU RÁPIDO DO BOTÃO + */
-
-.quick-toggle {
-  display: none;
-}
-
-.center-action {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-decoration: none !important;
-  user-select: none !important;
-}
-
-.quick-menu {
-  position: fixed;
-  left: 50%;
-  bottom: 106px;
-  transform: translateX(-50%) translateY(18px) scale(0.96);
-  width: min(370px, calc(100% - 42px));
-  padding: 14px;
-  border-radius: 28px;
-  z-index: 90;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.25s ease;
-}
-
-.quick-toggle:checked ~ .quick-menu {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0) scale(1);
-}
-
-.quick-menu button {
-  height: 66px;
+  min-width: 34px;
+  border-radius: 11px;
   border: 1px solid rgba(210, 230, 255, 0.18);
-  border-radius: 20px;
-  background: rgba(10, 28, 56, 0.26);
+  background: rgba(255,255,255,0.06);
   color: #ffffff;
-
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 11px;
-
-  padding: 0 14px;
-  backdrop-filter: blur(12px) saturate(150%);
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    0 0 18px rgba(70, 150, 255, 0.10);
-}
-
-.quick-menu button span {
-  width: 34px;
-  height: 34px;
-  border-radius: 13px;
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-
-  color: #dce9ff;
-  background: rgba(170, 205, 255, 0.12);
-  border: 1px solid rgba(220, 235, 255, 0.18);
-
-  box-shadow:
-    0 0 12px rgba(130, 190, 255, 0.16),
-    inset 0 1px 0 rgba(255,255,255,0.12);
-}
-
-.quick-menu button strong {
+  padding: 0;
   font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-}
-
-/* quando abrir o menu, o botão + fica com brilho */
-.quick-toggle:checked ~ .bottom-nav .center-action {
-  transform: rotate(45deg) scale(1.03);
-  box-shadow:
-    0 0 34px rgba(160, 200, 255, 0.42),
-    0 0 70px rgba(70, 140, 255, 0.18);
-}
-
-/* ÍCONES 3D DO MENU RÁPIDO — FEITOS NO CÓDIGO */
-
-.quick-menu button span {
-  position: relative;
-  width: 42px !important;
-  height: 42px !important;
-  min-width: 42px !important;
-  border-radius: 16px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  font-family: "Orbitron", sans-serif !important;
-  font-size: 0 !important;
-
-  background:
-    linear-gradient(145deg, rgba(210, 235, 255, 0.26), rgba(20, 65, 125, 0.32)),
-    radial-gradient(circle at 30% 18%, rgba(255,255,255,0.55), transparent 32%),
-    radial-gradient(circle at 70% 82%, rgba(0,145,255,0.55), transparent 45%) !important;
-
-  border: 1px solid rgba(210, 235, 255, 0.34) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.42),
-    inset 0 -8px 18px rgba(0, 40, 95, 0.34),
-    0 0 14px rgba(120, 190, 255, 0.36),
-    0 0 30px rgba(40, 130, 255, 0.16),
-    0 12px 20px rgba(0,0,0,0.28) !important;
-
-  overflow: hidden;
-}
-
-/* brilho diagonal */
-.quick-menu button span::after {
-  content: "";
-  position: absolute;
-  top: -40%;
-  left: -65%;
-  width: 80%;
-  height: 180%;
-  transform: rotate(28deg);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,255,255,0.55),
-    transparent
-  );
-  opacity: 0.35;
-}
-
-/* GANHO — símbolo + em 3D */
-.quick-menu button:nth-child(1) span::before {
-  content: "+";
-  font-size: 27px;
   font-weight: 800;
-  color: #eef6ff;
-  text-shadow:
-    0 0 8px rgba(160, 220, 255, 0.9),
-    0 0 18px rgba(60, 160, 255, 0.55);
 }
 
-/* SAÍDA — símbolo - em 3D */
-.quick-menu button:nth-child(2) span::before {
-  content: "−";
-  font-size: 30px;
+/* ===============================
+   FILTROS
+================================ */
+
+.bill-filters,
+.period-filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 8px;
+  margin-bottom: 24px;
+  border-radius: 24px;
+  background: rgba(10, 38, 75, 0.72);
+  border: 1px solid rgba(180, 220, 255, 0.18);
+}
+
+.bill-filters button,
+.period-filters button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  color: rgba(230, 240, 255, 0.62);
+  font-size: 18px;
   font-weight: 800;
-  color: #eef6ff;
-  text-shadow:
-    0 0 8px rgba(160, 220, 255, 0.9),
-    0 0 18px rgba(60, 160, 255, 0.55);
 }
 
-/* CONTA — cartão/retângulo 3D */
-.quick-menu button:nth-child(3) span::before {
-  content: "";
-  width: 24px;
-  height: 17px;
-  border-radius: 5px;
-  border: 2px solid rgba(240, 248, 255, 0.96);
-  box-shadow:
-    0 0 8px rgba(160, 220, 255, 0.9),
-    inset 0 0 8px rgba(110, 190, 255, 0.38);
+.bill-filters button.active,
+.period-filters button.active {
+  background: rgba(150, 195, 255, 0.14);
+  color: #ffffff;
+  border: 1px solid rgba(210, 230, 255, 0.18);
 }
 
-.quick-menu button:nth-child(3) span::after {
-  content: "";
-  position: absolute;
-  width: 13px;
-  height: 2px;
-  left: 14px;
-  top: 25px;
-  border-radius: 5px;
-  background: rgba(240, 248, 255, 0.95);
-  box-shadow: 0 0 8px rgba(160, 220, 255, 0.9);
-}
+/* ===============================
+   ESTADOS DAS CONTAS
+================================ */
 
-/* META — diamante/cristal 3D */
-.quick-menu button:nth-child(4) span::before {
-  content: "";
-  width: 22px;
-  height: 22px;
-  transform: rotate(45deg);
-  border: 2px solid rgba(240, 248, 255, 0.96);
-  border-radius: 4px;
+/* Alerta próximo do vencimento */
+.conta-alerta {
   background:
-    linear-gradient(135deg, rgba(255,255,255,0.28), rgba(50,160,255,0.12));
+    radial-gradient(circle at 16% 35%, rgba(255, 178, 58, 0.22), transparent 32%),
+    linear-gradient(145deg, rgba(255, 157, 32, 0.25), rgba(12, 28, 56, 0.86) 62%, rgba(8, 24, 52, 0.94)) !important;
+  border: 1px solid rgba(255, 184, 70, 0.78) !important;
   box-shadow:
-    0 0 8px rgba(160, 220, 255, 0.9),
-    inset 0 0 10px rgba(110, 190, 255, 0.38);
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 26px rgba(255, 166, 35, 0.16),
+    0 0 20px rgba(255, 166, 35, 0.16) !important;
 }
 
-/* melhora o card do menu */
-.quick-menu button {
+.conta-alerta::before,
+.conta-alerta::after {
+  content: none;
+  display: none;
+}
+
+.conta-alerta h4,
+.conta-alerta strong {
+  color: #ffffff;
+}
+
+.conta-alerta small {
+  color: rgba(255, 232, 185, 0.95);
+}
+
+/* Conta paga */
+.conta-paga {
+  opacity: 1;
+  border: 1px solid rgba(115, 175, 255, 0.62) !important;
   background:
-    linear-gradient(145deg, rgba(10, 35, 75, 0.38), rgba(8, 18, 40, 0.28)) !important;
-  border: 1px solid rgba(205, 230, 255, 0.22) !important;
+    radial-gradient(circle at 88% 24%, rgba(95, 160, 255, 0.30), transparent 34%),
+    linear-gradient(145deg, rgba(45, 93, 190, 0.38), rgba(18, 54, 125, 0.34) 46%, rgba(8, 24, 58, 0.92)) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.13),
-    inset 0 -1px 0 rgba(255,255,255,0.04),
-    0 0 22px rgba(65, 145, 255, 0.12) !important;
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 0 30px rgba(85, 150, 255, 0.16),
+    0 0 24px rgba(75, 145, 255, 0.18) !important;
 }
 
-/* efeito ao tocar */
-.quick-menu button:active span {
-  transform: scale(0.94);
+.conta-paga::before,
+.conta-paga::after {
+  content: none;
+  display: none;
 }
 
-/* ÍCONES DE ENTRADA E SAÍDA NO HISTÓRICO */
-
-.transaction-icon-img {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-  display: block;
-  filter:
-    drop-shadow(0 0 8px rgba(120, 190, 255, 0.45))
-    drop-shadow(0 0 18px rgba(60, 140, 255, 0.22))
-    saturate(1.2);
+.conta-paga h4,
+.conta-paga strong {
+  color: #ffffff;
 }
 
-#listaTransacoes .item-icon {
-  width: 58px !important;
-  height: 58px !important;
-  min-width: 58px !important;
-  border-radius: 18px !important;
-  overflow: visible !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  background: rgba(255, 255, 255, 0.045) !important;
+.conta-paga small {
+  color: rgba(225, 238, 255, 0.82);
 }
 
-/* AJUSTE AGENDA — ESPAÇO ENTRE TÍTULO E CARD */
-
-.agenda-group {
-  margin-bottom: 26px !important;
+.conta-paga .item-icon {
+  opacity: 0.9;
+  filter: saturate(1.05) brightness(1.02);
 }
 
-.agenda-group h3 {
-  margin-bottom: 12px !important;
-  padding-left: 2px !important;
-}
-
-/* CARD VERMELHO PARA CONTAS ATRASADAS */
-
+/* Conta atrasada */
 .agenda-atrasada {
   background:
-    linear-gradient(145deg, rgba(95, 8, 18, 0.42), rgba(18, 4, 8, 0.38)) !important;
-  border: 1px solid rgba(255, 80, 105, 0.45) !important;
-
+    radial-gradient(circle at 15% 35%, rgba(255, 60, 90, 0.20), transparent 32%),
+    linear-gradient(145deg, rgba(130, 18, 35, 0.34), rgba(8, 24, 52, 0.90)) !important;
+  border: 1px solid rgba(255, 80, 105, 0.58) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.10),
-    0 0 22px rgba(255, 40, 75, 0.18),
-    0 0 44px rgba(255, 0, 45, 0.10) !important;
-}
-
-.agenda-atrasada h4,
-.agenda-atrasada strong {
-  color: #ffffff !important;
+    0 0 20px rgba(255, 70, 95, 0.14) !important;
 }
 
 .agenda-atrasada small {
-  color: rgba(255, 205, 215, 0.92) !important;
+  color: rgba(255, 200, 210, 0.92);
 }
 
-/* AJUSTE AGENDA — ESPAÇO ENTRE TÍTULO E CARD */
+/* ===============================
+   AGENDA
+================================ */
 
 .agenda-group {
-  margin-bottom: 26px !important;
+  margin-top: 22px;
 }
 
-.agenda-group h3 {
-  margin-bottom: 12px !important;
-  padding-left: 2px !important;
+.agenda-group h3,
+.goal-section-title {
+  margin: 0 0 14px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
 }
 
-/* CARD VERMELHO PARA CONTAS ATRASADAS */
-
-.agenda-atrasada {
-  background:
-    linear-gradient(145deg, rgba(95, 8, 18, 0.42), rgba(18, 4, 8, 0.38)) !important;
-  border: 1px solid rgba(255, 80, 105, 0.45) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    0 0 22px rgba(255, 40, 75, 0.18),
-    0 0 44px rgba(255, 0, 45, 0.10) !important;
-}
-
-.agenda-atrasada h4,
-.agenda-atrasada strong {
-  color: #ffffff !important;
-}
-
-.agenda-atrasada small {
-  color: rgba(255, 205, 215, 0.92) !important;
-}
-
-/* RESUMO MENSAL NA HOME */
+/* ===============================
+   RESUMO MENSAL
+================================ */
 
 .monthly-summary-panel {
-  margin-top: 26px !important;
-  margin-bottom: 26px !important;
+  padding: 26px;
 }
 
-.monthly-summary-head span {
-  font-family: "Orbitron", sans-serif;
-  font-size: 12px;
-  text-transform: uppercase;
-  color: rgba(210, 230, 255, 0.82);
-  letter-spacing: 0.08em;
+.month-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 24px;
+}
+
+.month-selector button {
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 800;
+  padding: 0;
+  line-height: 1;
+}
+
+.month-selector strong {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: lowercase;
 }
 
 .monthly-summary-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 16px;
 }
 
 .monthly-summary-item {
-  min-height: 92px;
-  padding: 16px;
-  border-radius: 22px;
-
-  background:
-    linear-gradient(145deg, rgba(12, 40, 82, 0.34), rgba(7, 18, 38, 0.28)) !important;
-
-  border: 1px solid rgba(205, 230, 255, 0.18);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    0 0 18px rgba(70, 150, 255, 0.08);
+  min-height: 126px;
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(5, 22, 50, 0.64);
+  border: 1px solid rgba(190, 225, 255, 0.16);
 }
 
 .monthly-summary-item span {
-  display: block;
-  font-size: 14px;
-  color: rgba(225, 235, 255, 0.78);
-  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 19px;
 }
 
 .monthly-summary-item strong {
   display: block;
-  font-family: "Orbitron", sans-serif;
-  font-size: 18px;
-  color: #ffffff;
-  line-height: 1.08;
-}
-
-.monthly-summary-item.highlight {
-  background:
-    linear-gradient(145deg, rgba(20, 60, 118, 0.46), rgba(8, 24, 52, 0.34)) !important;
-}
-
-.monthly-summary-item.positive {
-  border-color: rgba(120, 210, 255, 0.28);
+  font-family: var(--font-tech);
+  font-size: 25px;
+  margin-top: 18px;
 }
 
 .monthly-summary-item.negative {
-  border-color: rgba(255, 80, 105, 0.42);
-  background:
-    linear-gradient(145deg, rgba(95, 8, 18, 0.38), rgba(18, 4, 8, 0.30)) !important;
+  border-color: rgba(255, 80, 110, 0.46);
+  background: rgba(80, 18, 36, 0.28);
 }
 
 .monthly-summary-message {
-  margin-top: 16px;
-  padding: 16px;
+  margin-top: 18px;
+  padding: 18px;
   border-radius: 22px;
-
-  font-size: 15px;
-  line-height: 1.25;
-  color: rgba(240, 246, 255, 0.94);
-
-  border: 1px solid rgba(210, 230, 255, 0.16);
-  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(190, 225, 255, 0.16);
+  background: rgba(5, 22, 50, 0.52);
+  color: rgba(235, 245, 255, 0.82);
+  font-size: 20px;
+  line-height: 1.2;
 }
 
-.monthly-summary-message.warning {
-  border-color: rgba(255, 95, 120, 0.36);
-  box-shadow: 0 0 22px rgba(255, 40, 75, 0.10);
-}
-
-.monthly-summary-message.safe {
-  border-color: rgba(120, 200, 255, 0.22);
-  box-shadow: 0 0 22px rgba(80, 160, 255, 0.10);
-}
-
-/* FILTROS DA ABA CONTAS */
-
-.bill-filters {
-  display: flex;
-  gap: 8px;
-  margin: 18px 0 16px;
-  padding: 8px;
-
-  border-radius: 22px;
-  background: rgba(255,255,255,0.045);
-  border: 1px solid rgba(205, 230, 255, 0.16);
-
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    0 0 20px rgba(70, 150, 255, 0.08);
-}
-
-.bill-filters button {
-  flex: 1;
-  min-height: 38px;
-  border: 1px solid transparent;
-  border-radius: 16px;
-
-  background: transparent;
-  color: rgba(230, 240, 255, 0.72);
-
-  font-family: "Rajdhani", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-
-  transition: 0.22s ease;
-}
-
-.bill-filters button.active {
-  color: #ffffff;
-  background:
-    linear-gradient(145deg, rgba(120, 180, 255, 0.24), rgba(30, 80, 155, 0.22));
-
-  border: 1px solid rgba(200, 225, 255, 0.28);
-
-  box-shadow:
-    0 0 16px rgba(90, 160, 255, 0.18),
-    inset 0 1px 0 rgba(255,255,255,0.14);
-}
-
-.bill-filters button:active {
-  transform: scale(0.96);
-}
-
-/* METAS PREMIUM */
-
-.goal-section-title {
-  margin: 18px 0 10px;
-  padding-left: 4px;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-
-  color: rgba(220, 235, 255, 0.92);
-  text-shadow: 0 0 12px rgba(120, 180, 255, 0.22);
-}
+/* ===============================
+   METAS
+================================ */
 
 .goal-card-premium {
-  padding: 20px !important;
-  margin-bottom: 16px !important;
-  border-radius: 30px !important;
-}
-
-.goal-premium-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
+  padding: 26px;
   margin-bottom: 18px;
 }
 
-.goal-status {
-  display: inline-flex;
-  margin-bottom: 8px;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 9px;
+.goal-title-column span {
+  display: block;
+  font-family: var(--font-tech);
+  font-size: 12px;
   letter-spacing: 0.18em;
-  text-transform: uppercase;
-
-  color: rgba(190, 215, 255, 0.82);
+  color: rgba(225, 238, 255, 0.45);
+  margin-bottom: 10px;
 }
 
-.goal-premium-head h3 {
-  color: #ffffff !important;
-  font-size: 24px !important;
-  line-height: 1 !important;
-  margin: 0 !important;
-}
-
-.goal-percent {
-  min-width: 82px;
-  text-align: right;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 34px !important;
-  line-height: 0.9;
-
-  color: #ffffff;
-  text-shadow:
-    0 0 10px rgba(150, 205, 255, 0.32),
-    0 0 24px rgba(70, 150, 255, 0.20);
+.goal-title-column h3 {
+  font-size: 34px;
+  font-weight: 800;
 }
 
 .goal-premium-values {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 14px;
+  margin: 24px 0;
 }
 
 .goal-premium-values div {
+  min-height: 56px;
+  padding: 0 18px;
+  border-radius: 18px;
+  background: rgba(5, 22, 50, 0.62);
+  border: 1px solid rgba(190, 225, 255, 0.14);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-
-  padding: 12px 14px;
-  border-radius: 18px;
-
-  background: rgba(255,255,255,0.045);
-  border: 1px solid rgba(205, 230, 255, 0.12);
 }
 
 .goal-premium-values span {
-  color: rgba(230, 240, 255, 0.72);
-  font-size: 14px;
+  color: var(--muted);
+  font-size: 18px;
 }
 
 .goal-premium-values strong {
-  font-family: "Orbitron", sans-serif;
-  color: #ffffff;
-  font-size: 14px;
-  text-align: right;
-}
-
-.goal-progress-track {
-  height: 12px !important;
-  margin-top: 4px;
-  margin-bottom: 16px;
-  background: rgba(255,255,255,0.10) !important;
-}
-
-.goal-actions-premium {
-  display: grid;
-  grid-template-columns: 1.3fr 0.8fr 0.8fr;
-  gap: 8px;
-}
-
-.goal-actions-premium button {
-  min-height: 42px;
-  border-radius: 16px;
-  border: 1px solid rgba(205, 230, 255, 0.18);
-  background: rgba(255,255,255,0.065);
-  color: #ffffff;
-
-  font-size: 13px;
-  font-weight: 800;
-  font-family: "Rajdhani", sans-serif;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    0 0 16px rgba(70, 150, 255, 0.08);
-}
-
-.goal-actions-premium button:first-child {
-  background:
-    linear-gradient(145deg, rgba(120, 180, 255, 0.28), rgba(30, 80, 155, 0.22));
-  border-color: rgba(200, 225, 255, 0.28);
-}
-
-.goal-complete {
-  border: 1px solid rgba(180, 225, 255, 0.38) !important;
-  box-shadow:
-    0 0 30px rgba(120, 190, 255, 0.18),
-    inset 0 1px 0 rgba(255,255,255,0.18) !important;
-}
-
-.goal-complete .goal-status {
-  color: #ffffff;
-  text-shadow: 0 0 12px rgba(180, 225, 255, 0.55);
-}
-
-.goal-complete .goal-percent {
-  text-shadow:
-    0 0 14px rgba(180, 225, 255, 0.65),
-    0 0 32px rgba(80, 160, 255, 0.30);
-}
-
-@media (max-width: 380px) {
-  .goal-percent {
-    font-size: 28px !important;
-    min-width: 68px;
-  }
-
-  .goal-actions-premium {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* AJUSTE FINAL — CARD DE METAS COM STATUS EM CIMA */
-
-.goal-premium-head {
-  display: none !important;
-}
-
-.goal-title-row {
-  display: none !important;
-}
-
-.goal-title-column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 18px;
-}
-
-.goal-title-column .goal-status {
-  margin: 0 0 8px 0 !important;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-
-  color: rgba(190, 215, 255, 0.82);
-  white-space: nowrap;
-}
-
-.goal-title-column h3 {
-  color: #ffffff !important;
-  font-size: 26px !important;
-  line-height: 1 !important;
-  margin: 0 !important;
+  font-family: var(--font-tech);
+  font-size: 21px;
 }
 
 .goal-progress-row {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 60px;
   align-items: center;
-  gap: 12px;
-  margin: 14px 0 18px;
+  gap: 14px;
+  margin: 18px 0 22px;
 }
 
-.goal-progress-row .goal-progress-track {
-  margin: 0 !important;
+.progress-track,
+.goal-progress-track {
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(200, 220, 255, 0.14);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #eff5ff, #b9d5ff);
 }
 
 .goal-percent-small {
-  font-family: "Orbitron", sans-serif;
-  font-size: 14px !important;
-  line-height: 1;
-  color: #ffffff;
-
-  min-width: 42px;
+  font-family: var(--font-tech);
+  font-size: 22px;
   text-align: right;
-
-  text-shadow:
-    0 0 8px rgba(150, 205, 255, 0.35),
-    0 0 18px rgba(70, 150, 255, 0.22);
 }
 
-.goal-percent {
-  display: none !important;
+.goal-actions-premium {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 10px;
 }
 
-/* FILTROS POR PERÍODO — GANHOS E SAÍDAS */
-
-.period-filters {
-  display: flex;
-  gap: 8px;
-  margin: 18px 0 16px;
-  padding: 8px;
-
-  border-radius: 22px;
-  background: rgba(255,255,255,0.045);
-  border: 1px solid rgba(205, 230, 255, 0.16);
-
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    0 0 20px rgba(70, 150, 255, 0.08);
-}
-
-.period-filters button {
-  flex: 1;
-  min-height: 38px;
-  border: 1px solid transparent;
-  border-radius: 16px;
-
-  background: transparent;
-  color: rgba(230, 240, 255, 0.72);
-
-  font-family: "Rajdhani", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-
-  transition: 0.22s ease;
-}
-
-.period-filters button.active {
+.goal-actions-premium button {
+  min-height: 54px;
+  border-radius: 18px;
+  border: 1px solid rgba(210, 230, 255, 0.18);
+  background: rgba(255,255,255,0.06);
   color: #ffffff;
-  background:
-    linear-gradient(145deg, rgba(120, 180, 255, 0.24), rgba(30, 80, 155, 0.22));
-
-  border: 1px solid rgba(200, 225, 255, 0.28);
-
-  box-shadow:
-    0 0 16px rgba(90, 160, 255, 0.18),
-    inset 0 1px 0 rgba(255,255,255,0.14);
+  font-size: 17px;
+  font-weight: 800;
 }
 
-.period-filters button:active {
-  transform: scale(0.96);
-}
-
-/* BACKUP NA HOME */
+/* ===============================
+   BACKUP
+================================ */
 
 .backup-panel {
-  margin-top: 26px !important;
-  margin-bottom: 110px !important;
+  margin-top: 24px;
 }
 
 .backup-actions {
-  margin-top: 18px;
   display: grid;
-  grid-template-columns: 1fr;
+  gap: 14px;
 }
 
 .backup-actions button {
-  min-height: 52px;
-  border-radius: 18px;
-
-  border: 1px solid rgba(205, 230, 255, 0.22);
-  background:
-    linear-gradient(145deg, rgba(120, 180, 255, 0.22), rgba(20, 60, 120, 0.20));
-
+  min-height: 58px;
+  border-radius: 20px;
+  border: 1px solid rgba(210, 230, 255, 0.18);
+  background: rgba(80, 140, 210, 0.20);
   color: #ffffff;
-
-  font-family: "Rajdhani", sans-serif;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 800;
-  letter-spacing: 0.02em;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 0 22px rgba(80, 160, 255, 0.12);
 }
 
-.backup-actions button:active {
-  transform: scale(0.97);
-}
-
-/* BACKUP — BOTÕES EXPORTAR / IMPORTAR */
-
-.backup-actions {
-  margin-top: 18px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
-.backup-actions button {
-  min-height: 52px;
-  border-radius: 18px;
-
-  border: 1px solid rgba(205, 230, 255, 0.22);
-  background:
-    linear-gradient(145deg, rgba(120, 180, 255, 0.22), rgba(20, 60, 120, 0.20));
-
-  color: #ffffff;
-
-  font-family: "Rajdhani", sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 0 22px rgba(80, 160, 255, 0.12);
-}
-
-.backup-actions button:nth-child(2) {
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(20, 60, 120, 0.14));
-}
-
-.backup-actions button:active {
-  transform: scale(0.97);
-}
-
-/* AJUSTE DE RESPIRO — BOTÕES BACKUP */
-
-.backup-actions {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 20px !important;
-  margin-top: 24px !important;
-}
-
-.backup-actions button {
-  margin: 0 !important;
-}
-
-/* CORRIGIR ESPAÇO ENTRE OS CARDS DE BACKUP */
-
-#backupHome .backup-actions {
-  display: block !important;
-  margin-top: 24px !important;
-}
-
-#backupHome .backup-actions button {
-  display: block !important;
-  width: 100% !important;
-  min-height: 56px !important;
-
-  margin: 0 0 16px 0 !important;
-
-  border-radius: 22px !important;
-}
-
-#backupHome .backup-actions button:last-child {
-  margin-bottom: 0 !important;
-}
-
-/* ESPAÇO REAL ENTRE EXPORTAR E IMPORTAR BACKUP */
-
-#backupHome .backup-actions {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 22px !important;
-  margin-top: 26px !important;
-}
-
-#backupHome .backup-actions button {
-  width: 100% !important;
-  min-height: 58px !important;
-  margin: 0 !important;
-  border-radius: 22px !important;
-}
-
-/* SELETOR DE MÊS — RESUMO MENSAL */
-
-.month-selector {
-  display: grid;
-  grid-template-columns: 48px 1fr 48px;
-  align-items: center;
-  gap: 10px;
-
-  margin-top: 18px;
-  margin-bottom: 18px;
-  padding: 8px;
-
-  border-radius: 22px;
-  background: rgba(255,255,255,0.045);
-  border: 1px solid rgba(205, 230, 255, 0.16);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    0 0 20px rgba(70, 150, 255, 0.08);
-}
-
-.month-selector button {
-  width: 48px;
-  height: 42px;
-
-  border-radius: 16px;
-  border: 1px solid rgba(205, 230, 255, 0.20);
-
-  background:
-    linear-gradient(145deg, rgba(120, 180, 255, 0.18), rgba(20, 60, 120, 0.18));
-
-  color: #ffffff;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 28px;
-  line-height: 1;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 0 14px rgba(80, 160, 255, 0.10);
-}
-
-.month-selector strong {
-  text-align: center;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-
-  color: #ffffff;
-}
-
-.month-selector button:active {
-  transform: scale(0.94);
-}
-
-/* AJUSTE FINAL — SELETOR DE MÊS SEM FUNDO NAS SETAS */
-
-.month-selector {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 14px !important;
-
-  margin-top: 18px !important;
-  margin-bottom: 26px !important;
-  padding: 0 !important;
-
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.month-selector strong {
-  font-family: "Rajdhani", sans-serif !important;
-  font-size: 22px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0 !important;
-  text-transform: lowercase !important;
-
-  color: #ffffff !important;
-  text-align: left !important;
-  line-height: 1 !important;
-}
-
-.month-selector button {
-  width: auto !important;
-  height: auto !important;
-  min-width: auto !important;
-  min-height: auto !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  outline: none !important;
-
-  color: #ffffff !important;
-
-  font-family: "Rajdhani", sans-serif !important;
-  font-size: 28px !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
-
-  appearance: none !important;
-  -webkit-appearance: none !important;
-}
-
-.month-selector button:active {
-  transform: scale(0.92) !important;
-  opacity: 0.7 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.month-selector button:hover {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* AJUSTE FINAL — SETAS DO RESUMO MENSAL SEM FUNDO */
-
-.month-selector {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 12px !important;
-
-  margin-top: 18px !important;
-  margin-bottom: 26px !important;
-  padding: 0 !important;
-
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.month-selector strong {
-  font-family: "Rajdhani", sans-serif !important;
-  font-size: 22px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0 !important;
-  text-transform: lowercase !important;
-
-  color: #ffffff !important;
-  text-align: left !important;
-  line-height: 1 !important;
-}
-
-.month-selector button {
-  width: auto !important;
-  height: auto !important;
-  min-width: auto !important;
-  min-height: auto !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-
-  background: transparent !important;
-  background-color: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  outline: none !important;
-
-  color: #ffffff !important;
-
-  font-family: "Rajdhani", sans-serif !important;
-  font-size: 28px !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
-
-  appearance: none !important;
-  -webkit-appearance: none !important;
-}
-
-.month-selector button:hover,
-.month-selector button:focus,
-.month-selector button:active {
-  background: transparent !important;
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.month-selector button:active {
-  transform: scale(0.92) !important;
-  opacity: 0.7 !important;
-}
-
-/* VISUAL PREMIUM — CONTAS PAGAS */
-
-.conta-paga {
-  position: relative !important;
-
-  background:
-    linear-gradient(145deg, rgba(12, 42, 70, 0.28), rgba(6, 18, 34, 0.22)) !important;
-
-  border: 1px solid rgba(140, 215, 255, 0.24) !important;
-
-  opacity: 0.82 !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    0 0 18px rgba(80, 180, 255, 0.08) !important;
-}
-
-.conta-paga::before {
-  content: "✓";
-  position: absolute;
-  top: 12px;
-  right: 14px;
-
-  width: 22px;
-  height: 22px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 12px;
-  font-weight: 800;
-
-  color: #ffffff;
-
-  background:
-    linear-gradient(145deg, rgba(120, 210, 255, 0.32), rgba(40, 120, 180, 0.24));
-
-  border: 1px solid rgba(200, 235, 255, 0.35);
-
-  box-shadow:
-    0 0 14px rgba(120, 210, 255, 0.18),
-    inset 0 1px 0 rgba(255,255,255,0.18);
-}
-
-.conta-paga h4 {
-  color: rgba(255,255,255,0.88) !important;
-}
-
-.conta-paga small {
-  color: rgba(185, 225, 255, 0.82) !important;
-}
-
-.conta-paga strong {
-  color: rgba(255,255,255,0.86) !important;
-}
-
-.conta-paga .item-icon {
-  opacity: 0.72 !important;
-  filter: saturate(0.75) brightness(0.92);
-}
-
-.conta-paga .item-actions button:first-child {
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(60, 120, 170, 0.12)) !important;
-
-  border-color: rgba(190, 225, 255, 0.22) !important;
-  color: rgba(235, 245, 255, 0.88) !important;
-}
-
-/* ALERTA VISUAL — CONTAS PRÓXIMAS DO VENCIMENTO */
-
-.conta-alerta {
-  position: relative !important;
-
-  background:
-    linear-gradient(145deg, rgba(110, 78, 12, 0.38), rgba(34, 22, 5, 0.28)) !important;
-
-  border: 1px solid rgba(255, 198, 80, 0.42) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    0 0 22px rgba(255, 180, 40, 0.16),
-    0 0 44px rgba(255, 140, 0, 0.08) !important;
-}
-
-.conta-alerta::before {
-  content: "!";
-  position: absolute;
-  top: 12px;
-  right: 14px;
-
-  width: 22px;
-  height: 22px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  font-family: "Orbitron", sans-serif;
-  font-size: 13px;
-  font-weight: 900;
-
-  color: #ffffff;
-
-  background:
-    linear-gradient(145deg, rgba(255, 204, 80, 0.42), rgba(190, 110, 20, 0.34));
-
-  border: 1px solid rgba(255, 225, 140, 0.42);
-
-  box-shadow:
-    0 0 16px rgba(255, 190, 60, 0.22),
-    inset 0 1px 0 rgba(255,255,255,0.18);
-}
-
-.conta-alerta h4,
-.conta-alerta strong {
-  color: #ffffff !important;
-}
-
-.conta-alerta small {
-  color: rgba(255, 230, 180, 0.92) !important;
-}
-
-.conta-alerta .item-icon {
-  filter: saturate(1.12) brightness(1.05);
-}
-
-/* MODAL PREMIUM — EDITAR CONTA */
+/* ===============================
+   MODAIS
+================================ */
 
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
-
+  z-index: 99999;
   display: none;
   align-items: center;
   justify-content: center;
-
+  width: 100vw;
+  height: 100vh;
   padding: 22px;
-
-  background: rgba(0, 8, 20, 0.72);
+  background: rgba(0, 8, 20, 0.78);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
@@ -2348,1258 +794,300 @@ img {
 
 .modal-card {
   width: 100%;
-  max-width: 420px;
-  max-height: 86vh;
+  max-width: 430px;
+  max-height: 82vh;
   overflow-y: auto;
-
+  overflow-x: hidden;
   padding: 26px;
+  padding-bottom: 30px;
   border-radius: 30px;
-
-  background:
-    linear-gradient(145deg, rgba(7, 22, 46, 0.94), rgba(5, 14, 30, 0.92)) !important;
-
-  border: 1px solid rgba(190, 225, 255, 0.22);
-
+  background: linear-gradient(145deg, rgba(7, 22, 46, 0.96), rgba(4, 12, 28, 0.96));
+  border: 1px solid rgba(190, 225, 255, 0.24);
   box-shadow:
-    0 0 50px rgba(60, 150, 255, 0.18),
+    0 0 70px rgba(60, 150, 255, 0.22),
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .modal-head {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-
+  align-items: flex-start;
   margin-bottom: 22px;
 }
 
 .modal-head span {
   display: block;
-  margin-bottom: 4px;
-
-  font-family: "Orbitron", sans-serif;
+  margin-bottom: 5px;
+  font-family: var(--font-tech);
   font-size: 10px;
   letter-spacing: 0.18em;
   color: rgba(210, 230, 255, 0.62);
 }
 
 .modal-head h3 {
-  margin: 0;
-
-  font-family: "Rajdhani", sans-serif;
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 800;
-  color: #ffffff;
+  line-height: 1;
 }
 
 .modal-close {
-  width: 36px;
-  height: 36px;
-
+  width: 38px;
+  height: 38px;
   border-radius: 14px;
-  border: 1px solid rgba(205, 230, 255, 0.16);
-
-  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(205, 230, 255, 0.20);
+  background: rgba(255,255,255,0.08);
   color: #ffffff;
-
   font-size: 26px;
   line-height: 1;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08);
-}
-
-.modal-form {
-  display: grid;
-  gap: 14px;
 }
 
 .modal-form label {
   display: grid;
   gap: 8px;
-
-  font-family: "Rajdhani", sans-serif;
-  font-size: 15px;
+  color: rgba(230, 240, 255, 0.84);
+  font-size: 16px;
   font-weight: 700;
-
-  color: rgba(230, 240, 255, 0.82);
-}
-
-.modal-form input,
-.modal-form select {
-  width: 100%;
-  min-height: 52px;
-
-  padding: 0 16px;
-
-  border-radius: 18px;
-  border: 1px solid rgba(205, 230, 255, 0.18);
-
-  background: rgba(4, 16, 34, 0.76);
-  color: #ffffff;
-
-  font-family: "Rajdhani", sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-
-  outline: none;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.06);
-}
-
-.modal-form input::placeholder {
-  color: rgba(220, 235, 255, 0.42);
-}
-
-.modal-form input:focus,
-.modal-form select:focus {
-  border-color: rgba(150, 215, 255, 0.42);
-  box-shadow:
-    0 0 18px rgba(80, 170, 255, 0.12),
-    inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .modal-actions {
   display: grid;
-  grid-template-columns: 1fr;
   gap: 12px;
-
-  margin-top: 22px;
+  margin-top: 24px;
 }
 
 .modal-actions button {
-  min-height: 54px;
-
+  width: 100%;
+  min-height: 56px;
   border-radius: 18px;
-  border: 1px solid rgba(205, 230, 255, 0.20);
-
-  font-family: "Rajdhani", sans-serif;
+  border: 1px solid rgba(205, 230, 255, 0.22);
   font-size: 16px;
   font-weight: 800;
-
-  color: #ffffff;
 }
 
 .modal-save {
-  background:
-    linear-gradient(145deg, rgba(190, 220, 255, 0.92), rgba(135, 180, 255, 0.86)) !important;
-
-  color: #061225 !important;
+  background: linear-gradient(145deg, rgba(210, 230, 255, 0.98), rgba(135, 180, 255, 0.92));
+  color: #061225;
 }
 
 .modal-cancel {
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(30, 80, 145, 0.12)) !important;
+  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(30, 80, 145, 0.16));
+  color: #ffffff;
 }
 
 .hidden {
-  display: none !important;
+  display: none;
 }
 
-/* CORREÇÃO — BOTÕES DOS CARDS CLICÁVEIS */
+/* ===============================
+   BOTTOM NAV
+================================ */
 
-.item,
-.conta-item,
-.transaction-item,
-.goal-card {
-  position: relative !important;
-}
+.bottom-nav {
+  position: fixed;
+  left: 18px;
+  right: 18px;
+  bottom: 28px;
+  height: 92px;
+  z-index: 50;
 
-.item-actions,
-.transaction-actions,
-.goal-actions-premium {
-  position: relative !important;
-  z-index: 50 !important;
-  pointer-events: auto !important;
-}
+  display: grid;
+  grid-template-columns: 1fr 1fr 94px 1fr 1fr;
+  align-items: center;
+  gap: 6px;
 
-.item-actions button,
-.transaction-actions button,
-.goal-actions-premium button {
-  position: relative !important;
-  z-index: 60 !important;
-  pointer-events: auto !important;
-}
-
-.conta-paga::before,
-.conta-alerta::before {
-  pointer-events: none !important;
-  z-index: 2 !important;
-}
-
-/* CORREÇÃO FORÇADA — MODAL EDITAR CONTA */
-
-#modalEditarConta.modal-overlay {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 999999 !important;
-
-  display: none !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  width: 100vw !important;
-  height: 100vh !important;
-
-  padding: 22px !important;
-
-  background: rgba(0, 8, 20, 0.78) !important;
-
-  backdrop-filter: blur(18px) saturate(140%) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
-}
-
-#modalEditarConta.modal-overlay.active {
-  display: flex !important;
-}
-
-#modalEditarConta .modal-card {
-  position: relative !important;
-  z-index: 1000000 !important;
-
-  width: 100% !important;
-  max-width: 430px !important;
-  max-height: 82vh !important;
-
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-
-  padding: 26px !important;
-  padding-bottom: 30px !important;
-
-  border-radius: 30px !important;
-
+  padding: 10px 18px;
+  border-radius: 34px;
   background:
-    linear-gradient(145deg, rgba(7, 22, 46, 0.96), rgba(4, 12, 28, 0.96)) !important;
-
-  border: 1px solid rgba(190, 225, 255, 0.24) !important;
-
+    linear-gradient(145deg, rgba(8, 50, 92, 0.90), rgba(4, 28, 68, 0.90));
+  border: 1px solid rgba(175, 220, 255, 0.22);
   box-shadow:
-    0 0 70px rgba(60, 150, 255, 0.22),
-    inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    0 0 32px rgba(60, 150, 255, 0.20),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-#modalEditarConta .modal-head {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: flex-start !important;
-
-  margin-bottom: 22px !important;
-}
-
-#modalEditarConta .modal-head span {
-  display: block !important;
-
-  margin-bottom: 5px !important;
-
-  font-family: "Orbitron", sans-serif !important;
-  font-size: 10px !important;
-  letter-spacing: 0.18em !important;
-  color: rgba(210, 230, 255, 0.62) !important;
-}
-
-#modalEditarConta .modal-head h3 {
-  margin: 0 !important;
-
-  font-family: "Rajdhani", sans-serif !important;
-  font-size: 32px !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
-
-  color: #ffffff !important;
-}
-
-#modalEditarConta .modal-close {
-  width: 38px !important;
-  height: 38px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  padding: 0 !important;
-
-  border-radius: 14px !important;
-  border: 1px solid rgba(205, 230, 255, 0.20) !important;
-
-  background: rgba(255,255,255,0.08) !important;
-  color: #ffffff !important;
-
-  font-size: 26px !important;
-  line-height: 1 !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10) !important;
-}
-
-#modalEditarConta .modal-form {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 15px !important;
-}
-
-#modalEditarConta .modal-form label {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 8px !important;
-
-  width: 100% !important;
-
-  font-family: "Rajdhani", sans-serif !important;
-  font-size: 16px !important;
-  font-weight: 700 !important;
-  color: rgba(230, 240, 255, 0.84) !important;
-}
-
-#modalEditarConta .modal-form input,
-#modalEditarConta .modal-form select {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-height: 54px !important;
-
-  padding: 0 16px !important;
-
-  border-radius: 18px !important;
-  border: 1px solid rgba(205, 230, 255, 0.20) !important;
-
-  background: rgba(4, 16, 34, 0.86) !important;
-  color: #ffffff !important;
-
-  font-family: "Rajdhani", sans-serif !important;
-  font-size: 18px !important;
-  font-weight: 600 !important;
-
-  outline: none !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.07),
-    0 0 18px rgba(80, 160, 255, 0.06) !important;
-
-  box-sizing: border-box !important;
-}
-
-#modalEditarConta .modal-form input:focus,
-#modalEditarConta .modal-form select:focus {
-  border-color: rgba(150, 215, 255, 0.45) !important;
-
-  box-shadow:
-    0 0 20px rgba(80, 170, 255, 0.16),
-    inset 0 1px 0 rgba(255,255,255,0.08) !important;
-}
-
-#modalEditarConta .modal-actions {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 12px !important;
-
-  margin-top: 24px !important;
-}
-
-#modalEditarConta .modal-actions button {
-  width: 100% !important;
-  min-height: 56px !important;
-
-  border-radius: 18px !important;
-  border: 1px solid rgba(205, 230, 255, 0.22) !important;
-
-  font-family: "Rajdhani", sans-serif !important;
-  font-size: 16px !important;
-  font-weight: 800 !important;
-
-  box-sizing: border-box !important;
-}
-
-#modalEditarConta .modal-save {
-  background:
-    linear-gradient(145deg, rgba(210, 230, 255, 0.98), rgba(135, 180, 255, 0.92)) !important;
-
-  color: #061225 !important;
-}
-
-#modalEditarConta .modal-cancel {
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(30, 80, 145, 0.16)) !important;
-
-  color: #ffffff !important;
-}
-
-/* ESCONDE DATA DE PAGAMENTO QUANDO STATUS FOR PENDENTE */
-
-#modalEditarConta .hidden {
-  display: none !important;
-}
-
-/* GARANTE QUE A NAV NÃO FIQUE POR CIMA DO MODAL */
-
-#modalEditarConta ~ .bottom-nav,
-#modalEditarConta.active ~ .bottom-nav {
-  z-index: 1 !important;
-}
-
-/* =========================
-   ALERTA DE VENCIMENTO
-   ========================= */
-
-/* card com alerta/urgência */
-.vencimento-card.alerta,
-.agenda-card.alerta,
-.conta-card.alerta {
-  position: relative;
-  overflow: hidden; /* impede o brilho de vazar pro card de baixo */
-  border: 1px solid rgba(255, 170, 55, 0.55) !important;
-  box-shadow:
-    0 0 0 1px rgba(255, 170, 55, 0.18) inset,
-    0 0 14px rgba(255, 170, 55, 0.16); /* sombra menor */
-}
-
-/* brilho interno controlado */
-.vencimento-card.alerta::before,
-.agenda-card.alerta::before,
-.conta-card.alerta::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 170, 55, 0.10) 0%,
-    rgba(255, 170, 55, 0.04) 45%,
-    rgba(255, 170, 55, 0.00) 100%
-  );
-  z-index: 0;
-}
-
-/* garante conteúdo acima do brilho */
-.vencimento-card.alerta > *,
-.agenda-card.alerta > *,
-.conta-card.alerta > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* =========================
-   ÍCONE DE ATENÇÃO
-   ========================= */
-
-.icone-alerta,
-.alerta-icon,
-.warning-badge {
-  position: absolute;
-  top: 10px;      /* sobe mais */
-  right: 12px;
-  width: 24px;    /* menor */
-  height: 24px;   /* menor */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 14px;   /* exclamação menor */
-  font-weight: 700;
-  line-height: 1;
-
-  color: #fff;
-  background: rgba(255, 170, 55, 0.32);
-  border: 1px solid rgba(255, 190, 90, 0.55);
-  box-shadow: 0 0 10px rgba(255, 170, 55, 0.18);
-
-  z-index: 3;
-}
-
-/* dá espaço para o valor não encostar no ícone */
-.valor-conta,
-.vencimento-valor,
-.card-valor {
-  padding-right: 42px;
-}
-
-/* =====================================================
-   CORREÇÃO DEFINITIVA — CARD DE ALERTA LARANJA
-   ===================================================== */
-
-/* Card em alerta: laranja preso dentro do próprio card */
-.conta-alerta {
-  position: relative !important;
-  overflow: hidden !important;
-  isolation: isolate !important;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(92, 63, 16, 0.32) 0%,
-      rgba(15, 28, 52, 0.72) 42%,
-      rgba(8, 22, 45, 0.86) 100%
-    ) !important;
-
-  border: 1px solid rgba(255, 184, 70, 0.42) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    inset 0 0 22px rgba(255, 174, 55, 0.10) !important;
-}
-
-/* Remove qualquer vazamento antigo do alerta */
-.conta-alerta::before {
-  content: "!" !important;
-
-  position: absolute !important;
-  top: 8px !important;
-  right: 15px !important;
-
-  width: 18px !important;
-  height: 18px !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  border-radius: 50% !important;
-
-  font-family: "Orbitron", sans-serif !important;
-  font-size: 10px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-
-  color: #ffffff !important;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 197, 85, 0.58),
-      rgba(183, 105, 22, 0.42)
-    ) !important;
-
-  border: 1px solid rgba(255, 226, 150, 0.46) !important;
-
-  box-shadow:
-    0 0 8px rgba(255, 184, 70, 0.18),
-    inset 0 1px 0 rgba(255,255,255,0.22) !important;
-
-  pointer-events: none !important;
-  z-index: 4 !important;
-}
-
-/* Bloqueia pseudo-elemento extra, caso algum estilo antigo tenha criado brilho */
-.conta-alerta::after {
-  content: none !important;
-  display: none !important;
-}
-
-/* Garante que o conteúdo fique acima do fundo */
-.conta-alerta > * {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-/* Dá espaço para o valor não encostar no ícone */
-.conta-alerta > div:last-child {
-  padding-right: 28px !important;
-}
-
-/* Valor e textos do card de alerta */
-.conta-alerta h4,
-.conta-alerta strong {
-  color: #ffffff !important;
-}
-
-.conta-alerta small {
-  color: rgba(255, 226, 178, 0.92) !important;
-}
-
-/* Ícone principal do card */
-.conta-alerta .item-icon {
-  filter: saturate(1.05) brightness(1.03) !important;
-}
-
-/* Remove sombra laranja de filhos que possam estar vazando */
-.conta-alerta * {
-  box-shadow-color: transparent;
-}
-
-/* Mas mantém os botões clicáveis */
-.conta-alerta .item-actions,
-.conta-alerta .item-actions button {
-  position: relative !important;
-  z-index: 8 !important;
-  pointer-events: auto !important;
-}
-
-/* =====================================================
-   AJUSTE DA ABA CONTAS
-   - alerta menor e mais alto
-   - botões alinhados
-   - valor sem sobreposição
-   ===================================================== */
-
-/* Card da lista de contas */
-.conta-item,
-.conta-card {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Conteúdo principal do card */
-.conta-item-content,
-.conta-card-content {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-/* Área do ícone da conta */
-.conta-item-icon,
-.conta-card-icon {
-  flex: 0 0 88px;
-  width: 88px;
-  height: 88px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Imagem do ícone */
-.conta-item-icon img,
-.conta-card-icon img {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  display: block;
-}
-
-/* Bloco central de informações */
-.conta-item-info,
-.conta-card-info {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Nome + valor */
-.conta-item-header,
-.conta-card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 6px;
-}
-
-/* Nome da conta */
-.conta-item-title,
-.conta-card-title {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Valor da conta */
-.conta-item-value,
-.conta-card-value {
-  flex-shrink: 0;
-  white-space: nowrap;
-  padding-right: 22px; /* espaço para o alerta não encostar */
-  position: relative;
-  z-index: 2;
-}
-
-/* Linha de baixo: categoria / vencimento */
-.conta-item-subtitle,
-.conta-card-subtitle {
-  line-height: 1.25;
-  margin-bottom: 10px;
-}
-
-/* Área dos botões */
-.item-actions,
-.conta-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-  flex-wrap: nowrap;
-  margin-top: 6px;
-}
-
-/* Botões de ação */
-.item-actions button,
-.conta-actions button {
-  min-width: 44px;
-  height: 44px;
-  padding: 0 12px;
-  border-radius: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-/* =========================================
-   ALERTA LARANJA APENAS NO CARD ATRASADO
-   ========================================= */
-
-.conta-alerta {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  border: 1px solid rgba(255, 184, 70, 0.45);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    inset 0 0 18px rgba(255, 170, 60, 0.08);
-}
-
-/* ícone ! menor e mais alto */
-.conta-alerta::before {
-  content: "!";
-  position: absolute;
-  top: 9px;
-  right: 12px;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 10px;
+.nav-item {
+  border: 0;
+  background: transparent;
+  color: rgba(230, 240, 255, 0.64);
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  font-size: 16px;
   font-weight: 800;
-  line-height: 1;
+}
 
-  color: #fff;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 197, 85, 0.65),
-    rgba(172, 103, 25, 0.52)
-  );
-  border: 1px solid rgba(255, 223, 145, 0.45);
-  box-shadow:
-    0 0 8px rgba(255, 184, 70, 0.16),
-    inset 0 1px 0 rgba(255,255,255,0.18);
+.nav-item.active {
+  color: #ffffff;
+}
 
-  z-index: 5;
+.nav-item img,
+.nav-icon {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.nav-plus {
+  width: 94px;
+  height: 94px;
+  border-radius: 50%;
+  border: 7px solid rgba(18, 20, 28, 0.85);
+  background: linear-gradient(145deg, #edf4ff, #c4d8ff);
+  color: #061225;
+  font-size: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-28px);
+}
+
+/* ===============================
+   SPLASH
+================================ */
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.10), rgba(0,0,0,0.35)),
+    url("assets/bg-splash.PNG") center / cover no-repeat,
+    #020816;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.splash-screen.hide {
+  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
-/* remove qualquer pseudo extra antigo */
-.conta-alerta::after {
-  content: none !important;
-  display: none !important;
+.splash-content {
+  width: 82%;
+  text-align: center;
 }
 
-/* tudo do card acima do fundo */
-.conta-alerta > * {
-  position: relative;
-  z-index: 2;
+.splash-logo {
+  width: 70%;
+  max-width: 340px;
+  margin-bottom: 130px;
 }
 
-/* =========================================
-   RESPONSIVO / AJUSTE FINO MOBILE
-   ========================================= */
+.loading-text {
+  font-family: var(--font-tech);
+  font-size: 14px;
+  letter-spacing: 0.10em;
+  color: rgba(235, 245, 255, 0.82);
+  margin-bottom: 28px;
+}
 
-@media (max-width: 768px) {
-  .conta-item-content,
-  .conta-card-content {
-    gap: 12px;
+.loading-percent {
+  font-family: var(--font-tech);
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.loading-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(230, 240, 255, 0.18);
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffffff, #bcd5ff);
+}
+
+/* ===============================
+   EMPTY
+================================ */
+
+.empty {
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1.2;
+  padding: 10px 0;
+}
+
+/* ===============================
+   RESPONSIVO
+================================ */
+
+@media (max-width: 480px) {
+  .app {
+    padding: 30px 16px 150px;
   }
 
-  .conta-item-icon,
-  .conta-card-icon {
-    flex: 0 0 78px;
-    width: 78px;
-    height: 78px;
+  h1,
+  .page-title {
+    font-size: 40px;
   }
 
-  .conta-item-icon img,
-  .conta-card-icon img {
-    width: 64px;
-    height: 64px;
+  .panel {
+    padding: 22px;
   }
 
-  .conta-item-value,
-  .conta-card-value {
-    padding-right: 20px;
+  .item {
+    grid-template-columns: 80px 1fr 138px;
+    gap: 10px;
+    min-height: 112px;
+    padding: 16px;
   }
 
-  .item-actions,
-  .conta-actions {
-    gap: 6px;
+  .item-icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .account-icon-img,
+  .transaction-icon-img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .item h4 {
+    font-size: 23px;
+  }
+
+  .item small {
+    font-size: 18px;
+  }
+
+  .item > div:nth-child(3) {
+    width: 138px;
+    min-width: 138px;
+  }
+
+  .item > div:nth-child(3) strong {
+    font-size: 21px;
   }
 
   .item-actions button,
-  .conta-actions button {
-    min-width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    padding: 0 10px;
+  .transaction-actions button {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 11px;
   }
 
-  .conta-alerta::before {
-    top: 8px;
-    right: 10px;
-    width: 15px;
-    height: 15px;
-    font-size: 9px;
-  }
-}
-
-/* =====================================================
-   ALERTA SEM ÍCONE — SOMENTE CARD LARANJA/AMARELO
-   ===================================================== */
-
-/* Card de alerta mais forte */
-.conta-alerta {
-  position: relative !important;
-  overflow: hidden !important;
-  isolation: isolate !important;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 157, 32, 0.34) 0%,
-      rgba(165, 92, 10, 0.26) 35%,
-      rgba(10, 28, 55, 0.82) 100%
-    ) !important;
-
-  border: 1px solid rgba(255, 187, 62, 0.72) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 0 28px rgba(255, 166, 35, 0.22),
-    0 0 22px rgba(255, 166, 35, 0.22) !important;
-}
-
-/* Remove completamente o ícone de alerta */
-.conta-alerta::before,
-.conta-alerta::after {
-  content: none !important;
-  display: none !important;
-}
-
-/* Brilho interno sem vazar para fora */
-.conta-alerta .item-icon,
-.conta-alerta h4,
-.conta-alerta small,
-.conta-alerta strong,
-.conta-alerta .item-actions {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-/* Texto no card de alerta */
-.conta-alerta h4,
-.conta-alerta strong {
-  color: #ffffff !important;
-}
-
-.conta-alerta small {
-  color: rgba(255, 232, 185, 0.96) !important;
-}
-
-/* Ícone da categoria mais vivo */
-.conta-alerta .item-icon {
-  filter: saturate(1.18) brightness(1.08) !important;
-}
-
-/* Botões continuam clicáveis e alinhados */
-.conta-alerta .item-actions,
-.conta-alerta .item-actions button {
-  position: relative !important;
-  z-index: 5 !important;
-  pointer-events: auto !important;
-}
-
-/* =====================================================
-   ÍCONE DE PAGO / VERIFICADO
-   menor, mais alto e afastado do valor
-   ===================================================== */
-
-.conta-paga,
-.conta-card.paga,
-.agenda-card.paga,
-.item-pago {
-  position: relative;
-}
-
-/* valor da conta paga ganha espaço à direita */
-.conta-paga .item-valor,
-.conta-card.paga .item-valor,
-.agenda-card.paga .item-valor,
-.item-pago .item-valor,
-.conta-paga .valor,
-.conta-card.paga .valor,
-.agenda-card.paga .valor,
-.item-pago .valor {
-  padding-right: 52px !important;
-}
-
-/* ícone de verificado/pago */
-.conta-paga .status-pago,
-.conta-card.paga .status-pago,
-.agenda-card.paga .status-pago,
-.item-pago .status-pago,
-.conta-paga .pago-icon,
-.conta-card.paga .pago-icon,
-.agenda-card.paga .pago-icon,
-.item-pago .pago-icon,
-.conta-paga .status-check,
-.conta-card.paga .status-check,
-.agenda-card.paga .status-check,
-.item-pago .status-check {
-  position: absolute !important;
-  top: 18px !important;
-  right: 14px !important;
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px !important;
-  min-height: 26px !important;
-  border-radius: 50% !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  background: rgba(120, 170, 255, 0.18) !important;
-  border: 1px solid rgba(180, 210, 255, 0.35) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 0 10px rgba(140, 180, 255, 0.12) !important;
-
-  z-index: 3 !important;
-}
-
-/* símbolo do check */
-.conta-paga .status-pago svg,
-.conta-card.paga .status-pago svg,
-.agenda-card.paga .status-pago svg,
-.item-pago .status-pago svg,
-.conta-paga .pago-icon svg,
-.conta-card.paga .pago-icon svg,
-.agenda-card.paga .pago-icon svg,
-.item-pago .pago-icon svg,
-.conta-paga .status-check svg,
-.conta-card.paga .status-check svg,
-.agenda-card.paga .status-check svg,
-.item-pago .status-check svg {
-  width: 13px !important;
-  height: 13px !important;
-}
-
-.conta-paga .status-pago,
-.conta-card.paga .status-pago,
-.agenda-card.paga .status-pago,
-.item-pago .status-pago,
-.conta-paga .pago-icon,
-.conta-card.paga .pago-icon,
-.agenda-card.paga .pago-icon,
-.item-pago .pago-icon,
-.conta-paga .status-check,
-.conta-card.paga .status-check,
-.agenda-card.paga .status-check,
-.item-pago .status-check {
-  font-size: 13px !important;
-  color: #ffffff !important;
-}
-
-/* MODAL EDITAR META — MESMO PADRÃO DO MODAL DE CONTA */
-
-#modalEditarMeta.modal-overlay {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 999999 !important;
-
-  display: none !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  width: 100vw !important;
-  height: 100vh !important;
-
-  padding: 22px !important;
-
-  background: rgba(0, 8, 20, 0.78) !important;
-
-  backdrop-filter: blur(18px) saturate(140%) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
-}
-
-#modalEditarMeta.modal-overlay.active {
-  display: flex !important;
-}
-
-#modalEditarMeta .modal-card {
-  position: relative !important;
-  z-index: 1000000 !important;
-
-  width: 100% !important;
-  max-width: 430px !important;
-  max-height: 82vh !important;
-
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-
-  padding: 26px !important;
-  padding-bottom: 30px !important;
-
-  border-radius: 30px !important;
-
-  background:
-    linear-gradient(145deg, rgba(7, 22, 46, 0.96), rgba(4, 12, 28, 0.96)) !important;
-
-  border: 1px solid rgba(190, 225, 255, 0.24) !important;
-
-  box-shadow:
-    0 0 70px rgba(60, 150, 255, 0.22),
-    inset 0 1px 0 rgba(255,255,255,0.08) !important;
-}
-
-/* CARD PAGO — SEM ÍCONE DE CHECK E COM AZUL MAIS FORTE */
-
-.conta-paga::before,
-.conta-paga::after {
-  content: none !important;
-  display: none !important;
-}
-
-.conta-paga {
-  position: relative !important;
-
-  opacity: 1 !important;
-
-  border: 1px solid rgba(115, 175, 255, 0.62) !important;
-
-  background:
-    radial-gradient(circle at 88% 24%, rgba(95, 160, 255, 0.32), transparent 34%),
-    linear-gradient(
-      145deg,
-      rgba(45, 93, 190, 0.38) 0%,
-      rgba(18, 54, 125, 0.34) 46%,
-      rgba(8, 24, 58, 0.92) 100%
-    ) !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.14),
-    inset 0 0 30px rgba(85, 150, 255, 0.16),
-    0 0 24px rgba(75, 145, 255, 0.18) !important;
-}
-
-.conta-paga h4,
-.conta-paga strong {
-  color: #ffffff !important;
-}
-
-.conta-paga small {
-  color: rgba(225, 238, 255, 0.82) !important;
-}
-
-.conta-paga .item-icon {
-  opacity: 0.88 !important;
-  filter: saturate(1.05) brightness(1.02) !important;
-}
-
-.conta-paga > * {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-/* =====================================================
-   CORREÇÃO — BOTÕES TORTOS NO CARD COM ALERTA LARANJA
-   ===================================================== */
-
-/* Remove qualquer padding extra que o alerta colocou no bloco do valor */
-.conta-alerta > div:last-child {
-  padding-right: 0 !important;
-}
-
-/* Mantém o card em alerta com a mesma estrutura dos cards normais */
-.conta-alerta {
-  display: grid !important;
-  grid-template-columns: 86px 1fr 150px !important;
-  align-items: center !important;
-  gap: 14px !important;
-}
-
-/* Bloco do texto */
-.conta-alerta > div:nth-child(2) {
-  min-width: 0 !important;
-}
-
-/* Bloco do valor + ações */
-.conta-alerta > div:nth-child(3) {
-  width: 150px !important;
-  min-width: 150px !important;
-
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-end !important;
-  justify-content: center !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* Valor da conta */
-.conta-alerta > div:nth-child(3) strong {
-  display: block !important;
-  width: 100% !important;
-
-  text-align: right !important;
-  white-space: nowrap !important;
-
-  margin: 0 0 10px 0 !important;
-  padding: 0 !important;
-}
-
-/* Botões do card em alerta */
-.conta-alerta .item-actions {
-  width: 100% !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-
-  gap: 7px !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  position: relative !important;
-  z-index: 10 !important;
-}
-
-/* Cada botão */
-.conta-alerta .item-actions button {
-  width: 38px !important;
-  min-width: 38px !important;
-  height: 38px !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  border-radius: 13px !important;
-
-  position: relative !important;
-  z-index: 11 !important;
-}
-
-/* Garante que o fundo laranja não mexa no layout */
-.conta-alerta::before,
-.conta-alerta::after {
-  content: none !important;
-  display: none !important;
-}
-
-/* Responsivo iPhone */
-@media (max-width: 480px) {
-  .conta-alerta {
-    grid-template-columns: 82px 1fr 146px !important;
-    gap: 10px !important;
+  .metrics-grid,
+  .monthly-summary-grid {
+    gap: 14px;
   }
 
-  .conta-alerta > div:nth-child(3) {
-    width: 146px !important;
-    min-width: 146px !important;
-  }
-
-  .conta-alerta .item-actions {
-    gap: 6px !important;
-  }
-
-  .conta-alerta .item-actions button {
-    width: 36px !important;
-    min-width: 36px !important;
-    height: 36px !important;
-    border-radius: 12px !important;
-  }
-}
-
-/* =====================================================
-   CORREÇÃO — BOTÕES DO CARD ALERTA NO MESMO TAMANHO DOS OUTROS
-   ===================================================== */
-
-/* Volta os botões do card laranja para o mesmo padrão dos cards normais */
-.conta-alerta .item-actions {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-
-  gap: 6px !important;
-
-  margin-top: 6px !important;
-  padding: 0 !important;
-
-  width: auto !important;
-}
-
-/* Tamanho igual aos outros cards */
-.conta-alerta .item-actions button {
-  width: 34px !important;
-  min-width: 34px !important;
-  max-width: 34px !important;
-
-  height: 34px !important;
-  min-height: 34px !important;
-  max-height: 34px !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-
-  border-radius: 11px !important;
-
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  font-size: 14px !important;
-  line-height: 1 !important;
-}
-
-/* Mantém valor e botões alinhados */
-.conta-alerta > div:nth-child(3) {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-end !important;
-  justify-content: center !important;
-
-  width: 140px !important;
-  min-width: 140px !important;
-
-  padding: 0 !important;
-}
-
-/* Valor acima dos botões */
-.conta-alerta > div:nth-child(3) strong {
-  margin-bottom: 8px !important;
-  padding: 0 !important;
-
-  text-align: right !important;
-  white-space: nowrap !important;
-}
-
-/* Ajuste fino no iPhone */
-@media (max-width: 480px) {
-  .conta-alerta {
-    grid-template-columns: 82px 1fr 140px !important;
-    gap: 10px !important;
-  }
-
-  .conta-alerta > div:nth-child(3) {
-    width: 140px !important;
-    min-width: 140px !important;
-  }
-
-  .conta-alerta .item-actions button {
-    width: 34px !important;
-    min-width: 34px !important;
-    max-width: 34px !important;
-
-    height: 34px !important;
-    min-height: 34px !important;
-    max-height: 34px !important;
-
-    border-radius: 11px !important;
+  .bottom-nav {
+    left: 14px;
+    right: 14px;
+    bottom: 26px;
   }
 }
