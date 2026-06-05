@@ -3947,3 +3947,13 @@ img {
     text-align: left;
   }
 }
+
+/* =====================================================
+   REMOVER CENTRAL DE ALERTAS DA HOME
+   ===================================================== */
+
+#centralAlertasHome,
+.central-alerts-panel,
+.central-alertas-panel {
+  display: none !important;
+}
