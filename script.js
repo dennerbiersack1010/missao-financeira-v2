@@ -1844,3 +1844,43 @@ window.editarSaida = function(id) {
 window.fecharModalEditarTransacaoPremium = fecharModalEditarTransacaoPremium;
 window.salvarEditarTransacaoPremium = salvarEditarTransacaoPremium;
 
+function carregarFotoPerfil() {
+  const fotoSalva = localStorage.getItem("fotoPerfilMissaoFinanceira");
+  const fotoPerfil = document.getElementById("fotoPerfil");
+
+  if (fotoSalva && fotoPerfil) {
+    fotoPerfil.src = fotoSalva;
+  }
+}
+
+function trocarFotoPerfil(event) {
+  const arquivo = event.target.files[0];
+
+  if (!arquivo) return;
+
+  if (!arquivo.type.startsWith("image/")) {
+    alert("Selecione uma imagem válida.");
+    return;
+  }
+
+  const leitor = new FileReader();
+
+  leitor.onload = function(e) {
+    const imagemBase64 = e.target.result;
+    const fotoPerfil = document.getElementById("fotoPerfil");
+
+    if (fotoPerfil) {
+      fotoPerfil.src = imagemBase64;
+    }
+
+    localStorage.setItem("fotoPerfilMissaoFinanceira", imagemBase64);
+  };
+
+  leitor.readAsDataURL(arquivo);
+}
+
+window.trocarFotoPerfil = trocarFotoPerfil;
+
+document.addEventListener("DOMContentLoaded", () => {
+  carregarFotoPerfil();
+});
