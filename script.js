@@ -1863,3 +1863,160 @@ window.editarSaida = function(id) {
 
 window.fecharModalEditarTransacaoPremium = fecharModalEditarTransacaoPremium;
 window.salvarEditarTransacaoPremium = salvarEditarTransacaoPremium;
+
+/* =====================================================
+   CENTRAL DE ALERTAS — HOME
+   Mostra vencidas, vencendo hoje e próximas do vencimento
+   ===================================================== */
+
+function calcularDiasAlertaHome(vencimento) {
+  if (!vencimento) return null;
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  const data = new Date(vencimento + "T00:00:00");
+  data.setHours(0, 0, 0, 0);
+
+  if (isNaN(data.getTime())) return null;
+
+  const diff = data - hoje;
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
+
+function formatarMoedaAlertaHome(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+}
+
+function textoPrazoAlertaHome(dias) {
+  if (dias === null) return "Sem data definida";
+  if (dias < 0) return `Atrasada há ${Math.abs(dias)} dia${Math.abs(dias) === 1 ? "" : "s"}`;
+  if (dias === 0) return "Vence hoje";
+  if (dias === 1) return "Vence amanhã";
+  return `Vence em ${dias} dias`;
+}
+
+function criarCentralAlertasHome() {
+  const home = document.getElementById("home");
+  if (!home) return;
+
+  let bloco = document.getElementById("centralAlertasHome");
+
+  if (!bloco) {
+    bloco = document.createElement("section");
+    bloco.id = "centralAlertasHome";
+    bloco.className = "panel glass-card central-alertas-panel";
+
+    const resumoMensal = document.getElementById("resumoMensalHome");
+    const metricas = home.querySelector(".metrics-grid");
+
+    if (resumoMensal) {
+      home.insertBefore(bloco, resumoMensal);
+    } else if (metricas && metricas.nextSibling) {
+      home.insertBefore(bloco, metricas.nextSibling);
+    } else {
+      home.appendChild(bloco);
+    }
+  }
+
+  const contasPendentes = contas
+    .filter((conta) => conta.status !== "paga")
+    .map((conta) => ({
+      ...conta,
+      dias: calcularDiasAlertaHome(conta.vencimento)
+    }))
+    .filter((conta) => conta.dias !== null)
+    .sort((a, b) => a.dias - b.dias);
+
+  const atrasadas = contasPendentes.filter((conta) => conta.dias < 0);
+  const vencemHoje = contasPendentes.filter((conta) => conta.dias === 0);
+  const proximas = contasPendentes.filter((conta) => conta.dias > 0 && conta.dias <= 3);
+
+  const alertasPrioritarios = [...atrasadas, ...vencemHoje, ...proximas];
+
+  const totalUrgente = alertasPrioritarios.reduce((soma, conta) => soma + Number(conta.valor || 0), 0);
+
+  const caixaAtualTexto = typeof calcularResumo === "function"
+    ? calcularResumo().caixaAtual
+    : 0;
+
+  let statusMensagem = "";
+
+  if (!alertasPrioritarios.length) {
+    statusMensagem = "Nenhuma conta crítica no momento. Seu campo financeiro está sob controle.";
+  } else if (caixaAtualTexto >= totalUrgente) {
+    statusMensagem = "Seu caixa atual suporta os pagamentos urgentes. Priorize quitar o que vence primeiro.";
+  } else {
+    statusMensagem = "Atenção: seus alertas urgentes passam do caixa atual. Priorize o essencial.";
+  }
+
+  const cardsHtml = alertasPrioritarios.slice(0, 4).map((conta) => {
+    let tipo = "proxima";
+
+    if (conta.dias < 0) tipo = "atrasada";
+    if (conta.dias === 0) tipo = "hoje";
+
+    return `
+      <div class="central-alerta-card ${tipo}">
+        <div>
+          <span>${textoPrazoAlertaHome(conta.dias)}</span>
+          <strong>${conta.nome}</strong>
+          <small>${conta.categoria || "Conta"} · ${formatarMoedaAlertaHome(conta.valor)}</small>
+        </div>
+
+        <div class="central-alerta-indicador">
+          ${conta.dias < 0 ? "!" : conta.dias === 0 ? "0" : conta.dias}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  bloco.innerHTML = `
+    <div class="panel-head central-alertas-head">
+      <div>
+        <span>MISSION_ALERT</span>
+        <h3>Central de Alertas</h3>
+        <p>Leitura das contas que exigem atenção imediata</p>
+      </div>
+
+      <strong>${alertasPrioritarios.length}</strong>
+    </div>
+
+    <div class="central-alertas-resumo">
+      <div>
+        <span>Total urgente</span>
+        <strong>${formatarMoedaAlertaHome(totalUrgente)}</strong>
+      </div>
+
+      <div>
+        <span>Alertas ativos</span>
+        <strong>${alertasPrioritarios.length}</strong>
+      </div>
+    </div>
+
+    ${
+      alertasPrioritarios.length
+        ? `<div class="central-alertas-lista">${cardsHtml}</div>`
+        : `<div class="central-alertas-vazio">Nenhum alerta crítico encontrado.</div>`
+    }
+
+    <div class="central-alertas-mensagem">
+      ${statusMensagem}
+    </div>
+  `;
+}
+
+/* adiciona a central dentro do ciclo de atualização sem quebrar a função antiga */
+if (typeof atualizarTela === "function" && !window.centralAlertasHomeAtivada) {
+  const atualizarTelaOriginalCentralAlertas = atualizarTela;
+
+  atualizarTela = function() {
+    atualizarTelaOriginalCentralAlertas();
+    criarCentralAlertasHome();
+  };
+
+  window.centralAlertasHomeAtivada = true;
+}
