@@ -1607,49 +1607,29 @@ function atualizarHome() {
   const proximos = pegar("listaProximosVencimentos");
   const metaDestaque = pegar("metaDestaque");
 
-  const contasPendentes = contas
-    .filter((conta) => conta.status !== "paga")
-    .sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento))
-    .slice(0, 3);
+  if (proximos) {
+    const painelProximos = proximos.closest(".panel");
 
-  if (!contasPendentes.length) {
-    proximos.innerHTML = `<p class="empty">Nenhum vencimento pendente.</p>`;
-  } else {
-    proximos.innerHTML = contasPendentes.map((conta) => {
-      const diasParaVencer = calcularDias(conta.vencimento);
-      const estaAtrasada = diasParaVencer < 0;
-      const estaEmAlerta = diasParaVencer >= 0 && diasParaVencer <= 3;
-
-      return `
-        <div class="item conta-item ${estaAtrasada ? "agenda-atrasada" : ""} ${estaEmAlerta ? "conta-alerta" : ""}">
-          <div class="item-icon">${iconeConta(conta.nome, conta.categoria)}</div>
-
-          <div>
-            <h4>${conta.nome}</h4>
-            <small>${textoDias(conta.vencimento)}</small>
-          </div>
-
-          <div>
-            <strong>${moeda(conta.valor)}</strong>
-          </div>
-        </div>
-      `;
-    }).join("");
+    if (painelProximos) {
+      painelProximos.remove();
+    }
   }
 
-  if (!metas.length) {
-    metaDestaque.innerHTML = `<p class="empty">Nenhuma meta criada ainda.</p>`;
-  } else {
-    const metasOrdenadas = [...metas].sort((a, b) => {
-      const progressoA = a.valorTotal > 0 ? (a.valorAtual / a.valorTotal) * 100 : 0;
-      const progressoB = b.valorTotal > 0 ? (b.valorAtual / b.valorTotal) * 100 : 0;
+  if (metaDestaque) {
+    if (!metas.length) {
+      metaDestaque.innerHTML = `<p class="empty">Nenhuma meta criada ainda.</p>`;
+    } else {
+      const metasOrdenadas = [...metas].sort((a, b) => {
+        const progressoA = a.valorTotal > 0 ? (a.valorAtual / a.valorTotal) * 100 : 0;
+        const progressoB = b.valorTotal > 0 ? (b.valorAtual / b.valorTotal) * 100 : 0;
 
-      return progressoB - progressoA;
-    });
+        return progressoB - progressoA;
+      });
 
-    metaDestaque.innerHTML = criarCardMeta(metasOrdenadas[0]);
+      metaDestaque.innerHTML = criarCardMeta(metasOrdenadas[0]);
+    }
   }
-}
+}p
 
 function iniciarSplashV2() {
   const splash = pegar("splashScreen");
