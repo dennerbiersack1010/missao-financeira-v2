@@ -2290,6 +2290,9 @@ if (typeof atualizarTela === "function" && !window.limpezaHomeProximosAtiva) {
     removerProximosVencimentosAntigoHome();
   };
 
+
+  
+
   window.limpezaHomeProximosAtiva = true;
 }
 
@@ -2298,6 +2301,39 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     removerProximosVencimentosAntigoHome();
   }, 900);
+});
+
+/* =====================================================
+   DESATIVAR CENTRAL DE ALERTAS DA HOME
+   ===================================================== */
+
+function removerCentralAlertasHome() {
+  const central = document.getElementById("centralAlertasHome");
+
+  if (central) {
+    central.remove();
+  }
+
+  document.querySelectorAll(".central-alerts-panel, .central-alertas-panel").forEach((item) => {
+    item.remove();
+  });
+}
+
+if (typeof atualizarTela === "function" && !window.removerCentralAlertasAtivo) {
+  const atualizarTelaOriginalSemCentral = atualizarTela;
+
+  atualizarTela = function() {
+    atualizarTelaOriginalSemCentral();
+    removerCentralAlertasHome();
+  };
+
+  window.removerCentralAlertasAtivo = true;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    removerCentralAlertasHome();
+  }, 700);
 });
 
 /* =====================================================
