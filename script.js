@@ -2082,3 +2082,184 @@ function tocarSomInicializacao() {
 document.addEventListener("DOMContentLoaded", () => {
   tocarSomInicializacao();
 });
+
+/* =====================================================
+   CENTRAL DE ALERTAS — HOME PREMIUM / CORREÇÃO VISUAL
+   Cola no FINAL do script.js
+   ===================================================== */
+
+function mfCalcularDiasAlerta(vencimento) {
+  if (!vencimento) return null;
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  const data = new Date(vencimento + "T00:00:00");
+  data.setHours(0, 0, 0, 0);
+
+  if (isNaN(data.getTime())) return null;
+
+  const diff = data - hoje;
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
+
+function mfFormatarMoedaAlerta(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+}
+
+function mfTextoPrazoAlerta(dias) {
+  if (dias === null) return "sem data";
+  if (dias < 0) return `atrasada há ${Math.abs(dias)} dia${Math.abs(dias) === 1 ? "" : "s"}`;
+  if (dias === 0) return "vence hoje";
+  if (dias === 1) return "vence amanhã";
+  return `vence em ${dias} dias`;
+}
+
+function renderCentralAlertasHomePremium() {
+  const home = document.getElementById("home");
+  if (!home) return;
+
+  let container = document.getElementById("centralAlertasHome");
+
+  if (!container) {
+    container = document.createElement("section");
+    container.id = "centralAlertasHome";
+    container.className = "panel glass-card central-alerts-panel";
+
+    const resumoMensal = document.getElementById("resumoMensalHome");
+    const metricas = home.querySelector(".metrics-grid");
+
+    if (resumoMensal) {
+      home.insertBefore(container, resumoMensal);
+    } else if (metricas && metricas.nextSibling) {
+      home.insertBefore(container, metricas.nextSibling);
+    } else {
+      home.appendChild(container);
+    }
+  }
+
+  container.classList.remove("central-alertas-panel");
+  container.classList.add("central-alerts-panel");
+
+  const listaContas = Array.isArray(contas) ? contas : [];
+
+  const contasPendentes = listaContas
+    .filter((conta) => conta.status !== "paga")
+    .map((conta) => ({
+      ...conta,
+      dias: mfCalcularDiasAlerta(conta.vencimento)
+    }))
+    .filter((conta) => conta.dias !== null)
+    .sort((a, b) => a.dias - b.dias);
+
+  const urgentes = contasPendentes.filter((conta) => conta.dias <= 7);
+
+  const totalUrgente = urgentes.reduce((soma, conta) => {
+    return soma + Number(conta.valor || 0);
+  }, 0);
+
+  const alertasAtivos = urgentes.length;
+
+  let caixaAtual = 0;
+
+  if (typeof calcularResumo === "function") {
+    caixaAtual = Number(calcularResumo().caixaAtual || 0);
+  } else {
+    const totalEntradas = Array.isArray(entradas)
+      ? entradas.reduce((soma, item) => soma + Number(item.valor || 0), 0)
+      : 0;
+
+    const totalSaidas = Array.isArray(saidas)
+      ? saidas.reduce((soma, item) => soma + Number(item.valor || 0), 0)
+      : 0;
+
+    caixaAtual = totalEntradas - totalSaidas;
+  }
+
+  let suporteTexto = "";
+
+  if (alertasAtivos === 0) {
+    suporteTexto = "Nenhuma conta urgente no momento. Seu caixa está sob controle.";
+  } else if (caixaAtual >= totalUrgente) {
+    suporteTexto = "Seu caixa atual suporta os pagamentos urgentes. Priorize quitar o que vence primeiro.";
+  } else {
+    suporteTexto = "Seu caixa atual não cobre todos os pagamentos urgentes. Priorize o essencial primeiro.";
+  }
+
+  const listaHTML = urgentes.length
+    ? urgentes.slice(0, 3).map((conta) => {
+        return `
+          <div class="central-alert-item">
+            <div class="central-alert-item-left">
+              <small>${mfTextoPrazoAlerta(conta.dias)}</small>
+              <h4>${conta.nome || "Conta"}</h4>
+              <p>${conta.categoria || "Conta"} · ${mfFormatarMoedaAlerta(conta.valor)}</p>
+            </div>
+
+            <div class="central-alert-item-value">
+              ${mfFormatarMoedaAlerta(conta.valor)}
+            </div>
+          </div>
+        `;
+      }).join("")
+    : `
+      <div class="central-alert-empty">
+        Nenhum alerta crítico no momento.
+      </div>
+    `;
+
+  container.innerHTML = `
+    <div class="central-alerts-header">
+      <div>
+        <span class="central-alerts-kicker">MISSION_ALERT</span>
+        <h3>Central de Alertas</h3>
+        <p>Leitura das contas que exigem atenção imediata</p>
+      </div>
+
+      <div class="central-alert-badge">${alertasAtivos}</div>
+    </div>
+
+    <div class="central-alert-summary">
+      <div class="central-alert-summary-card">
+        <span>Total urgente</span>
+        <strong>${mfFormatarMoedaAlerta(totalUrgente)}</strong>
+      </div>
+
+      <div class="central-alert-summary-card">
+        <span>Alertas ativos</span>
+        <strong>${alertasAtivos}</strong>
+      </div>
+    </div>
+
+    <div class="central-alert-list">
+      ${listaHTML}
+    </div>
+
+    <div class="central-alert-support">
+      <span>Suporte do caixa</span>
+      <p>${suporteTexto}</p>
+    </div>
+  `;
+}
+
+/* chama a central junto com a atualização geral da tela */
+if (typeof atualizarTela === "function" && !window.centralAlertasPremiumAtiva) {
+  const atualizarTelaOriginalComAlertasPremium = atualizarTela;
+
+  atualizarTela = function() {
+    atualizarTelaOriginalComAlertasPremium();
+    renderCentralAlertasHomePremium();
+  };
+
+  window.centralAlertasPremiumAtiva = true;
+}
+
+/* tentativa extra: renderiza quando a página já carregou */
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    renderCentralAlertasHomePremium();
+  }, 800);
+});
