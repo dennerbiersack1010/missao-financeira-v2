@@ -3548,3 +3548,39 @@ img {
   margin: 0 !important;
   overflow: hidden !important;
 }
+
+/* FOTO DE PERFIL EDITÁVEL */
+
+.top-user-box {
+  position: relative !important;
+  cursor: pointer !important;
+}
+
+.avatar-edit-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  color: #071225;
+  background: linear-gradient(145deg, #ffffff, #a9c7ff);
+
+  border: 1px solid rgba(255,255,255,0.65);
+
+  box-shadow:
+    0 0 14px rgba(120, 190, 255, 0.45),
+    inset 0 1px 0 rgba(255,255,255,0.85);
+
+  z-index: 5;
+}
