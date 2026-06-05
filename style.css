@@ -3740,3 +3740,210 @@ img {
 }
   }
 }
+
+/* =========================================
+   CENTRAL DE ALERTAS — NOVO LAYOUT
+   ========================================= */
+
+.central-alerts-panel {
+  padding: 20px !important;
+  margin-top: 18px !important;
+  margin-bottom: 22px !important;
+  border-radius: 30px !important;
+}
+
+.central-alerts-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.central-alerts-kicker {
+  display: block;
+  margin-bottom: 6px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(210, 230, 255, 0.75);
+}
+
+.central-alerts-header h3 {
+  margin: 0 0 6px 0;
+  font-size: 22px;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.central-alerts-header p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.3;
+  color: rgba(230, 240, 255, 0.78);
+  max-width: 250px;
+}
+
+.central-alert-badge {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, rgba(255, 179, 62, 0.28), rgba(156, 93, 20, 0.24));
+  border: 1px solid rgba(255, 196, 90, 0.42);
+  color: #ffffff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 0 16px rgba(255, 170, 55, 0.16);
+}
+
+.central-alert-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.central-alert-summary-card {
+  min-height: 84px;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(205, 230, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 16px rgba(70, 150, 255, 0.06);
+}
+
+.central-alert-summary-card span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: rgba(230, 240, 255, 0.72);
+}
+
+.central-alert-summary-card strong {
+  display: block;
+  font-family: "Orbitron", sans-serif;
+  font-size: 18px;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+.central-alert-list {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.central-alert-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 157, 32, 0.16) 0%,
+      rgba(165, 92, 10, 0.12) 35%,
+      rgba(10, 28, 55, 0.42) 100%
+    );
+  border: 1px solid rgba(255, 187, 62, 0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 16px rgba(255, 166, 35, 0.08);
+}
+
+.central-alert-item-left {
+  min-width: 0;
+}
+
+.central-alert-item-left small {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: rgba(255, 226, 178, 0.88);
+}
+
+.central-alert-item-left h4 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.central-alert-item-left p {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(235, 242, 255, 0.74);
+  line-height: 1.2;
+}
+
+.central-alert-item-value {
+  flex-shrink: 0;
+  text-align: right;
+  font-family: "Orbitron", sans-serif;
+  font-size: 15px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.central-alert-support {
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(205, 230, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 18px rgba(80, 160, 255, 0.07);
+}
+
+.central-alert-support span {
+  display: block;
+  margin-bottom: 6px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(210, 230, 255, 0.72);
+}
+
+.central-alert-support p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+.central-alert-empty {
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(205, 230, 255, 0.12);
+  font-size: 14px;
+  color: rgba(230, 240, 255, 0.78);
+}
+
+@media (max-width: 380px) {
+  .central-alert-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .central-alert-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .central-alert-item-value {
+    text-align: left;
+  }
+}
