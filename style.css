@@ -1,14 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@400;500;600;700;800&display=swap");
 
 /* ===============================
-   BASE
+   RESET / BASE
 ================================ */
 
 :root {
   --bg-main: #020816;
-  --blue-border: rgba(165, 215, 255, 0.22);
   --white: #ffffff;
   --muted: rgba(225, 238, 255, 0.68);
+  --muted-soft: rgba(225, 238, 255, 0.45);
+  --border: rgba(165, 215, 255, 0.22);
+  --card: rgba(7, 23, 48, 0.82);
   --font-title: "Rajdhani", sans-serif;
   --font-tech: "Orbitron", sans-serif;
 }
@@ -20,13 +22,19 @@
 
 html,
 body {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
   margin: 0;
   padding: 0;
-  min-height: 100%;
+  overflow-x: hidden !important;
   background: #020816;
   color: var(--white);
   font-family: var(--font-title);
-  overflow-x: hidden;
+}
+
+body {
+  position: relative;
 }
 
 button,
@@ -58,13 +66,15 @@ button {
 
 .app {
   width: 100%;
+  max-width: 100vw;
   min-height: 100vh;
-  padding: 34px 18px 150px;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+
+  padding: 32px 16px 150px;
 
   background:
-    linear-gradient(to bottom, rgba(0,0,0,0.20), rgba(0,0,0,0.28)),
+    linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.34)),
     url("assets/bg-splash.PNG") center top / cover no-repeat,
     var(--bg-main);
 }
@@ -74,17 +84,21 @@ button {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  z-index: 0;
+
   background:
     radial-gradient(circle at 80% 18%, rgba(80, 160, 255, 0.14), transparent 30%),
     radial-gradient(circle at 20% 80%, rgba(80, 180, 255, 0.12), transparent 36%),
-    linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.34));
-  z-index: 0;
+    linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.34));
 }
 
 .screen {
   display: none;
   position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
 }
 
 .screen.active {
@@ -98,11 +112,23 @@ button {
 .header,
 .top-header,
 .screen-header {
+  width: 100%;
+  max-width: 100%;
+
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
+
   margin-bottom: 28px;
+  overflow: hidden;
+}
+
+.header > div,
+.top-header > div,
+.screen-header > div {
+  min-width: 0;
+  flex: 1;
 }
 
 .kicker,
@@ -120,10 +146,12 @@ button {
 h1,
 .page-title {
   margin: 0;
-  font-size: 44px;
+  font-size: 40px;
   line-height: 0.95;
   font-weight: 800;
   letter-spacing: -0.02em;
+  max-width: 100%;
+  word-break: normal;
 }
 
 h2,
@@ -133,12 +161,21 @@ p {
   margin: 0;
 }
 
+/* trava qualquer imagem do topo/avatar */
 .avatar,
-.user-avatar {
-  width: 72px;
-  height: 72px;
+.user-avatar,
+.header img,
+.top-header img,
+.screen-header img {
+  width: 72px !important;
+  height: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+
   border-radius: 24px;
   object-fit: cover;
+  display: block;
+
   border: 1px solid rgba(200, 230, 255, 0.25);
   box-shadow: 0 0 28px rgba(80, 160, 255, 0.16);
 }
@@ -153,20 +190,27 @@ p {
 .metric-card,
 .hero-card,
 .goal-card {
+  width: 100%;
+  max-width: 100%;
+
   background:
     linear-gradient(145deg, rgba(7, 23, 48, 0.86), rgba(4, 14, 32, 0.72));
-  border: 1px solid var(--blue-border);
-  border-radius: 34px;
+
+  border: 1px solid var(--border);
+  border-radius: 30px;
+
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.08),
     0 18px 45px rgba(0,0,0,0.22);
+
   backdrop-filter: blur(14px) saturate(130%);
   -webkit-backdrop-filter: blur(14px) saturate(130%);
 }
 
 .panel {
-  padding: 26px;
+  padding: 22px;
   margin-bottom: 24px;
+  overflow: hidden;
 }
 
 .panel-head {
@@ -197,7 +241,7 @@ p {
 ================================ */
 
 .hero-card {
-  padding: 34px 28px;
+  padding: 34px 26px;
   margin-bottom: 20px;
   min-height: 190px;
 }
@@ -211,10 +255,11 @@ p {
 #caixaAtual {
   display: block;
   font-family: var(--font-tech);
-  font-size: 48px;
+  font-size: clamp(36px, 10vw, 52px);
   font-weight: 800;
   line-height: 1;
   margin: 18px 0 20px;
+  white-space: nowrap;
 }
 
 .status-pill,
@@ -224,23 +269,29 @@ p {
   min-height: 42px;
   padding: 0 18px;
   border-radius: 999px;
+
   background: linear-gradient(145deg, rgba(150, 190, 255, 0.24), rgba(55, 100, 180, 0.22));
   border: 1px solid rgba(210, 230, 255, 0.20);
+
   color: #ffffff;
   font-size: 20px;
   font-weight: 800;
 }
 
 .metrics-grid {
+  width: 100%;
+  max-width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
   margin-bottom: 24px;
 }
 
 .metric-card {
+  min-width: 0;
   min-height: 145px;
   padding: 22px;
+  overflow: hidden;
 }
 
 .metric-card span {
@@ -251,8 +302,9 @@ p {
 .metric-card strong {
   display: block;
   font-family: var(--font-tech);
-  font-size: 28px;
+  font-size: clamp(22px, 6vw, 30px);
   margin: 18px 0 10px;
+  white-space: nowrap;
 }
 
 .metric-card small {
@@ -266,35 +318,32 @@ p {
 
 .form-card,
 .form-panel {
-  padding: 26px;
+  padding: 22px;
   margin-bottom: 24px;
 }
 
 input,
 select {
   width: 100%;
+  max-width: 100%;
   min-height: 64px;
   padding: 0 18px;
+
   border-radius: 22px;
   border: 1px solid rgba(190, 225, 255, 0.20);
+
   background: rgba(5, 22, 50, 0.78);
   color: #ffffff;
+
   font-size: 22px;
   font-weight: 500;
+
   outline: none;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 input::placeholder {
   color: rgba(225, 238, 255, 0.40);
-}
-
-input:focus,
-select:focus {
-  border-color: rgba(150, 215, 255, 0.42);
-  box-shadow:
-    0 0 20px rgba(75, 150, 255, 0.12),
-    inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .form-grid,
@@ -309,10 +358,13 @@ select:focus {
 .form-panel button {
   width: 100%;
   min-height: 64px;
+
   border: 0;
   border-radius: 22px;
+
   background: linear-gradient(145deg, #edf4ff, #bcd5ff);
   color: #071225;
+
   font-size: 21px;
   font-weight: 800;
 }
@@ -324,21 +376,26 @@ select:focus {
 .list {
   display: grid;
   gap: 16px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .item {
   width: 100%;
+  max-width: 100%;
   min-height: 112px;
   padding: 16px;
 
   display: grid;
-  grid-template-columns: 80px minmax(0, 1fr) 138px;
+  grid-template-columns: 74px minmax(0, 1fr) 124px;
   align-items: center;
   gap: 10px;
 
   border-radius: 28px;
+
   background:
     linear-gradient(145deg, rgba(8, 32, 70, 0.78), rgba(5, 18, 42, 0.76));
+
   border: 1px solid rgba(175, 215, 255, 0.18);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
 
@@ -347,46 +404,54 @@ select:focus {
 }
 
 .item-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 24px;
+  width: 66px;
+  height: 66px;
+
+  border-radius: 22px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   background: rgba(110, 170, 255, 0.10);
   overflow: hidden;
 }
 
 .account-icon-img,
 .transaction-icon-img {
-  width: 70px;
-  height: 70px;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
   display: block;
 }
 
 .item h4 {
-  font-size: 23px;
+  font-size: 22px;
   font-weight: 800;
   line-height: 0.98;
   margin-bottom: 8px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item small {
   display: block;
   color: var(--muted);
-  font-size: 18px;
-  line-height: 1.15;
+  font-size: 17px;
+  line-height: 1.12;
 }
 
 .item > div:nth-child(2) {
   min-width: 0;
+  overflow: hidden;
 }
 
 .item > div:nth-child(3) {
-  width: 138px;
-  min-width: 138px;
-  max-width: 138px;
+  width: 124px;
+  min-width: 124px;
+  max-width: 124px;
 
   display: flex;
   flex-direction: column;
@@ -399,11 +464,13 @@ select:focus {
 
 .item > div:nth-child(3) strong {
   font-family: var(--font-tech);
-  font-size: 21px;
+  font-size: 19px;
   font-weight: 800;
   line-height: 1;
+
   white-space: nowrap;
   text-align: right;
+
   margin: 0 0 9px 0;
   padding: 0;
 }
@@ -413,7 +480,8 @@ select:focus {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 5px;
+
   width: auto;
   margin: 0;
   padding: 0;
@@ -422,15 +490,19 @@ select:focus {
 .item-actions button,
 .transaction-actions button,
 .conta-alerta .item-actions button {
-  width: 34px !important;
-  height: 34px !important;
-  min-width: 34px !important;
-  max-width: 34px !important;
-  min-height: 34px !important;
-  max-height: 34px !important;
+  width: 31px !important;
+  height: 31px !important;
 
-  border-radius: 11px;
+  min-width: 31px !important;
+  max-width: 31px !important;
+  min-height: 31px !important;
+  max-height: 31px !important;
+
+  flex: 0 0 31px !important;
+
+  border-radius: 10px;
   border: 1px solid rgba(210, 230, 255, 0.18);
+
   background: rgba(255,255,255,0.06);
   color: #ffffff;
 
@@ -441,11 +513,9 @@ select:focus {
   padding: 0;
   margin: 0;
 
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
   line-height: 1;
-
-  flex: 0 0 34px !important;
 }
 
 /* ===============================
@@ -454,24 +524,35 @@ select:focus {
 
 .bill-filters,
 .period-filters {
+  width: 100%;
+  max-width: 100%;
+
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
+
   padding: 8px;
   margin-bottom: 24px;
+
   border-radius: 24px;
   background: rgba(10, 38, 75, 0.72);
   border: 1px solid rgba(180, 220, 255, 0.18);
+
+  overflow: hidden;
 }
 
 .bill-filters button,
 .period-filters button {
+  min-width: 0;
   min-height: 52px;
+
   border: 0;
   border-radius: 18px;
+
   background: transparent;
   color: rgba(230, 240, 255, 0.62);
-  font-size: 18px;
+
+  font-size: 17px;
   font-weight: 800;
 }
 
@@ -483,14 +564,16 @@ select:focus {
 }
 
 /* ===============================
-   CONTAS — ESTADOS
+   ESTADOS DAS CONTAS
 ================================ */
 
 .conta-alerta {
   background:
     radial-gradient(circle at 16% 35%, rgba(255, 178, 58, 0.22), transparent 32%),
     linear-gradient(145deg, rgba(255, 157, 32, 0.25), rgba(12, 28, 56, 0.86) 62%, rgba(8, 24, 52, 0.94)) !important;
+
   border: 1px solid rgba(255, 184, 70, 0.78) !important;
+
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
     inset 0 0 26px rgba(255, 166, 35, 0.16),
@@ -514,10 +597,13 @@ select:focus {
 
 .conta-paga {
   opacity: 1;
+
   border: 1px solid rgba(115, 175, 255, 0.62) !important;
+
   background:
     radial-gradient(circle at 88% 24%, rgba(95, 160, 255, 0.30), transparent 34%),
     linear-gradient(145deg, rgba(45, 93, 190, 0.38), rgba(18, 54, 125, 0.34) 46%, rgba(8, 24, 58, 0.92)) !important;
+
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.14),
     inset 0 0 30px rgba(85, 150, 255, 0.16),
@@ -543,6 +629,7 @@ select:focus {
   background:
     radial-gradient(circle at 15% 35%, rgba(255, 60, 90, 0.20), transparent 32%),
     linear-gradient(145deg, rgba(130, 18, 35, 0.34), rgba(8, 24, 52, 0.90)) !important;
+
   border: 1px solid rgba(255, 80, 105, 0.58) !important;
 }
 
@@ -567,22 +654,26 @@ select:focus {
 ================================ */
 
 .monthly-summary-panel {
-  padding: 26px;
+  padding: 22px;
 }
 
 .month-selector {
   display: flex;
   align-items: center;
   gap: 12px;
+
   margin: 18px 0 24px;
 }
 
 .month-selector button {
   background: transparent;
   border: 0;
+
   color: #ffffff;
+
   font-size: 28px;
   font-weight: 800;
+
   padding: 0;
   line-height: 1;
 }
@@ -595,17 +686,25 @@ select:focus {
 }
 
 .monthly-summary-grid {
+  width: 100%;
+  max-width: 100%;
+
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
 }
 
 .monthly-summary-item {
+  min-width: 0;
   min-height: 126px;
-  padding: 20px;
+  padding: 18px;
+
   border-radius: 24px;
+
   background: rgba(5, 22, 50, 0.64);
   border: 1px solid rgba(190, 225, 255, 0.16);
+
+  overflow: hidden;
 }
 
 .monthly-summary-item span {
@@ -616,8 +715,9 @@ select:focus {
 .monthly-summary-item strong {
   display: block;
   font-family: var(--font-tech);
-  font-size: 25px;
+  font-size: clamp(20px, 5.5vw, 25px);
   margin-top: 18px;
+  white-space: nowrap;
 }
 
 .monthly-summary-item.negative {
@@ -628,10 +728,13 @@ select:focus {
 .monthly-summary-message {
   margin-top: 18px;
   padding: 18px;
+
   border-radius: 22px;
   border: 1px solid rgba(190, 225, 255, 0.16);
+
   background: rgba(5, 22, 50, 0.52);
   color: rgba(235, 245, 255, 0.82);
+
   font-size: 20px;
   line-height: 1.2;
 }
@@ -641,15 +744,17 @@ select:focus {
 ================================ */
 
 .goal-card-premium {
-  padding: 26px;
+  padding: 22px;
   margin-bottom: 18px;
 }
 
 .goal-title-column span {
   display: block;
+
   font-family: var(--font-tech);
   font-size: 12px;
   letter-spacing: 0.18em;
+
   color: rgba(225, 238, 255, 0.45);
   margin-bottom: 10px;
 }
@@ -668,9 +773,12 @@ select:focus {
 .goal-premium-values div {
   min-height: 56px;
   padding: 0 18px;
+
   border-radius: 18px;
+
   background: rgba(5, 22, 50, 0.62);
   border: 1px solid rgba(190, 225, 255, 0.14);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -688,9 +796,10 @@ select:focus {
 
 .goal-progress-row {
   display: grid;
-  grid-template-columns: 1fr 60px;
+  grid-template-columns: minmax(0, 1fr) 60px;
   align-items: center;
   gap: 14px;
+
   margin: 18px 0 22px;
 }
 
@@ -698,6 +807,7 @@ select:focus {
 .goal-progress-track {
   height: 14px;
   border-radius: 999px;
+
   background: rgba(200, 220, 255, 0.14);
   overflow: hidden;
 }
@@ -722,10 +832,13 @@ select:focus {
 
 .goal-actions-premium button {
   min-height: 54px;
+
   border-radius: 18px;
   border: 1px solid rgba(210, 230, 255, 0.18);
+
   background: rgba(255,255,255,0.06);
   color: #ffffff;
+
   font-size: 17px;
   font-weight: 800;
 }
@@ -745,10 +858,13 @@ select:focus {
 
 .backup-actions button {
   min-height: 58px;
+
   border-radius: 20px;
   border: 1px solid rgba(210, 230, 255, 0.18);
+
   background: rgba(80, 140, 210, 0.20);
   color: #ffffff;
+
   font-size: 20px;
   font-weight: 800;
 }
@@ -761,13 +877,18 @@ select:focus {
   position: fixed;
   inset: 0;
   z-index: 99999;
+
   display: none;
   align-items: center;
   justify-content: center;
+
   width: 100vw;
   height: 100vh;
+
   padding: 22px;
+
   background: rgba(0, 8, 20, 0.78);
+
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
@@ -780,13 +901,18 @@ select:focus {
   width: 100%;
   max-width: 430px;
   max-height: 82vh;
+
   overflow-y: auto;
   overflow-x: hidden;
+
   padding: 26px;
   padding-bottom: 30px;
+
   border-radius: 30px;
+
   background: linear-gradient(145deg, rgba(7, 22, 46, 0.96), rgba(4, 12, 28, 0.96));
   border: 1px solid rgba(190, 225, 255, 0.24);
+
   box-shadow:
     0 0 70px rgba(60, 150, 255, 0.22),
     inset 0 1px 0 rgba(255,255,255,0.08);
@@ -796,15 +922,18 @@ select:focus {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+
   margin-bottom: 22px;
 }
 
 .modal-head span {
   display: block;
   margin-bottom: 5px;
+
   font-family: var(--font-tech);
   font-size: 10px;
   letter-spacing: 0.18em;
+
   color: rgba(210, 230, 255, 0.62);
 }
 
@@ -817,10 +946,13 @@ select:focus {
 .modal-close {
   width: 38px;
   height: 38px;
+
   border-radius: 14px;
   border: 1px solid rgba(205, 230, 255, 0.20);
+
   background: rgba(255,255,255,0.08);
   color: #ffffff;
+
   font-size: 26px;
   line-height: 1;
 }
@@ -828,7 +960,9 @@ select:focus {
 .modal-form label {
   display: grid;
   gap: 8px;
+
   color: rgba(230, 240, 255, 0.84);
+
   font-size: 16px;
   font-weight: 700;
 }
@@ -836,14 +970,17 @@ select:focus {
 .modal-actions {
   display: grid;
   gap: 12px;
+
   margin-top: 24px;
 }
 
 .modal-actions button {
   width: 100%;
   min-height: 56px;
+
   border-radius: 18px;
   border: 1px solid rgba(205, 230, 255, 0.22);
+
   font-size: 16px;
   font-weight: 800;
 }
@@ -868,37 +1005,49 @@ select:focus {
 
 .bottom-nav {
   position: fixed;
-  left: 18px;
-  right: 18px;
-  bottom: 28px;
-  height: 92px;
+  left: 14px;
+  right: 14px;
+  bottom: 26px;
+  height: 88px;
   z-index: 9999;
 
   display: grid;
-  grid-template-columns: 1fr 1fr 94px 1fr 1fr;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: center;
-  gap: 6px;
+  gap: 0;
 
-  padding: 10px 18px;
-  border-radius: 34px;
+  padding: 8px 10px;
+
+  border-radius: 32px;
+
   background:
-    linear-gradient(145deg, rgba(8, 50, 92, 0.90), rgba(4, 28, 68, 0.90));
+    linear-gradient(145deg, rgba(8, 50, 92, 0.92), rgba(4, 28, 68, 0.92));
+
   border: 1px solid rgba(175, 220, 255, 0.22);
+
   box-shadow:
     0 0 32px rgba(60, 150, 255, 0.20),
     inset 0 1px 0 rgba(255,255,255,0.08);
+
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+
+  overflow: visible;
 }
 
 .nav-item {
+  min-width: 0;
+
   border: 0;
   background: transparent;
+
   color: rgba(230, 240, 255, 0.64);
+
   display: grid;
   justify-items: center;
   gap: 4px;
-  font-size: 16px;
+
+  font-size: 15px;
   font-weight: 800;
 }
 
@@ -908,23 +1057,29 @@ select:focus {
 
 .nav-item img,
 .nav-icon {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
 }
 
 .nav-plus {
-  width: 94px;
-  height: 94px;
+  width: 78px;
+  height: 78px;
+
   border-radius: 50%;
-  border: 7px solid rgba(18, 20, 28, 0.85);
+  border: 6px solid rgba(18, 20, 28, 0.85);
+
   background: linear-gradient(145deg, #edf4ff, #c4d8ff);
   color: #061225;
-  font-size: 38px;
+
+  font-size: 34px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(-28px);
+
+  justify-self: center;
+  transform: translateY(-22px);
 }
 
 /* ===============================
@@ -938,23 +1093,43 @@ select:focus {
   padding: 10px 0;
 }
 
-@media (max-width: 480px) {
-  .app {
-    padding: 30px 16px 150px;
+@media (max-width: 380px) {
+  .item {
+    grid-template-columns: 68px minmax(0, 1fr) 116px;
+    gap: 8px;
+    padding: 14px;
   }
 
-  h1,
-  .page-title {
-    font-size: 40px;
+  .item-icon {
+    width: 62px;
+    height: 62px;
   }
 
-  .panel {
-    padding: 22px;
+  .account-icon-img,
+  .transaction-icon-img {
+    width: 60px;
+    height: 60px;
   }
 
-  .bottom-nav {
-    left: 14px;
-    right: 14px;
-    bottom: 26px;
+  .item > div:nth-child(3) {
+    width: 116px;
+    min-width: 116px;
+    max-width: 116px;
+  }
+
+  .item > div:nth-child(3) strong {
+    font-size: 17px;
+  }
+
+  .item-actions button,
+  .transaction-actions button,
+  .conta-alerta .item-actions button {
+    width: 29px !important;
+    height: 29px !important;
+    min-width: 29px !important;
+    max-width: 29px !important;
+    min-height: 29px !important;
+    max-height: 29px !important;
+    flex: 0 0 29px !important;
   }
 }
