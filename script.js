@@ -54,13 +54,13 @@ function pegar(id) {
 }
 
 function escrever(id, texto) {
-  const elemento = pegar(id);
-  if (elemento) elemento.textContent = texto;
+  const el = pegar(id);
+  if (el) el.textContent = texto;
 }
 
 function escreverValor(id, valor) {
-  const elemento = pegar(id);
-  if (elemento) elemento.value = valor;
+  const el = pegar(id);
+  if (el) el.value = valor;
 }
 
 function moeda(valor) {
@@ -72,18 +72,6 @@ function moeda(valor) {
 
 function numero(valor) {
   return Number(valor || 0);
-}
-
-function converterValorDigitado(valor) {
-  if (valor === null || valor === undefined) return NaN;
-
-  return Number(
-    valor
-      .toString()
-      .trim()
-      .replace(/\./g, "")
-      .replace(",", ".")
-  );
 }
 
 function hojeBR() {
@@ -98,6 +86,18 @@ function hojeSemHora() {
 
 function validarDataBR(data) {
   return /^\d{2}\/\d{2}\/\d{4}$/.test(data);
+}
+
+function converterValorDigitado(valor) {
+  if (valor === null || valor === undefined) return NaN;
+
+  return Number(
+    valor
+      .toString()
+      .trim()
+      .replace(/\./g, "")
+      .replace(",", ".")
+  );
 }
 
 function calcularDias(vencimento) {
@@ -188,7 +188,6 @@ function vencimentoNoMes(vencimento, mes, ano) {
   if (!vencimento) return false;
 
   const data = new Date(vencimento + "T00:00:00");
-
   if (isNaN(data.getTime())) return false;
 
   return data.getMonth() === mes && data.getFullYear() === ano;
@@ -297,7 +296,7 @@ async function carregarDados() {
     atualizarTela();
   } catch (erro) {
     console.error("Erro ao carregar Firebase:", erro);
-    alert("Erro ao carregar os dados do Firebase.");
+    alert("Erro ao carregar dados.");
   }
 }
 
@@ -395,9 +394,7 @@ function openTab(tab, botao = null) {
     item.classList.remove("active");
   });
 
-  if (botao) {
-    botao.classList.add("active");
-  }
+  if (botao) botao.classList.add("active");
 }
 
 /* =========================
@@ -529,7 +526,7 @@ async function adicionarMeta() {
 }
 
 /* =========================
-   CONTAS
+   AÇÕES
 ========================= */
 
 async function marcarContaPaga(index) {
@@ -554,8 +551,7 @@ function editarConta(index) {
 async function excluirConta(index) {
   if (!contas[index]) return;
 
-  const confirmar = confirm("Excluir esta conta?");
-  if (!confirmar) return;
+  if (!confirm("Excluir esta conta?")) return;
 
   contas.splice(index, 1);
 
@@ -563,17 +559,12 @@ async function excluirConta(index) {
   atualizarTela();
 }
 
-/* =========================
-   TRANSAÇÕES
-========================= */
-
 function editarEntrada(id) {
   abrirModalEditarTransacao("entrada", id);
 }
 
 async function excluirEntrada(id) {
-  const confirmar = confirm("Excluir este ganho?");
-  if (!confirmar) return;
+  if (!confirm("Excluir este ganho?")) return;
 
   entradas = entradas.filter((item) => item.id !== id);
 
@@ -586,18 +577,13 @@ function editarSaida(id) {
 }
 
 async function excluirSaida(id) {
-  const confirmar = confirm("Excluir esta saída?");
-  if (!confirmar) return;
+  if (!confirm("Excluir esta saída?")) return;
 
   saidas = saidas.filter((item) => item.id !== id);
 
   await salvarDados();
   atualizarTela();
 }
-
-/* =========================
-   METAS
-========================= */
 
 async function adicionarValorMeta(id) {
   const meta = metas.find((item) => item.id === id);
@@ -628,8 +614,7 @@ function editarMeta(id) {
 }
 
 async function excluirMeta(id) {
-  const confirmar = confirm("Excluir esta meta?");
-  if (!confirmar) return;
+  if (!confirm("Excluir esta meta?")) return;
 
   metas = metas.filter((meta) => meta.id !== id);
 
@@ -638,8 +623,7 @@ async function excluirMeta(id) {
 }
 
 async function apagarTudo() {
-  const confirmar = confirm("Tem certeza que deseja apagar todos os dados da V2?");
-  if (!confirmar) return;
+  if (!confirm("Tem certeza que deseja apagar todos os dados?")) return;
 
   entradas = [];
   saidas = [];
@@ -915,33 +899,23 @@ function exportarBackup() {
   };
 
   const conteudo = JSON.stringify(dadosBackup, null, 2);
-
-  const arquivo = new Blob([conteudo], {
-    type: "application/json"
-  });
-
+  const arquivo = new Blob([conteudo], { type: "application/json" });
   const url = URL.createObjectURL(arquivo);
   const link = document.createElement("a");
 
   link.href = url;
-
-  const dataHoje = new Date().toISOString().slice(0, 10);
-  link.download = `backup-missao-financeira-${dataHoje}.json`;
+  link.download = `backup-missao-financeira-${new Date().toISOString().slice(0, 10)}.json`;
 
   document.body.appendChild(link);
   link.click();
-
   document.body.removeChild(link);
+
   URL.revokeObjectURL(url);
 }
 
 function abrirImportarBackup() {
   const input = pegar("inputImportarBackup");
-
-  if (!input) {
-    alert("Campo de importação não encontrado.");
-    return;
-  }
+  if (!input) return;
 
   input.value = "";
   input.click();
@@ -949,15 +923,13 @@ function abrirImportarBackup() {
 
 function importarBackupArquivo(event) {
   const arquivo = event.target.files[0];
-
   if (!arquivo) return;
 
   const leitor = new FileReader();
 
   leitor.onload = async function(e) {
     try {
-      const conteudo = e.target.result;
-      const dados = JSON.parse(conteudo);
+      const dados = JSON.parse(e.target.result);
 
       if (
         !dados ||
@@ -966,12 +938,11 @@ function importarBackupArquivo(event) {
         !Array.isArray(dados.contas) ||
         !Array.isArray(dados.metas)
       ) {
-        alert("Esse arquivo não parece ser um backup válido do app.");
+        alert("Backup inválido.");
         return;
       }
 
-      const confirmar = confirm("Importar este backup? Isso substituirá os dados atuais.");
-      if (!confirmar) return;
+      if (!confirm("Importar este backup? Isso substituirá os dados atuais.")) return;
 
       entradas = dados.entradas;
       saidas = dados.saidas;
@@ -981,9 +952,8 @@ function importarBackupArquivo(event) {
       await salvarDados();
       atualizarTela();
 
-      alert("Backup importado com sucesso.");
+      alert("Backup importado.");
     } catch (erro) {
-      console.error("Erro ao importar backup:", erro);
       alert("Erro ao importar backup.");
     }
   };
@@ -1009,25 +979,13 @@ function criarModalEditarConta() {
           <span>MISSION_EDIT</span>
           <h3>Editar conta</h3>
         </div>
-
         <button type="button" class="modal-close" onclick="fecharModalEditarConta()">×</button>
       </div>
 
       <div class="modal-form">
-        <label>
-          Nome da conta
-          <input id="editarContaNome" type="text">
-        </label>
-
-        <label>
-          Valor
-          <input id="editarContaValor" type="number" step="0.01">
-        </label>
-
-        <label>
-          Vencimento
-          <input id="editarContaVencimento" type="date">
-        </label>
+        <label>Nome da conta <input id="editarContaNome" type="text"></label>
+        <label>Valor <input id="editarContaValor" type="number" step="0.01"></label>
+        <label>Vencimento <input id="editarContaVencimento" type="date"></label>
 
         <label>
           Categoria
@@ -1083,14 +1041,11 @@ function abrirModalEditarConta(index) {
 
   alternarCampoDataPagamento();
 
-  const modal = pegar("modalEditarConta");
-  if (modal) modal.classList.add("active");
+  pegar("modalEditarConta")?.classList.add("active");
 }
 
 function fecharModalEditarConta() {
-  const modal = pegar("modalEditarConta");
-  if (modal) modal.classList.remove("active");
-
+  pegar("modalEditarConta")?.classList.remove("active");
   contaEditandoIndex = null;
 }
 
@@ -1133,7 +1088,7 @@ async function salvarEdicaoConta() {
     pagaEm = pegar("editarContaPagaEm")?.value.trim();
 
     if (!validarDataBR(pagaEm)) {
-      alert("Use a data de pagamento no formato DD/MM/AAAA.");
+      alert("Use a data no formato DD/MM/AAAA.");
       return;
     }
   }
@@ -1149,7 +1104,6 @@ async function salvarEdicaoConta() {
   };
 
   await salvarDados();
-
   fecharModalEditarConta();
   atualizarTela();
 }
@@ -1168,25 +1122,13 @@ function criarModalEditarMeta() {
           <span>MISSION_GOAL</span>
           <h3>Editar meta</h3>
         </div>
-
         <button type="button" class="modal-close" onclick="fecharModalEditarMeta()">×</button>
       </div>
 
       <div class="modal-form">
-        <label>
-          Nome da meta
-          <input id="editarMetaNome" type="text">
-        </label>
-
-        <label>
-          Valor total da meta
-          <input id="editarMetaValorTotal" type="number" step="0.01">
-        </label>
-
-        <label>
-          Valor já guardado
-          <input id="editarMetaValorAtual" type="number" step="0.01">
-        </label>
+        <label>Nome da meta <input id="editarMetaNome" type="text"></label>
+        <label>Valor total <input id="editarMetaValorTotal" type="number" step="0.01"></label>
+        <label>Valor guardado <input id="editarMetaValorAtual" type="number" step="0.01"></label>
       </div>
 
       <div class="modal-actions">
@@ -1211,14 +1153,11 @@ function abrirModalEditarMeta(id) {
   escreverValor("editarMetaValorTotal", meta.valorTotal || "");
   escreverValor("editarMetaValorAtual", meta.valorAtual || 0);
 
-  const modal = pegar("modalEditarMeta");
-  if (modal) modal.classList.add("active");
+  pegar("modalEditarMeta")?.classList.add("active");
 }
 
 function fecharModalEditarMeta() {
-  const modal = pegar("modalEditarMeta");
-  if (modal) modal.classList.remove("active");
-
+  pegar("modalEditarMeta")?.classList.remove("active");
   metaEditandoId = null;
 }
 
@@ -1233,13 +1172,12 @@ async function salvarEdicaoMeta() {
   let valorAtual = Number(pegar("editarMetaValorAtual")?.value);
 
   if (!nome || valorTotal <= 0) {
-    alert("Preencha o nome da meta e o valor total.");
+    alert("Preencha o nome e o valor total.");
     return;
   }
 
   if (isNaN(valorAtual) || valorAtual < 0) {
-    alert("Digite um valor guardado válido.");
-    return;
+    valorAtual = 0;
   }
 
   if (valorAtual > valorTotal) {
@@ -1251,7 +1189,6 @@ async function salvarEdicaoMeta() {
   meta.valorAtual = valorAtual;
 
   await salvarDados();
-
   fecharModalEditarMeta();
   atualizarTela();
 }
@@ -1270,25 +1207,13 @@ function criarModalEditarTransacao() {
           <span id="editarTransacaoLabel">MISSION_FLOW</span>
           <h3 id="editarTransacaoTitulo">Editar registro</h3>
         </div>
-
         <button type="button" class="modal-close" onclick="fecharModalEditarTransacao()">×</button>
       </div>
 
       <div class="modal-form">
-        <label>
-          Nome
-          <input id="editarTransacaoNome" type="text">
-        </label>
-
-        <label>
-          Valor
-          <input id="editarTransacaoValor" type="number" step="0.01">
-        </label>
-
-        <label>
-          Data
-          <input id="editarTransacaoData" type="text" placeholder="DD/MM/AAAA">
-        </label>
+        <label>Nome <input id="editarTransacaoNome" type="text"></label>
+        <label>Valor <input id="editarTransacaoValor" type="number" step="0.01"></label>
+        <label>Data <input id="editarTransacaoData" type="text" placeholder="DD/MM/AAAA"></label>
       </div>
 
       <div class="modal-actions">
@@ -1319,13 +1244,11 @@ function abrirModalEditarTransacao(tipo, id) {
   escreverValor("editarTransacaoValor", item.valor || "");
   escreverValor("editarTransacaoData", item.data || hojeBR());
 
-  const modal = pegar("modalEditarTransacao");
-  if (modal) modal.classList.add("active");
+  pegar("modalEditarTransacao")?.classList.add("active");
 }
 
 function fecharModalEditarTransacao() {
-  const modal = pegar("modalEditarTransacao");
-  if (modal) modal.classList.remove("active");
+  pegar("modalEditarTransacao")?.classList.remove("active");
 
   transacaoEditandoTipo = null;
   transacaoEditandoId = null;
@@ -1358,13 +1281,12 @@ async function salvarEdicaoTransacao() {
   item.data = data;
 
   await salvarDados();
-
   fecharModalEditarTransacao();
   atualizarTela();
 }
 
 /* =========================
-   RENDERIZAÇÃO
+   RENDER
 ========================= */
 
 function atualizarTela() {
@@ -1420,37 +1342,36 @@ function atualizarEntradas() {
     .filter((item) => estaNoPeriodo(item.data, filtroEntradasAtual))
     .sort((a, b) => b.id - a.id);
 
-  const totalFiltrado = filtradas.reduce((soma, item) => soma + numero(item.valor), 0);
-
-  escrever("resumoGanhosTela", moeda(totalFiltrado));
+  escrever(
+    "resumoGanhosTela",
+    moeda(filtradas.reduce((soma, item) => soma + numero(item.valor), 0))
+  );
 
   if (!filtradas.length) {
     lista.innerHTML = `<p class="empty">Nenhum ganho encontrado neste período.</p>`;
     return;
   }
 
-  lista.innerHTML = filtradas.map((item) => {
-    return `
-      <div class="item transaction-item">
-        <div class="item-icon">
-          <img src="assets/icone-entradas.png" alt="Entrada" class="transaction-icon-img">
-        </div>
+  lista.innerHTML = filtradas.map((item) => `
+    <div class="item transaction-item">
+      <div class="item-icon">
+        <img src="assets/icone-entradas.png" alt="Entrada" class="transaction-icon-img">
+      </div>
 
-        <div>
-          <h4>${item.nome}</h4>
-          <small>Entrada • ${item.data}</small>
-        </div>
+      <div>
+        <h4>${item.nome}</h4>
+        <small>Entrada • ${item.data}</small>
+      </div>
 
-        <div>
-          <strong>+ ${moeda(item.valor)}</strong>
-          <div class="item-actions transaction-actions">
-            <button type="button" onclick="editarEntrada(${item.id})">✎</button>
-            <button type="button" onclick="excluirEntrada(${item.id})">×</button>
-          </div>
+      <div>
+        <strong>+ ${moeda(item.valor)}</strong>
+        <div class="item-actions transaction-actions">
+          <button type="button" onclick="editarEntrada(${item.id})">✎</button>
+          <button type="button" onclick="excluirEntrada(${item.id})">×</button>
         </div>
       </div>
-    `;
-  }).join("");
+    </div>
+  `).join("");
 }
 
 function atualizarSaidas() {
@@ -1469,37 +1390,36 @@ function atualizarSaidas() {
     .filter((item) => estaNoPeriodo(item.data, filtroSaidasAtual))
     .sort((a, b) => b.id - a.id);
 
-  const totalFiltrado = filtradas.reduce((soma, item) => soma + numero(item.valor), 0);
-
-  escrever("resumoSaidasTela", moeda(totalFiltrado));
+  escrever(
+    "resumoSaidasTela",
+    moeda(filtradas.reduce((soma, item) => soma + numero(item.valor), 0))
+  );
 
   if (!filtradas.length) {
     lista.innerHTML = `<p class="empty">Nenhuma saída encontrada neste período.</p>`;
     return;
   }
 
-  lista.innerHTML = filtradas.map((item) => {
-    return `
-      <div class="item transaction-item">
-        <div class="item-icon">
-          <img src="assets/icone-saidas.png" alt="Saída" class="transaction-icon-img">
-        </div>
+  lista.innerHTML = filtradas.map((item) => `
+    <div class="item transaction-item">
+      <div class="item-icon">
+        <img src="assets/icone-saidas.png" alt="Saída" class="transaction-icon-img">
+      </div>
 
-        <div>
-          <h4>${item.nome}</h4>
-          <small>Saída • ${item.data}</small>
-        </div>
+      <div>
+        <h4>${item.nome}</h4>
+        <small>Saída • ${item.data}</small>
+      </div>
 
-        <div>
-          <strong>- ${moeda(item.valor)}</strong>
-          <div class="item-actions transaction-actions">
-            <button type="button" onclick="editarSaida(${item.id})">✎</button>
-            <button type="button" onclick="excluirSaida(${item.id})">×</button>
-          </div>
+      <div>
+        <strong>- ${moeda(item.valor)}</strong>
+        <div class="item-actions transaction-actions">
+          <button type="button" onclick="editarSaida(${item.id})">✎</button>
+          <button type="button" onclick="excluirSaida(${item.id})">×</button>
         </div>
       </div>
-    `;
-  }).join("");
+    </div>
+  `).join("");
 }
 
 function criarHtmlConta(conta, comAcoes = true) {
@@ -1561,9 +1481,7 @@ function atualizarContas() {
     return;
   }
 
-  lista.innerHTML = contasFiltradas.map((conta) => {
-    return criarHtmlConta(conta, true);
-  }).join("");
+  lista.innerHTML = contasFiltradas.map((conta) => criarHtmlConta(conta, true)).join("");
 }
 
 function criarCardMeta(meta) {
@@ -1663,14 +1581,12 @@ function atualizarMetas() {
 function montarGrupoAgenda(titulo, listaDeContas) {
   if (!listaDeContas.length) return "";
 
-  const itens = listaDeContas.map((conta) => {
-    return criarHtmlConta(conta, false);
-  }).join("");
-
   return `
     <div class="agenda-group">
       <h3>${titulo}</h3>
-      <div class="list">${itens}</div>
+      <div class="list">
+        ${listaDeContas.map((conta) => criarHtmlConta(conta, false)).join("")}
+      </div>
     </div>
   `;
 }
@@ -1713,14 +1629,12 @@ function atualizarCalendario() {
     }
   });
 
-  const html =
+  lista.innerHTML =
     montarGrupoAgenda("Atrasadas", atrasadas) +
     montarGrupoAgenda("Vence hoje", hoje) +
     montarGrupoAgenda("Próximos 7 dias", proximos7Dias) +
     montarGrupoAgenda("Este mês", esteMes) +
     montarGrupoAgenda("Pagas", pagas);
-
-  lista.innerHTML = html || `<p class="empty">Nenhum vencimento encontrado.</p>`;
 }
 
 function atualizarHome() {
@@ -1740,9 +1654,7 @@ function atualizarHome() {
     if (!contasPendentes.length) {
       proximos.innerHTML = `<p class="empty">Nenhum vencimento pendente.</p>`;
     } else {
-      proximos.innerHTML = contasPendentes.map((conta) => {
-        return criarHtmlConta(conta, false);
-      }).join("");
+      proximos.innerHTML = contasPendentes.map((conta) => criarHtmlConta(conta, false)).join("");
     }
   }
 
@@ -1763,42 +1675,23 @@ function atualizarHome() {
 }
 
 /* =========================
-   SPLASH
+   SPLASH DESLIGADA
 ========================= */
 
 function iniciarSplashV2() {
-  const splash = pegar("splashScreen");
-  const percent = pegar("loadingPercent");
-  const bar = pegar("loadingBar");
+  const splash = pegar("splashScreen") || document.querySelector(".splash-screen");
 
-  if (!splash) return;
-
-  let progresso = 0;
-
-  const intervalo = setInterval(() => {
-    progresso++;
-
-    if (percent) percent.textContent = String(progresso).padStart(3, "0") + "%";
-    if (bar) bar.style.width = progresso + "%";
-
-    if (progresso >= 100) {
-      clearInterval(intervalo);
-
-      setTimeout(() => {
-        splash.classList.add("hide");
-        splash.style.display = "none";
-      }, 350);
-    }
-  }, 18);
-
-  setTimeout(() => {
+  if (splash) {
     splash.classList.add("hide");
     splash.style.display = "none";
-  }, 3500);
+    splash.style.opacity = "0";
+    splash.style.visibility = "hidden";
+    splash.style.pointerEvents = "none";
+  }
 }
 
 /* =========================
-   EXPORTAR
+   EXPORTAR FUNÇÕES
 ========================= */
 
 window.openTab = openTab;
