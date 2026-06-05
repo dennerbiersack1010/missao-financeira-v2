@@ -36,6 +36,9 @@ let anoResumoSelecionado = new Date().getFullYear();
 let contaEditandoIndex = null;
 let metaEditandoId = null;
 
+let transacaoEditandoTipo = null;
+let transacaoEditandoId = null;
+
 function pegar(id) {
   return document.getElementById(id);
 }
@@ -172,6 +175,8 @@ function contaPagaNoMes(conta, mes, ano) {
   return vencimentoNoMes(conta.vencimento, mes, ano);
 }
 
+/* ÍCONE PNG POR CATEGORIA */
+
 function iconeConta(nome, categoria) {
   const texto = `${nome} ${categoria}`.toLowerCase();
 
@@ -239,6 +244,8 @@ function iconeConta(nome, categoria) {
   return `<img src="assets/${arquivo}" alt="${categoria}" class="account-icon-img">`;
 }
 
+/* FIREBASE */
+
 async function carregarDados() {
   try {
     const snapshot = await getDoc(documentoRef);
@@ -275,6 +282,8 @@ async function salvarDados() {
     alert("Erro ao salvar dados da V2.");
   }
 }
+
+/* CÁLCULOS */
 
 function calcularResumo() {
   const totalEntradas = entradas.reduce((soma, item) => soma + Number(item.valor || 0), 0);
@@ -336,6 +345,8 @@ function calcularResumoMensal(mes = mesResumoSelecionado, ano = anoResumoSelecio
   };
 }
 
+/* ABAS */
+
 function openTab(tab, botao = null) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.remove("active");
@@ -369,6 +380,8 @@ function openTab(tab, botao = null) {
     appContainer.classList.add(`bg-${tab}`);
   }
 }
+
+/* ADICIONAR DADOS */
 
 async function adicionarEntrada() {
   const nomeInput = pegar("entradaNome");
@@ -477,6 +490,8 @@ async function adicionarMeta() {
   atualizarTela();
 }
 
+/* AÇÕES CONTAS */
+
 async function marcarContaPaga(index) {
   if (!contas[index]) return;
 
@@ -505,36 +520,10 @@ async function excluirConta(index) {
   atualizarTela();
 }
 
-async function editarEntrada(id) {
-  const entrada = entradas.find((item) => item.id === id);
+/* AÇÕES ENTRADAS / SAÍDAS */
 
-  if (!entrada) return;
-
-  const novoNome = prompt("Nome do ganho:", entrada.nome);
-  if (novoNome === null) return;
-
-  const nomeFinal = novoNome.trim();
-
-  if (!nomeFinal) {
-    alert("O nome do ganho não pode ficar vazio.");
-    return;
-  }
-
-  const novoValor = prompt("Valor recebido:", entrada.valor);
-  if (novoValor === null) return;
-
-  const valorFinal = converterValorDigitado(novoValor);
-
-  if (isNaN(valorFinal) || valorFinal <= 0) {
-    alert("Digite um valor válido.");
-    return;
-  }
-
-  entrada.nome = nomeFinal;
-  entrada.valor = valorFinal;
-
-  await salvarDados();
-  atualizarTela();
+function editarEntrada(id) {
+  abrirModalEditarTransacao("entrada", id);
 }
 
 async function excluirEntrada(id) {
@@ -543,36 +532,8 @@ async function excluirEntrada(id) {
   atualizarTela();
 }
 
-async function editarSaida(id) {
-  const saida = saidas.find((item) => item.id === id);
-
-  if (!saida) return;
-
-  const novoNome = prompt("Nome da saída:", saida.nome);
-  if (novoNome === null) return;
-
-  const nomeFinal = novoNome.trim();
-
-  if (!nomeFinal) {
-    alert("O nome da saída não pode ficar vazio.");
-    return;
-  }
-
-  const novoValor = prompt("Valor gasto:", saida.valor);
-  if (novoValor === null) return;
-
-  const valorFinal = converterValorDigitado(novoValor);
-
-  if (isNaN(valorFinal) || valorFinal <= 0) {
-    alert("Digite um valor válido.");
-    return;
-  }
-
-  saida.nome = nomeFinal;
-  saida.valor = valorFinal;
-
-  await salvarDados();
-  atualizarTela();
+function editarSaida(id) {
+  abrirModalEditarTransacao("saida", id);
 }
 
 async function excluirSaida(id) {
@@ -580,6 +541,8 @@ async function excluirSaida(id) {
   await salvarDados();
   atualizarTela();
 }
+
+/* AÇÕES METAS */
 
 async function adicionarValorMeta(id) {
   const meta = metas.find((item) => item.id === id);
@@ -634,6 +597,8 @@ async function apagarTudo() {
   atualizarTela();
 }
 
+/* FILTROS CONTAS */
+
 function aplicarFiltroContas(filtro) {
   filtroContasAtual = filtro;
   atualizarContas();
@@ -684,6 +649,8 @@ function filtrarContasParaTela(lista) {
   return lista;
 }
 
+/* FILTROS PERÍODO */
+
 function criarFiltrosPeriodo(tipo) {
   const lista = tipo === "entradas" ? pegar("listaEntradas") : pegar("listaSaidas");
   if (!lista) return;
@@ -729,6 +696,8 @@ function aplicarFiltroSaidas(filtro) {
   filtroSaidasAtual = filtro;
   atualizarSaidas();
 }
+
+/* RESUMO MENSAL */
 
 function mensagemResumoMensal(resumo) {
   if (resumo.caixaAtual >= 0 && resumo.saldoProjetado >= 0) {
@@ -838,6 +807,8 @@ function mudarMesResumo(direcao) {
 
   atualizarTela();
 }
+
+/* BACKUP */
 
 function criarAreaBackupNaHome() {
   const home = pegar("home");
@@ -970,6 +941,8 @@ function importarBackupArquivo(event) {
 
   leitor.readAsText(arquivo);
 }
+
+/* MODAL PREMIUM — EDITAR CONTA */
 
 function criarModalEditarConta() {
   if (pegar("modalEditarConta")) return;
@@ -1133,6 +1106,8 @@ async function salvarEdicaoConta() {
   atualizarTela();
 }
 
+/* MODAL PREMIUM — EDITAR META */
+
 function criarModalEditarMeta() {
   if (pegar("modalEditarMeta")) return;
 
@@ -1237,6 +1212,122 @@ async function salvarEdicaoMeta() {
   atualizarTela();
 }
 
+/* MODAL PREMIUM — EDITAR GANHO / SAÍDA */
+
+function criarModalEditarTransacao() {
+  if (pegar("modalEditarTransacao")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "modalEditarTransacao";
+  modal.className = "modal-overlay";
+
+  modal.innerHTML = `
+    <div class="modal-card glass-card">
+      <div class="modal-head">
+        <div>
+          <span id="editarTransacaoLabel">MISSION_FLOW</span>
+          <h3 id="editarTransacaoTitulo">Editar registro</h3>
+        </div>
+
+        <button type="button" class="modal-close" onclick="fecharModalEditarTransacao()">×</button>
+      </div>
+
+      <div class="modal-form">
+        <label>
+          Nome
+          <input id="editarTransacaoNome" type="text" placeholder="Nome do registro">
+        </label>
+
+        <label>
+          Valor
+          <input id="editarTransacaoValor" type="number" step="0.01" placeholder="Valor">
+        </label>
+
+        <label>
+          Data
+          <input id="editarTransacaoData" type="text" placeholder="DD/MM/AAAA">
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-save" onclick="salvarEdicaoTransacao()">Salvar alterações</button>
+        <button type="button" class="modal-cancel" onclick="fecharModalEditarTransacao()">Cancelar</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+}
+
+function abrirModalEditarTransacao(tipo, id) {
+  criarModalEditarTransacao();
+
+  const lista = tipo === "entrada" ? entradas : saidas;
+  const item = lista.find((registro) => registro.id === id);
+
+  if (!item) return;
+
+  transacaoEditandoTipo = tipo;
+  transacaoEditandoId = id;
+
+  const titulo = tipo === "entrada" ? "Editar ganho" : "Editar saída";
+  const label = tipo === "entrada" ? "MISSION_INCOME" : "MISSION_OUTFLOW";
+
+  escrever("editarTransacaoTitulo", titulo);
+  escrever("editarTransacaoLabel", label);
+
+  pegar("editarTransacaoNome").value = item.nome || "";
+  pegar("editarTransacaoValor").value = item.valor || "";
+  pegar("editarTransacaoData").value = item.data || hojeBR();
+
+  pegar("modalEditarTransacao").classList.add("active");
+}
+
+function fecharModalEditarTransacao() {
+  const modal = pegar("modalEditarTransacao");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
+  transacaoEditandoTipo = null;
+  transacaoEditandoId = null;
+}
+
+async function salvarEdicaoTransacao() {
+  if (!transacaoEditandoTipo || transacaoEditandoId === null) return;
+
+  const lista = transacaoEditandoTipo === "entrada" ? entradas : saidas;
+  const item = lista.find((registro) => registro.id === transacaoEditandoId);
+
+  if (!item) return;
+
+  const nome = pegar("editarTransacaoNome").value.trim();
+  const valor = Number(pegar("editarTransacaoValor").value);
+  const data = pegar("editarTransacaoData").value.trim();
+
+  if (!nome || valor <= 0) {
+    alert("Preencha o nome e um valor válido.");
+    return;
+  }
+
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+    alert("Use a data no formato DD/MM/AAAA. Exemplo: 04/06/2026");
+    return;
+  }
+
+  item.nome = nome;
+  item.valor = valor;
+  item.data = data;
+
+  await salvarDados();
+
+  fecharModalEditarTransacao();
+  atualizarTela();
+}
+
+/* ATUALIZAR TELA */
+
 function atualizarTela() {
   const resumo = calcularResumo();
   const resumoMensal = calcularResumoMensal();
@@ -1269,6 +1360,8 @@ function atualizarTela() {
   criarResumoMensalNaHome(resumoMensal);
   criarAreaBackupNaHome();
 }
+
+/* GANHOS */
 
 function atualizarEntradas() {
   const lista = pegar("listaEntradas");
@@ -1319,6 +1412,8 @@ function atualizarEntradas() {
   }).join("");
 }
 
+/* SAÍDAS */
+
 function atualizarSaidas() {
   const lista = pegar("listaSaidas");
 
@@ -1367,6 +1462,8 @@ function atualizarSaidas() {
     `;
   }).join("");
 }
+
+/* CONTAS */
 
 function atualizarContas() {
   const lista = pegar("listaContas");
@@ -1425,6 +1522,8 @@ function atualizarContas() {
     })
     .join("");
 }
+
+/* METAS */
 
 function criarCardMeta(meta) {
   const progresso = meta.valorTotal > 0
@@ -1521,6 +1620,8 @@ function atualizarMetas() {
   lista.innerHTML = html;
 }
 
+/* AGENDA */
+
 function montarGrupoAgenda(titulo, listaDeContas) {
   if (!listaDeContas.length) return "";
 
@@ -1603,6 +1704,8 @@ function atualizarCalendario() {
   lista.innerHTML = html || `<p class="empty">Nenhum vencimento encontrado.</p>`;
 }
 
+/* HOME */
+
 function atualizarHome() {
   const proximos = pegar("listaProximosVencimentos");
   const metaDestaque = pegar("metaDestaque");
@@ -1651,6 +1754,8 @@ function atualizarHome() {
   }
 }
 
+/* SPLASH */
+
 function iniciarSplashV2() {
   const splash = pegar("splashScreen");
   const percent = pegar("loadingPercent");
@@ -1675,6 +1780,8 @@ function iniciarSplashV2() {
     }
   }, 22);
 }
+
+/* EXPOR FUNÇÕES PARA O HTML */
 
 window.openTab = openTab;
 window.adicionarEntrada = adicionarEntrada;
@@ -1717,7 +1824,14 @@ window.abrirModalEditarMeta = abrirModalEditarMeta;
 window.fecharModalEditarMeta = fecharModalEditarMeta;
 window.salvarEdicaoMeta = salvarEdicaoMeta;
 
+window.abrirModalEditarTransacao = abrirModalEditarTransacao;
+window.fecharModalEditarTransacao = fecharModalEditarTransacao;
+window.salvarEdicaoTransacao = salvarEdicaoTransacao;
+
+/* INICIAR APP */
+
 document.addEventListener("DOMContentLoaded", () => {
   iniciarSplashV2();
   carregarDados();
 });
+
