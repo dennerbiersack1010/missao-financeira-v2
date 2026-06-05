@@ -60,9 +60,18 @@
         <h1>Bem-vindo, Dener</h1>
       </div>
 
-      <div class="top-user-box">
-        <img src="assets/avatar-dener.PNG" alt="Dener" class="top-user-photo">
-      </div>
+     <label class="top-user-box" for="inputFotoPerfil">
+  <img src="assets/avatar-dener.PNG" alt="Dener" class="top-user-photo" id="fotoPerfil">
+  <span class="avatar-edit-badge">✎</span>
+</label>
+
+<input
+  type="file"
+  id="inputFotoPerfil"
+  accept="image/*"
+  style="display: none;"
+  onchange="trocarFotoPerfil(event)"
+>
     </header>
 
     <main class="main">
