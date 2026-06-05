@@ -2264,42 +2264,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 800);
 });
 
-/* =====================================================
-   LIMPEZA DA HOME — REMOVE PRÓXIMOS VENCIMENTOS ANTIGO
-   Mantém a Central de Alertas como painel principal
-   ===================================================== */
-
-function removerProximosVencimentosAntigoHome() {
-  const listaProximos = document.getElementById("listaProximosVencimentos");
-
-  if (!listaProximos) return;
-
-  const painelAntigo = listaProximos.closest(".panel");
-
-  if (painelAntigo) {
-    painelAntigo.style.display = "none";
-  }
-}
-
-/* executa junto com a atualização da tela */
-if (typeof atualizarTela === "function" && !window.limpezaHomeProximosAtiva) {
-  const atualizarTelaOriginalLimpezaHome = atualizarTela;
-
-  atualizarTela = function() {
-    atualizarTelaOriginalLimpezaHome();
-    removerProximosVencimentosAntigoHome();
-  };
 
 
-  
-
-  window.limpezaHomeProximosAtiva = true;
-}
-
-/* tentativa extra ao carregar */
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    removerProximosVencimentosAntigoHome();
-  }, 900);
-});
 
