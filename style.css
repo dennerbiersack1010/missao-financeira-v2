@@ -3515,3 +3515,36 @@ img {
     border-radius: 12px !important;
   }
 }
+
+/* =====================================================
+   REMOVER CENTRAL DE ALERTAS DA HOME — SEGURO
+   ===================================================== */
+
+#centralAlertasHome,
+.central-alerts-panel,
+.central-alertas-panel {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Remove painel que contém o texto MISSION_ALERT */
+.panel:has(.central-alerts-kicker),
+.panel:has(.central-alertas-head),
+.panel:has(.central-alerts-header),
+.glass-card:has(.central-alerts-kicker),
+.glass-card:has(.central-alerts-header) {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
