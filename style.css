@@ -9,17 +9,10 @@
   --bg-card: rgba(7, 22, 46, 0.82);
   --bg-card-strong: rgba(8, 30, 62, 0.92);
 
-  --blue-1: rgba(75, 145, 255, 0.38);
-  --blue-2: rgba(110, 180, 255, 0.24);
   --blue-border: rgba(165, 215, 255, 0.22);
-
   --white: #ffffff;
   --muted: rgba(225, 238, 255, 0.68);
   --muted-2: rgba(225, 238, 255, 0.48);
-
-  --danger: #ff4d65;
-  --warning: #ffb33f;
-  --safe: #72b7ff;
 
   --radius-lg: 34px;
   --radius-md: 24px;
@@ -63,7 +56,7 @@ button {
 }
 
 /* ===============================
-   APP / BACKGROUND
+   APP
 ================================ */
 
 .app {
@@ -167,7 +160,7 @@ p {
 }
 
 /* ===============================
-   CARDS GERAIS
+   CARDS
 ================================ */
 
 .glass-card,
@@ -339,7 +332,7 @@ select:focus {
 }
 
 /* ===============================
-   LISTAS / ITEMS
+   LISTAS
 ================================ */
 
 .list {
@@ -350,12 +343,12 @@ select:focus {
 .item {
   width: 100%;
   min-height: 112px;
-  padding: 18px 18px;
+  padding: 16px;
 
   display: grid;
-  grid-template-columns: 86px 1fr 148px;
+  grid-template-columns: 80px minmax(0, 1fr) 138px;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 
   border-radius: 28px;
   background:
@@ -368,8 +361,8 @@ select:focus {
 }
 
 .item-icon {
-  width: 76px;
-  height: 76px;
+  width: 72px;
+  height: 72px;
   border-radius: 24px;
   display: flex;
   align-items: center;
@@ -380,14 +373,14 @@ select:focus {
 
 .account-icon-img,
 .transaction-icon-img {
-  width: 74px;
-  height: 74px;
+  width: 70px;
+  height: 70px;
   object-fit: contain;
   display: block;
 }
 
 .item h4 {
-  font-size: 25px;
+  font-size: 23px;
   font-weight: 800;
   line-height: 0.98;
   margin-bottom: 8px;
@@ -396,7 +389,7 @@ select:focus {
 .item small {
   display: block;
   color: var(--muted);
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1.15;
 }
 
@@ -405,31 +398,39 @@ select:focus {
 }
 
 .item > div:nth-child(3) {
-  width: 148px;
-  min-width: 148px;
+  width: 138px;
+  min-width: 138px;
+  max-width: 138px;
+
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
+
+  padding: 0;
+  margin: 0;
 }
 
 .item > div:nth-child(3) strong {
   font-family: var(--font-tech);
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 800;
   line-height: 1;
   white-space: nowrap;
   text-align: right;
-  margin-bottom: 9px;
+  margin: 0 0 9px 0;
+  padding: 0;
 }
 
 .item-actions,
-.transaction-actions,
-.goal-actions-premium {
+.transaction-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 6px;
+  width: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .item-actions button,
@@ -437,16 +438,27 @@ select:focus {
   width: 34px;
   height: 34px;
   min-width: 34px;
+  max-width: 34px;
+  min-height: 34px;
+  max-height: 34px;
+
   border-radius: 11px;
   border: 1px solid rgba(210, 230, 255, 0.18);
   background: rgba(255,255,255,0.06);
   color: #ffffff;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   padding: 0;
+  margin: 0;
+
   font-size: 15px;
   font-weight: 800;
+  line-height: 1;
+
+  flex: 0 0 34px;
 }
 
 /* ===============================
@@ -484,10 +496,9 @@ select:focus {
 }
 
 /* ===============================
-   ESTADOS DAS CONTAS
+   CONTAS — ESTADOS
 ================================ */
 
-/* Alerta próximo do vencimento */
 .conta-alerta {
   background:
     radial-gradient(circle at 16% 35%, rgba(255, 178, 58, 0.22), transparent 32%),
@@ -501,8 +512,8 @@ select:focus {
 
 .conta-alerta::before,
 .conta-alerta::after {
-  content: none;
-  display: none;
+  content: none !important;
+  display: none !important;
 }
 
 .conta-alerta h4,
@@ -514,7 +525,16 @@ select:focus {
   color: rgba(255, 232, 185, 0.95);
 }
 
-/* Conta paga */
+.conta-alerta .item-actions button {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  flex: 0 0 34px;
+}
+
 .conta-paga {
   opacity: 1;
   border: 1px solid rgba(115, 175, 255, 0.62) !important;
@@ -529,8 +549,8 @@ select:focus {
 
 .conta-paga::before,
 .conta-paga::after {
-  content: none;
-  display: none;
+  content: none !important;
+  display: none !important;
 }
 
 .conta-paga h4,
@@ -547,7 +567,6 @@ select:focus {
   filter: saturate(1.05) brightness(1.02);
 }
 
-/* Conta atrasada */
 .agenda-atrasada {
   background:
     radial-gradient(circle at 15% 35%, rgba(255, 60, 90, 0.20), transparent 32%),
@@ -875,7 +894,7 @@ select:focus {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 /* ===============================
@@ -947,6 +966,7 @@ select:focus {
    SPLASH
 ================================ */
 
+#splashScreen,
 .splash-screen {
   position: fixed;
   inset: 0;
@@ -961,14 +981,17 @@ select:focus {
   transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 
+#splashScreen.hide,
 .splash-screen.hide {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  display: none;
 }
 
 .splash-content {
   width: 82%;
+  max-width: 420px;
   text-align: center;
 }
 
@@ -1009,7 +1032,7 @@ select:focus {
 }
 
 /* ===============================
-   EMPTY
+   EMPTY / MOBILE
 ================================ */
 
 .empty {
@@ -1018,10 +1041,6 @@ select:focus {
   line-height: 1.2;
   padding: 10px 0;
 }
-
-/* ===============================
-   RESPONSIVO
-================================ */
 
 @media (max-width: 480px) {
   .app {
@@ -1037,49 +1056,6 @@ select:focus {
     padding: 22px;
   }
 
-  .item {
-    grid-template-columns: 80px 1fr 138px;
-    gap: 10px;
-    min-height: 112px;
-    padding: 16px;
-  }
-
-  .item-icon {
-    width: 72px;
-    height: 72px;
-  }
-
-  .account-icon-img,
-  .transaction-icon-img {
-    width: 70px;
-    height: 70px;
-  }
-
-  .item h4 {
-    font-size: 23px;
-  }
-
-  .item small {
-    font-size: 18px;
-  }
-
-  .item > div:nth-child(3) {
-    width: 138px;
-    min-width: 138px;
-  }
-
-  .item > div:nth-child(3) strong {
-    font-size: 21px;
-  }
-
-  .item-actions button,
-  .transaction-actions button {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    border-radius: 11px;
-  }
-
   .metrics-grid,
   .monthly-summary-grid {
     gap: 14px;
@@ -1090,76 +1066,4 @@ select:focus {
     right: 14px;
     bottom: 26px;
   }
-}
-
-/* =====================================================
-   CORREÇÃO FINAL — BOTÕES DO CARD LARANJA IGUAIS AO NORMAL
-===================================================== */
-
-.conta-alerta .item-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-
-  margin: 0;
-  padding: 0;
-
-  width: auto;
-  height: auto;
-}
-
-.conta-alerta .item-actions button {
-  width: 34px;
-  min-width: 34px;
-  max-width: 34px;
-
-  height: 34px;
-  min-height: 34px;
-  max-height: 34px;
-
-  padding: 0;
-  margin: 0;
-
-  border-radius: 11px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 1;
-
-  flex: 0 0 34px;
-}
-
-/* mantém o bloco do valor igual ao card normal */
-.conta-alerta > div:nth-child(3) {
-  width: 138px;
-  min-width: 138px;
-  max-width: 138px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-
-  padding: 0;
-  margin: 0;
-}
-
-/* valor acima dos botões */
-.conta-alerta > div:nth-child(3) strong {
-  margin: 0 0 9px 0;
-  padding: 0;
-
-  white-space: nowrap;
-  text-align: right;
-}
-
-/* impede que o card laranja aumente os botões por herança */
-.conta-alerta button {
-  transform: none;
-  scale: 1;
 }
