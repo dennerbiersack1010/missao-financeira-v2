@@ -26,7 +26,7 @@ const documentoRef = doc(db, "dadosFinanceirosV2", "dener");
    Troque o PIN abaixo quando quiser.
    ===================================================== */
 
-const APP_PIN = "927413";
+const APP_PIN = "230695";
 const PIN_STORAGE_KEY = "missaoFinanceiraV2_desbloqueado";
 
 let dadosCarregados = false;
