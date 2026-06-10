@@ -21,6 +21,127 @@ const db = getFirestore(app);
 
 const documentoRef = doc(db, "dadosFinanceirosV2", "dener");
 
+/* =====================================================
+   PIN DE ACESSO
+   Troque o PIN abaixo quando quiser.
+   ===================================================== */
+
+const APP_PIN = "927413";
+const PIN_STORAGE_KEY = "missaoFinanceiraV2_desbloqueado";
+
+let dadosCarregados = false;
+
+function appDesbloqueado() {
+  return localStorage.getItem(PIN_STORAGE_KEY) === "true";
+}
+
+function mostrarTelaPin() {
+  const pinScreen = document.getElementById("pinScreen");
+  const appRoot = document.getElementById("appRoot");
+  const pinInput = document.getElementById("pinInput");
+
+  if (appRoot) {
+    appRoot.classList.add("locked");
+    appRoot.setAttribute("aria-hidden", "true");
+  }
+
+  if (pinScreen) {
+    pinScreen.classList.add("active");
+    pinScreen.setAttribute("aria-hidden", "false");
+  }
+
+  setTimeout(() => {
+    if (pinInput) pinInput.focus();
+  }, 650);
+}
+
+function liberarAppVisualmente() {
+  const pinScreen = document.getElementById("pinScreen");
+  const appRoot = document.getElementById("appRoot");
+  const pinError = document.getElementById("pinError");
+
+  if (pinError) {
+    pinError.textContent = "";
+  }
+
+  if (pinScreen) {
+    pinScreen.classList.remove("active");
+    pinScreen.setAttribute("aria-hidden", "true");
+  }
+
+  if (appRoot) {
+    appRoot.classList.remove("locked");
+    appRoot.setAttribute("aria-hidden", "false");
+  }
+}
+
+async function carregarDadosDepoisDoPin() {
+  if (dadosCarregados) return;
+
+  dadosCarregados = true;
+  await carregarDados();
+}
+
+async function desbloquearComPin(event) {
+  event.preventDefault();
+
+  const pinScreen = document.getElementById("pinScreen");
+  const pinInput = document.getElementById("pinInput");
+  const pinError = document.getElementById("pinError");
+
+  if (!pinInput) return;
+
+  const pinDigitado = pinInput.value.trim();
+
+  if (pinDigitado === APP_PIN) {
+    localStorage.setItem(PIN_STORAGE_KEY, "true");
+    pinInput.value = "";
+    liberarAppVisualmente();
+    await carregarDadosDepoisDoPin();
+    return;
+  }
+
+  if (pinError) {
+    pinError.textContent = "PIN incorreto. Tente novamente.";
+  }
+
+  pinInput.value = "";
+
+  if (pinScreen) {
+    pinScreen.classList.remove("shake");
+    void pinScreen.offsetWidth;
+    pinScreen.classList.add("shake");
+  }
+
+  setTimeout(() => {
+    pinInput.focus();
+  }, 150);
+}
+
+function inicializarControleDeAcesso() {
+  const pinForm = document.getElementById("pinForm");
+
+  if (pinForm) {
+    pinForm.addEventListener("submit", desbloquearComPin);
+  }
+
+  if (appDesbloqueado()) {
+    liberarAppVisualmente();
+    carregarDadosDepoisDoPin();
+  } else {
+    mostrarTelaPin();
+  }
+}
+
+function bloquearApp() {
+  const confirmar = confirm("Deseja bloquear o Missão Financeira agora?");
+
+  if (!confirmar) return;
+
+  localStorage.removeItem(PIN_STORAGE_KEY);
+  window.location.reload();
+}
+
 let entradas = [];
 let saidas = [];
 let contas = [];
@@ -337,6 +458,11 @@ function calcularResumoMensal(mes = mesResumoSelecionado, ano = anoResumoSelecio
 }
 
 function openTab(tab, botao = null) {
+  if (!appDesbloqueado()) {
+    mostrarTelaPin();
+    return;
+  }
+
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.remove("active");
   });
@@ -1717,9 +1843,11 @@ window.abrirModalEditarMeta = abrirModalEditarMeta;
 window.fecharModalEditarMeta = fecharModalEditarMeta;
 window.salvarEdicaoMeta = salvarEdicaoMeta;
 
+window.bloquearApp = bloquearApp;
+
 document.addEventListener("DOMContentLoaded", () => {
   iniciarSplashV2();
-  carregarDados();
+  inicializarControleDeAcesso();
 });
 
 /* =====================================================
