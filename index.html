@@ -14,12 +14,12 @@
 
   <link rel="manifest" href="manifest.json">
 
-<meta name="theme-color" content="#000000">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Missão">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Missão">
 
-<link rel="apple-touch-icon" href="assets/icone-app.png">
+  <link rel="apple-touch-icon" href="assets/icone-app.png">
 </head>
 
 <body>
@@ -44,8 +44,39 @@
     </div>
   </div>
 
+  <!-- TELA DE PIN -->
+  <div id="pinScreen" class="pin-screen active" aria-hidden="false">
+    <div class="pin-bg"></div>
+    <div class="pin-overlay"></div>
+
+    <div class="pin-card glass-card">
+      <div class="pin-logo-wrap">
+        <img src="assets/logo-v2.PNG" alt="Missão Financeira" class="pin-logo">
+      </div>
+
+      <span class="pin-system-label">SECURE_ACCESS</span>
+      <h2>Acesso restrito</h2>
+      <p>Digite o PIN para abrir seu painel financeiro.</p>
+
+      <form id="pinForm" class="pin-form">
+        <input
+          id="pinInput"
+          type="password"
+          inputmode="numeric"
+          maxlength="8"
+          placeholder="Digite seu PIN"
+          autocomplete="off"
+        >
+
+        <button type="submit">Entrar no sistema</button>
+
+        <small id="pinError" class="pin-error"></small>
+      </form>
+    </div>
+  </div>
+
   <!-- APP -->
-  <div class="app bg-home">
+  <div id="appRoot" class="app bg-home locked">
 
     <!-- TOPO -->
     <header class="top-header">
@@ -54,8 +85,14 @@
         <h1>Bem-vindo, Dener</h1>
       </div>
 
-      <div class="top-user-box">
-        <img src="assets/avatar-dener.PNG" alt="Dener" class="top-user-photo">
+      <div class="top-user-actions">
+        <button class="lock-app-button" type="button" onclick="bloquearApp()" aria-label="Bloquear app">
+          ⏻
+        </button>
+
+        <div class="top-user-box">
+          <img src="assets/avatar-dener.PNG" alt="Dener" class="top-user-photo">
+        </div>
       </div>
     </header>
 
