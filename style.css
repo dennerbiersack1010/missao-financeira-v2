@@ -3515,3 +3515,316 @@ img {
     border-radius: 12px !important;
   }
 }
+
+
+/* =====================================================
+   TELA DE PIN — MISSÃO FINANCEIRA V2
+   ===================================================== */
+
+.app.locked {
+  display: none !important;
+}
+
+.pin-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  background: #030508;
+  overflow: hidden;
+
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.pin-screen.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.pin-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background: url("assets/bg-splash.PNG") center center / cover no-repeat;
+  transform: scale(1.04);
+  filter: brightness(0.82) contrast(1.12) blur(1.4px);
+}
+
+.pin-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  background:
+    radial-gradient(circle at center, rgba(140, 180, 255, 0.10), transparent 42%),
+    linear-gradient(180deg, rgba(0, 4, 12, 0.22) 0%, rgba(0, 4, 12, 0.58) 58%, rgba(0, 4, 12, 0.86) 100%);
+}
+
+.pin-card {
+  position: relative;
+  z-index: 3;
+
+  width: 100%;
+  max-width: 390px;
+
+  padding: 28px;
+  border-radius: 34px;
+
+  text-align: left;
+
+  background:
+    linear-gradient(145deg, rgba(7, 22, 46, 0.62), rgba(4, 12, 28, 0.54)) !important;
+
+  border: 1px solid rgba(205, 230, 255, 0.22) !important;
+
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.44),
+    0 0 46px rgba(80, 150, 255, 0.13),
+    inset 0 1px 0 rgba(255,255,255,0.12) !important;
+
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+}
+
+.pin-logo-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.pin-logo {
+  width: 235px;
+  max-width: 80%;
+  height: auto;
+  display: block;
+
+  filter:
+    drop-shadow(0 0 18px rgba(190, 220, 255, 0.18))
+    drop-shadow(0 0 34px rgba(80, 150, 255, 0.12));
+}
+
+.pin-system-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-family: "Orbitron", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  color: rgba(205, 225, 255, 0.78);
+}
+
+.pin-card h2 {
+  margin: 0 0 8px;
+
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.7px;
+  font-weight: 800;
+
+  color: #ffffff;
+}
+
+.pin-card p {
+  margin: 0 0 22px;
+
+  font-size: 16px;
+  line-height: 1.22;
+
+  color: rgba(235, 243, 255, 0.78);
+}
+
+.pin-form {
+  display: grid;
+  gap: 14px;
+}
+
+.pin-form input {
+  width: 100%;
+  height: 58px;
+
+  margin: 0;
+
+  border-radius: 20px;
+  border: 1px solid rgba(205, 230, 255, 0.22);
+
+  background: rgba(4, 16, 34, 0.72);
+  color: #ffffff;
+
+  font-family: "Orbitron", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+
+  text-align: center;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 18px rgba(80, 160, 255, 0.08);
+}
+
+.pin-form input::placeholder {
+  font-family: "Rajdhani", sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-align: center;
+
+  color: rgba(225, 237, 255, 0.44);
+}
+
+.pin-form input:focus {
+  border-color: rgba(165, 215, 255, 0.48);
+
+  box-shadow:
+    0 0 24px rgba(95, 175, 255, 0.16),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+.pin-form button {
+  width: 100%;
+  min-height: 58px;
+
+  border: none;
+  border-radius: 20px;
+
+  background: linear-gradient(135deg, #eaf0ff, #a9c7ff);
+  color: #05070b;
+
+  font-family: "Rajdhani", sans-serif;
+  font-size: 17px;
+  font-weight: 900;
+
+  box-shadow:
+    0 0 26px rgba(150, 195, 255, 0.24),
+    inset 0 1px 0 rgba(255,255,255,0.45);
+}
+
+.pin-form button:active {
+  transform: scale(0.97);
+}
+
+.pin-error {
+  min-height: 18px;
+
+  display: block;
+
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+
+  color: #ff8b91;
+}
+
+.pin-screen.shake .pin-card {
+  animation: pinShake 0.32s ease;
+}
+
+@keyframes pinShake {
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-8px);
+  }
+
+  40% {
+    transform: translateX(8px);
+  }
+
+  60% {
+    transform: translateX(-5px);
+  }
+
+  80% {
+    transform: translateX(5px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* BOTÃO BLOQUEAR NO TOPO */
+
+.top-user-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex: 0 0 auto !important;
+}
+
+.lock-app-button {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 17px;
+  border: 1px solid rgba(205, 230, 255, 0.18);
+
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(25, 70, 135, 0.12));
+
+  color: #ffffff;
+
+  font-family: "Orbitron", sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 0 18px rgba(80, 160, 255, 0.10);
+
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+}
+
+.lock-app-button:active {
+  transform: scale(0.94);
+}
+
+@media (max-width: 380px) {
+  .pin-card {
+    padding: 24px;
+    border-radius: 30px;
+  }
+
+  .pin-logo {
+    width: 210px;
+  }
+
+  .pin-card h2 {
+    font-size: 30px;
+  }
+
+  .pin-card p {
+    font-size: 15px;
+  }
+
+  .lock-app-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 15px;
+  }
+}
+
+
